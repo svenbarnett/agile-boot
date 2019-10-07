@@ -1,0 +1,4 @@
+rootProject.name = 'AgileBoot'
+include 'agile-base'
+include 'agile-boot-admin-api'
+

@@ -1,0 +1,6 @@
+dependencies {
+    implementation libs.apacheCommonsLang
+    implementation libs.springBeans
+    implementation libs.hibernateCore
+    implementation libs.validationApi
+}

@@ -1,0 +1,55 @@
+apply from: 'dep.other.gradle'
+
+buildscript {
+    ext.springBootVersion = "2.1.9.RELEASE"
+    ext.dependencyManagementVersion = "1.0.8.RELEASE"
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}")
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+configure(allprojects) { project ->
+    group = 'com.huijiewei'
+    version = '1.0.1'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    apply plugin: 'idea'
+
+    idea {
+        module {
+            inheritOutputDirs = false
+            outputDir = file("$buildDir/classes/main/")
+        }
+    }
+}
+
+configure(subprojects) { project ->
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        options.encoding = 'UTF-8'
+    }
+
+    dependencies {
+        compileOnly libs.lombok
+        annotationProcessor libs.lombok
+    }
+}
