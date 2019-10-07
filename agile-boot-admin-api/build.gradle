@@ -1,6 +1,7 @@
+apply from: '../dep.spring.boot.gradle'
+
 dependencies {
-    implementation libs.apacheCommonsLang
-    implementation libs.springBeans
-    implementation libs.hibernateCore
-    implementation libs.validationApi
+    implementation "org.springframework.boot:spring-boot-starter-web"
+
+    implementation project(':agile-base')
 }
