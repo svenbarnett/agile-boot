@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: agile-boot-admin-api
+  profiles:
+    active: dev
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

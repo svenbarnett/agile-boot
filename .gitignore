@@ -39,3 +39,5 @@ $RECYCLE.BIN/
 .*
 !.gitignore
 *~
+
+application-dev.yaml
