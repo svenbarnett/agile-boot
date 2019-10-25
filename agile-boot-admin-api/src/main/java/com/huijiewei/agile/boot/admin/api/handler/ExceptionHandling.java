@@ -11,14 +11,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.StatusType;
-import org.zalando.problem.spring.web.autoconfigure.BasicExceptionHandling;
+import org.zalando.problem.spring.web.autoconfigure.security.SpringSecurityExceptionHandling;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.zalando.problem.Status.UNPROCESSABLE_ENTITY;
 
 @ControllerAdvice
 @Order(-1)
-public class ExceptionHandling extends BasicExceptionHandling {
+public class ExceptionHandling extends SpringSecurityExceptionHandling {
     @Override
     public StatusType defaultConstraintViolationStatus() {
         return UNPROCESSABLE_ENTITY;
