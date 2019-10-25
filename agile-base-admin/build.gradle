@@ -7,9 +7,10 @@ dependencies {
     implementation libs.mysqlConnector
     implementation libs.apacheCommonsLang
     implementation libs.springBeans
+    implementation libs.mapstruct
     implementation libs.hibernateCore
     implementation libs.validationApi
-    implementation libs.springfoxSwagger2
+    implementation libs.springdocOpenApi
 
     implementation project(':agile-base')
 }

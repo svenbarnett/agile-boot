@@ -1,5 +1,5 @@
 ext.lombokVersion = '1.18.10'
-ext.springfoxVersion = '2.9.2'
+ext.springdocOpenApiVersion = '1.1.49'
 ext.validationApiVersion = '2.0.1.Final'
 ext.mysqlConnectorVersion = '8.0.17'
 ext.apacheCommonsLangVersion = '3.9'
@@ -14,11 +14,11 @@ ext.libs = [
         lombok            : [
                 "org.projectlombok:lombok:$lombokVersion"
         ],
-        springfoxSwagger2 : [
-                "io.springfox:springfox-swagger2:${springfoxVersion}"
+        springdocOpenApi  : [
+                "org.springdoc:springdoc-openapi-core:${springdocOpenApiVersion}"
         ],
-        springfoxSwaggerUi: [
-                "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+        springdocOpenApiUi: [
+                "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVersion}"
         ],
         validationApi     : [
                 "javax.validation:validation-api:${validationApiVersion}"
