@@ -6,10 +6,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,8 +18,6 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(defineInfo())
                 .components(new Components()
-                        .addResponses("NotFound", new ApiResponse().content(new Content().addMediaType("application/json", new MediaType().schema(new Schema().$ref("NotFoundProblem")))))
-                        .addResponses("ConstraintViolation", new ApiResponse().content(new Content().addMediaType("application/json", new MediaType().schema(new Schema().$ref("ConstraintViolationProblem")))))
                         .addSchemas("NotFoundProblem", defineNotFoundProblemSchema())
                         .addSchemas("BadRequestProblem", defineBadRequestProblemSchema())
                         .addSchemas("ConstraintViolationProblem", defineConstraintViolationProblemSchema())
