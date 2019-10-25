@@ -1,12 +1,12 @@
 ext.lombokVersion = '1.18.10'
 ext.springdocOpenApiVersion = '1.1.49'
 ext.validationApiVersion = '2.0.1.Final'
-ext.mysqlConnectorVersion = '8.0.17'
+ext.mysqlConnectorVersion = '8.0.18'
 ext.apacheCommonsLangVersion = '3.9'
-ext.springBeansVersion = '5.2.0.RELEASE'
+ext.springFrameworkVersion = '5.2.0.RELEASE'
+ext.hibernateCoreVersion = '5.4.5.Final'
 ext.hibernateValidatorVersion = '6.0.17.Final'
 ext.persistenceApiVersion = '2.2'
-ext.hibernateCoreVersion = '5.4.5.Final'
 ext.mapstructVersion = '1.3.1.Final'
 ext.zalandoProblemWebVersion = '0.25.2'
 
@@ -30,7 +30,10 @@ ext.libs = [
                 "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
         ],
         springBeans       : [
-                "org.springframework:spring-beans:${springBeansVersion}"
+                "org.springframework:spring-beans:${springFrameworkVersion}"
+        ],
+        springSecurity    : [
+                "org.springframework.security:spring-security-core:${springFrameworkVersion}"
         ],
         hibernateValidator: [
                 "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"

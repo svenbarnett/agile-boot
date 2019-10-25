@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.zalando.problem.violations.ConstraintViolationProblem;
 
 import javax.validation.Valid;
 
@@ -34,8 +33,8 @@ public class AuthController {
             description = "管理员登录",
             responses = {
                     @ApiResponse(content = @Content(schema = @Schema(implementation = AdminResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "管理员不存在"),
-                    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = ConstraintViolationProblem.class, allowableValues = {"violations"})), description = "输入验证错误")
+                    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(ref = "NotFoundProblem")), description = "管理员不存在"),
+                    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(ref = "ConstraintViolationProblem")), description = "输入验证错误")
             })
     @PostMapping(
             value = "/sign-in",

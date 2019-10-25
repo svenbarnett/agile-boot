@@ -1,9 +1,15 @@
 package com.huijiewei.agile.boot.admin.api.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +19,46 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI defineOpenApi() {
         return new OpenAPI()
-                .info(defineInfo());
+                .info(defineInfo())
+                .components(new Components()
+                        .addResponses("NotFound", new ApiResponse().content(new Content().addMediaType("application/json", new MediaType().schema(new Schema().$ref("NotFoundProblem")))))
+                        .addResponses("ConstraintViolation", new ApiResponse().content(new Content().addMediaType("application/json", new MediaType().schema(new Schema().$ref("ConstraintViolationProblem")))))
+                        .addSchemas("NotFoundProblem", defineNotFoundProblemSchema())
+                        .addSchemas("BadRequestProblem", defineBadRequestProblemSchema())
+                        .addSchemas("ConstraintViolationProblem", defineConstraintViolationProblemSchema())
+                );
+    }
+
+    private Schema defineNotFoundProblemSchema() {
+        return new Schema()
+                .type("object")
+                .addProperties("status", new Schema().type("integer"))
+                .addProperties("title", new Schema().type("string"))
+                .addProperties("detail", new Schema().type("string"));
+    }
+
+    private Schema defineBadRequestProblemSchema() {
+        return new Schema()
+                .type("object")
+                .addProperties("status", new Schema().type("integer"))
+                .addProperties("title", new Schema().type("string"))
+                .addProperties("detail", new Schema().type("string"));
+    }
+
+    private Schema defineConstraintViolationProblemSchema() {
+        return new Schema()
+                .type("object")
+                .addProperties("type", new Schema().type("string"))
+                .addProperties("status", new Schema().type("integer"))
+                .addProperties("title", new Schema().type("string"))
+                .addProperties(
+                        "violations",
+                        new ArraySchema()
+                                .items(new Schema<>()
+                                        .addProperties("field", new Schema().type("string"))
+                                        .addProperties("message", new Schema().type("string"))
+                                )
+                );
     }
 
     private Info defineInfo() {
