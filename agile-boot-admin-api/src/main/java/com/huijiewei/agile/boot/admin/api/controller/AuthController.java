@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/auth")
+@ApiOperation(value = "管理员验证控制器", notes = "管理员登录注册")
 public class AuthController {
     private final AdminService adminService;
 
