@@ -3,7 +3,6 @@ package com.huijiewei.agile.base.admin.request;
 import com.huijiewei.agile.base.constraint.AccountType;
 import com.huijiewei.agile.base.consts.AccountTypeEnums;
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 
