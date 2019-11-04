@@ -1,7 +1,7 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
-import com.huijiewei.agile.base.admin.request.AdminSignInRequest;
-import com.huijiewei.agile.base.admin.response.AdminResponse;
+import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,17 +32,16 @@ public class AuthController {
     @Operation(
             description = "管理员登录",
             responses = {
-                    @ApiResponse(content = @Content(schema = @Schema(implementation = AdminResponse.class))),
-                    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(ref = "NotFoundProblem")), description = "管理员不存在"),
+                    @ApiResponse(content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
                     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(ref = "ConstraintViolationProblem")), description = "输入验证错误")
             })
     @PostMapping(
-            value = "/sign-in",
+            value = "/login",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<?> actionSignIn(@Valid @RequestBody AdminSignInRequest request) {
-        AdminResponse response = this.adminService.signIn(request);
+    public ResponseEntity<?> actionLogin(@Valid @RequestBody AdminLoginRequest request) {
+        AdminLoginResponse response = this.adminService.login("",request);
 
         return ResponseEntity.ok(response);
     }

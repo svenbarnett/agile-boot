@@ -13,5 +13,7 @@ dependencies {
     implementation libs.validationApi
     implementation libs.springdocOpenApi
 
+    annotationProcessor libs.mapstructProcessor
+
     implementation project(':agile-base')
 }

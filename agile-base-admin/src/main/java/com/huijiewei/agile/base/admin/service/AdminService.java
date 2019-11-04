@@ -1,11 +1,8 @@
 package com.huijiewei.agile.base.admin.service;
 
-import com.huijiewei.agile.base.admin.request.AdminSignInRequest;
-import com.huijiewei.agile.base.admin.request.AdminSignUpRequest;
-import com.huijiewei.agile.base.admin.response.AdminResponse;
+import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 
 public interface AdminService {
-    public AdminResponse signIn(AdminSignInRequest request);
-
-    public AdminResponse signUp(AdminSignUpRequest request);
+    public AdminLoginResponse login(String clientId, AdminLoginRequest request);
 }

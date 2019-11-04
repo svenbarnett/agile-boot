@@ -3,7 +3,8 @@ ext.springdocOpenApiVersion = '1.1.49'
 ext.validationApiVersion = '2.0.1.Final'
 ext.mysqlConnectorVersion = '8.0.18'
 ext.apacheCommonsLangVersion = '3.9'
-ext.springFrameworkVersion = '5.2.0.RELEASE'
+ext.springFrameworkVersion = '5.2.1.RELEASE'
+ext.springSecurityVersion = '5.2.0.RELEASE'
 ext.hibernateCoreVersion = '5.4.5.Final'
 ext.hibernateValidatorVersion = '6.0.17.Final'
 ext.persistenceApiVersion = '2.2'
@@ -32,8 +33,11 @@ ext.libs = [
         springBeans       : [
                 "org.springframework:spring-beans:${springFrameworkVersion}"
         ],
+        springContext       : [
+                "org.springframework:spring-context:${springFrameworkVersion}"
+        ],
         springSecurity    : [
-                "org.springframework.security:spring-security-core:${springFrameworkVersion}"
+                "org.springframework.security:spring-security-core:${springSecurityVersion}"
         ],
         hibernateValidator: [
                 "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
