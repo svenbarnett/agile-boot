@@ -6,13 +6,16 @@ import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
+import com.huijiewei.agile.base.admin.security.AdminUser;
 
 import java.util.List;
 
 public interface AdminService {
     AdminLoginResponse login(String clientId, String userAgent, AdminLoginRequest request);
 
-    AdminAccountResponse account(Admin admin);
+    AdminAccountResponse account();
+
+    AdminUser getCurrentAdminUser();
 
     List<AdminResponse> getAdminsAll();
 

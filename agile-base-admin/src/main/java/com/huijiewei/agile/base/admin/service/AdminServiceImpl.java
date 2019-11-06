@@ -12,8 +12,11 @@ import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
+import com.huijiewei.agile.base.admin.security.AdminUser;
+import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +60,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AdminAccountResponse account(Admin admin) {
+    public AdminUser getCurrentAdminUser() {
+        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return adminUserDetails.getAdminUser();
+    }
+
+    @Override
+    public AdminAccountResponse account() {
+        Admin admin = this.getCurrentAdminUser().getAdmin();
+
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
         adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
 

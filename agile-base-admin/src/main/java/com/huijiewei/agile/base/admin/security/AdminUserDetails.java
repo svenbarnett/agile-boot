@@ -1,16 +1,15 @@
-package com.huijiewei.agile.boot.admin.api.security;
+package com.huijiewei.agile.base.admin.security;
 
-import com.huijiewei.agile.base.admin.entity.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 public class AdminUserDetails implements UserDetails {
-    private Admin admin;
+    private AdminUser adminUser;
 
-    AdminUserDetails(Admin admin) {
-        this.admin = admin;
+    public AdminUserDetails(AdminUser adminUser) {
+        this.adminUser = adminUser;
     }
 
     @Override
@@ -25,11 +24,11 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.admin.getName();
+        return this.adminUser.getAdmin().getName();
     }
 
-    public Admin getAdmin() {
-        return this.admin;
+    public AdminUser getAdminUser() {
+        return this.adminUser;
     }
 
     @Override

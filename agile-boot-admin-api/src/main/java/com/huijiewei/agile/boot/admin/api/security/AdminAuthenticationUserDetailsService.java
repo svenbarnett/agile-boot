@@ -4,12 +4,12 @@ import com.huijiewei.agile.base.admin.entity.Admin;
 import com.huijiewei.agile.base.admin.entity.AdminAccessToken;
 import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.huijiewei.agile.base.admin.security.AdminUser;
+import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -37,12 +37,16 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
             return null;
         }
 
-        Optional<Admin> admin = this.adminRepository.findById(adminAccessToken.getAdminId());
+        Optional<Admin> adminOptional = this.adminRepository.findById(adminAccessToken.getAdminId());
 
-        if (admin.isEmpty()) {
+        if (adminOptional.isEmpty()) {
             return null;
         }
 
-        return new AdminUserDetails(admin.get());
+        AdminUser adminUser = new AdminUser();
+        adminUser.setAdmin(adminOptional.get());
+        adminUser.setClientId(clientId);
+
+        return new AdminUserDetails(adminUser);
     }
 }
