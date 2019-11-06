@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Account(accountFieldName = "account",
         passwordFieldName = "password",
-        accountTypeFieldName = "accountType",
         accountEntityFieldName = "admin",
         accountTypeMessage = "无效的帐号类型, 帐号应该是手机或者邮箱",
         accountNotExistMessage = "帐号不存在",

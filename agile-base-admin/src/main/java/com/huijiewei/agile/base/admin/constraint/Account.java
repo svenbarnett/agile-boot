@@ -27,7 +27,5 @@ public @interface Account {
 
     String passwordFieldName();
 
-    String accountTypeFieldName();
-
     String accountEntityFieldName();
 }

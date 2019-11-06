@@ -18,7 +18,6 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
     private String accountFieldName;
     private String passwordFieldName;
-    private String accountTypeFieldName;
     private String accountEntityFieldName;
     private String accountTypeMessage;
     private String accountNotExistMessage;
@@ -31,7 +30,6 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     public void initialize(final Account constraintAnnotation) {
         this.accountFieldName = constraintAnnotation.accountFieldName();
         this.passwordFieldName = constraintAnnotation.passwordFieldName();
-        this.accountTypeFieldName = constraintAnnotation.accountTypeFieldName();
         this.accountEntityFieldName = constraintAnnotation.accountEntityFieldName();
         this.accountTypeMessage = constraintAnnotation.accountTypeMessage();
         this.accountNotExistMessage = constraintAnnotation.accountNotExistMessage();
@@ -93,7 +91,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
             return false;
         }
 
-        if (!admin.getPassword().equals(passwordEncoder.encode(password))) {
+        if (!passwordEncoder.matches(password, admin.getPassword())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
                     .addPropertyNode(this.passwordFieldName)
