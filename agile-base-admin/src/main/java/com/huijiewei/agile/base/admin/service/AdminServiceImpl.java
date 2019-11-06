@@ -46,7 +46,6 @@ public class AdminServiceImpl implements AdminService {
         }
 
         adminAccessToken.setAccessToken(accessToken);
-        //adminAccessToken.setUpdatedAt(Instant.now());
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
