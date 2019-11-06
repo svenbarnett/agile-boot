@@ -5,17 +5,18 @@ import com.huijiewei.agile.base.admin.entity.AdminGroup;
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.base.admin.response.AdminResponse;
 
 import java.util.List;
 
 public interface AdminService {
-    public AdminLoginResponse login(String clientId, String userAgent, AdminLoginRequest request);
+    AdminLoginResponse login(String clientId, String userAgent, AdminLoginRequest request);
 
-    public AdminAccountResponse account(Admin admin);
+    AdminAccountResponse account(Admin admin);
 
-    public List<Admin> getAdminsAll();
+    List<AdminResponse> getAdminsAll();
 
-    public List<AdminGroup> getAdminGroupsAll();
+    List<AdminGroup> getAdminGroupsAll();
 
-    public AdminGroup getAdminGroupById(Integer id);
+    AdminGroup getAdminGroupById(Integer id);
 }

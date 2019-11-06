@@ -14,6 +14,4 @@ public interface AdminMapper {
     AdminResponse toAdminResponse(Admin admin);
 
     List<AdminResponse> toAdminResponses(List<Admin> admins);
-
-    Admin toAdmin(AdminResponse adminResponse);
 }

@@ -11,6 +11,7 @@ import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,8 +64,8 @@ public class AdminServiceImpl implements AdminService {
         return adminAccountResponse;
     }
 
-    public List<Admin> getAdminsAll() {
-        return this.adminRepository.findAll();
+    public List<AdminResponse> getAdminsAll() {
+        return AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll());
     }
 
     public List<AdminGroup> getAdminGroupsAll() {

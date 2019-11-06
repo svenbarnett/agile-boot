@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
+    protected void configure(AuthenticationManagerBuilder builder) {
         PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
         provider.setPreAuthenticatedUserDetailsService(new AdminAuthenticationUserDetailsService(this.adminRepository, this.adminAccessTokenRepository));
 
