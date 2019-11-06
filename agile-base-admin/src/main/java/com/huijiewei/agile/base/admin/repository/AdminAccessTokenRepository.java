@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminAccessTokenRepository extends JpaRepository<AdminAccessToken, Integer> {
     public AdminAccessToken findByClientId(String clientId);
+
+    public AdminAccessToken findByClientIdAndAccessToken(String clientId, String accessToken);
 }
