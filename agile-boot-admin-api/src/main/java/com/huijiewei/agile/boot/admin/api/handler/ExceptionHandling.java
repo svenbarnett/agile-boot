@@ -1,6 +1,7 @@
 package com.huijiewei.agile.boot.admin.api.handler;
 
 import com.huijiewei.agile.base.exception.BadRequestException;
+import com.huijiewei.agile.base.exception.ForbiddenException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import org.apiguardian.api.API;
 import org.springframework.core.annotation.Order;
@@ -26,7 +27,7 @@ public class ExceptionHandling extends SpringSecurityExceptionHandling {
 
     @Override
     public boolean isCausalChainsEnabled() {
-        return true;
+        return false;
     }
 
     @API(status = INTERNAL)
@@ -43,5 +44,13 @@ public class ExceptionHandling extends SpringSecurityExceptionHandling {
             final BadRequestException exception,
             final NativeWebRequest request) {
         return create(Status.BAD_REQUEST, exception, request);
+    }
+
+    @API(status = INTERNAL)
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleForbidden(
+            final ForbiddenException exception,
+            final NativeWebRequest request) {
+        return create(Status.FORBIDDEN, exception, request);
     }
 }
