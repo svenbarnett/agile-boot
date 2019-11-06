@@ -16,4 +16,4 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   datasource:
     hikari:
-      max-lifetime: 1728000
+      max-lifetime: 28800
