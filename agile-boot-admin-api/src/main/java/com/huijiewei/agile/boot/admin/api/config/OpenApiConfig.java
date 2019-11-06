@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(defineInfo())
                 .components(new Components()
+                        .addSecuritySchemes("Authorization", new SecurityScheme().name("Authorization").type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER))
                         .addSchemas("NotFoundProblem", defineNotFoundProblemSchema())
                         .addSchemas("BadRequestProblem", defineBadRequestProblemSchema())
                         .addSchemas("ConstraintViolationProblem", defineConstraintViolationProblemSchema())

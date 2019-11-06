@@ -10,16 +10,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/auth")
 @Tag(name = "auth", description = "管理员登录注册")
 public class AuthController {
     private final AdminService adminService;
@@ -29,21 +26,17 @@ public class AuthController {
         this.adminService = adminService;
     }
 
-    @Operation(
-            description = "管理员登录",
-            responses = {
-                    @ApiResponse(content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
-                    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(ref = "ConstraintViolationProblem")), description = "输入验证错误")
-            })
+    @Operation(description = "管理员登录", responses = {
+            @ApiResponse(content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
+            @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(ref = "ConstraintViolationProblem")), description = "输入验证错误")
+    })
     @PostMapping(
-            value = "/login",
+            value = "/auth/login",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<?> actionLogin(@Valid @RequestBody AdminLoginRequest request) {
-        AdminLoginResponse response = this.adminService.login("",request);
-
-        return ResponseEntity.ok(response);
+    public AdminLoginResponse actionLogin(@Valid @RequestBody AdminLoginRequest request) {
+        return this.adminService.login("", request);
     }
 
 }
