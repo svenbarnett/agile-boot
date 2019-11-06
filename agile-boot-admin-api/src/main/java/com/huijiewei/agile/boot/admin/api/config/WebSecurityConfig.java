@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
@@ -14,6 +15,7 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityProblemSupport problemSupport;
 
+    @Autowired
     public WebSecurityConfig(SecurityProblemSupport problemSupport) {
         this.problemSupport = problemSupport;
     }
@@ -21,6 +23,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(problemSupport)
                 .accessDeniedHandler(problemSupport)
@@ -32,7 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/v3/api-docs",
-                        "/auth/*"
+                        "/auth/login",
+                        "/open/**"
                 )
                 .permitAll()
                 .anyRequest()

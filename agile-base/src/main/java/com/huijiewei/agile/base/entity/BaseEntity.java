@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @MappedSuperclass
 public abstract class BaseEntity {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 }

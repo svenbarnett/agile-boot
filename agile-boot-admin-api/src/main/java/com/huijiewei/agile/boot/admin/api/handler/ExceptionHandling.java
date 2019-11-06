@@ -18,7 +18,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.zalando.problem.Status.UNPROCESSABLE_ENTITY;
 
 @ControllerAdvice
-@Order(-1)
+@Order(-99)
 public class ExceptionHandling extends SpringSecurityExceptionHandling {
     @Override
     public StatusType defaultConstraintViolationStatus() {

@@ -12,6 +12,7 @@ dependencies {
     implementation libs.hibernateCore
     implementation libs.validationApi
     implementation libs.springdocOpenApi
+    implementation libs.friendlyId
 
     annotationProcessor libs.mapstructProcessor
 
