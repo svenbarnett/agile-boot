@@ -1,8 +1,10 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
+import com.huijiewei.agile.boot.admin.api.security.AdminUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,10 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -43,4 +43,16 @@ public class AuthController {
         return this.adminService.login(clientId, userAgent, request);
     }
 
+    @Operation(description = "当前登录帐号", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AdminAccountResponse.class))),
+    })
+    @GetMapping(
+            value = "/auth/account",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public AdminAccountResponse actionAccount() {
+        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return this.adminService.account(adminUserDetails.getAdmin());
+    }
 }

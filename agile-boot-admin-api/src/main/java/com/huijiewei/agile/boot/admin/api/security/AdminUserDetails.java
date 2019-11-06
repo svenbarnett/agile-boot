@@ -28,6 +28,10 @@ public class AdminUserDetails implements UserDetails {
         return this.admin.getName();
     }
 
+    public Admin getAdmin() {
+        return this.admin;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

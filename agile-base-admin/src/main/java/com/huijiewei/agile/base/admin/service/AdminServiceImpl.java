@@ -9,12 +9,12 @@ import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminGroupRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +53,14 @@ public class AdminServiceImpl implements AdminService {
         adminLoginResponse.setAccessToken(accessToken);
 
         return adminLoginResponse;
+    }
+
+    @Override
+    public AdminAccountResponse account(Admin admin) {
+        AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
+        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+
+        return adminAccountResponse;
     }
 
     public List<Admin> getAdminsAll() {

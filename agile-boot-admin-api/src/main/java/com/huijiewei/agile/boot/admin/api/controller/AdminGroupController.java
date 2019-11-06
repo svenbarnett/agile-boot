@@ -37,7 +37,6 @@ public class AdminGroupController {
         return this.adminService.getAdminGroupsAll();
     }
 
-
     @Operation(description = "管理组详情", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AdminGroup.class))),
             @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")

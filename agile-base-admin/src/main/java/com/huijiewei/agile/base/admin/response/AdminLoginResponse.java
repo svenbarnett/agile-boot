@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AdminLoginResponse extends AdminAuthenticationResponse {
+public class AdminLoginResponse extends AdminAccountResponse {
     private String accessToken;
 }
