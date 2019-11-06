@@ -6,11 +6,13 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "ag_admin_group")
 public class AdminGroup extends BaseEntity {
-
+    @NotBlank
+    private String name;
 }
