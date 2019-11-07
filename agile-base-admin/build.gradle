@@ -13,7 +13,7 @@ dependencies {
     implementation libs.mapstruct
     implementation libs.hibernateCore
     implementation libs.validationApi
-    implementation libs.swaggerJaxrs2
+    implementation libs.springdocOpenApi
     implementation libs.friendlyId
 
     annotationProcessor libs.mapstructProcessor

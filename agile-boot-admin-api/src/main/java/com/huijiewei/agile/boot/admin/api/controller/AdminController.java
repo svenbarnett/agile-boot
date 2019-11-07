@@ -28,9 +28,9 @@ public class AdminController {
             value = "/admins",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+    @JsonView({Admin.Views.Detail.class})
     @Operation(description = "管理员列表")
     @ApiResponse(responseCode = "200", description = "管理员列表")
-    @JsonView({Admin.Views.Detail.class})
     public List<Admin> actionList() {
         return this.adminService.getAll();
     }
@@ -39,10 +39,10 @@ public class AdminController {
             value = "/admins/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+    @JsonView({Admin.Views.Detail.class})
     @Operation(description = "管理员详情")
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
-    @JsonView({Admin.Views.Detail.class})
     public Admin actionDetail(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }

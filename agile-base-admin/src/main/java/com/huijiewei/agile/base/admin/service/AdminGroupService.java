@@ -1,6 +1,5 @@
 package com.huijiewei.agile.base.admin.service;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.huijiewei.agile.base.admin.entity.AdminGroup;
 import com.huijiewei.agile.base.admin.repository.AdminGroupRepository;
 import com.huijiewei.agile.base.exception.NotFoundException;
@@ -36,7 +35,6 @@ public class AdminGroupService {
         return adminGroupOptional.get();
     }
 
-    @JsonView(AdminGroup.Views.Create.class)
     public AdminGroup create(@Valid AdminGroup adminGroup) {
         this.adminGroupRepository.save(adminGroup);
 

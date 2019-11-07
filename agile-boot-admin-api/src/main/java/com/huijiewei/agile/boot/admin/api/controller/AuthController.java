@@ -6,8 +6,6 @@ import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,8 @@ public class AuthController {
     }
 
     @Operation(description = "管理员登录",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "登陆信息",
-                    content = @Content(schema = @Schema(implementation = AdminLoginRequest.class))
-            ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "登录成功", content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
+                    @ApiResponse(responseCode = "200", description = "登录成功"),
                     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
             })
     @PostMapping(
@@ -46,7 +40,7 @@ public class AuthController {
     }
 
     @Operation(description = "当前登录帐号", responses = {
-            @ApiResponse(responseCode = "200", description = "获取成功", content = @Content(schema = @Schema(implementation = AdminAccountResponse.class))),
+            @ApiResponse(responseCode = "200", description = "获取成功"),
     })
     @GetMapping(
             value = "/auth/account",
