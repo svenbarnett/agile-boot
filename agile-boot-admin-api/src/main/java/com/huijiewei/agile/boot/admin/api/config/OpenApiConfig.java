@@ -12,7 +12,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +22,6 @@ public class OpenApiConfig {
     public OpenAPI defineOpenApi() {
         return new OpenAPI()
                 .info(defineInfo())
-                .addServersItem(new Server().url("/").description("开发服务器"))
                 .addSecurityItem(new SecurityRequirement().addList("ClientId").addList("AccessToken"))
                 .components(new Components()
                         .addResponses("Problem", defineProblemResponse())

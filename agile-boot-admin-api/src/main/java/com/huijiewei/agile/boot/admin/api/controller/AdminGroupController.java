@@ -58,7 +58,10 @@ public class AdminGroupController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public AdminGroup actionCreate(@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = AdminGroup.class))) @JsonView(AdminGroup.Views.Create.class) @RequestBody AdminGroup adminGroup) {
+    public AdminGroup actionCreate(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = AdminGroup.class)))
+            @JsonView(AdminGroup.Views.Create.class)
+            @RequestBody AdminGroup adminGroup) {
         return this.adminGroupService.create(adminGroup);
     }
 }
