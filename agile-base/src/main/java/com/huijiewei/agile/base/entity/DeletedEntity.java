@@ -10,6 +10,6 @@ public interface DeletedEntity {
     Instant deletedAt = null;
 
     public default Boolean isDeleted() {
-        return this.deletedAt == null;
+        return this.deletedAt != null;
     }
 }

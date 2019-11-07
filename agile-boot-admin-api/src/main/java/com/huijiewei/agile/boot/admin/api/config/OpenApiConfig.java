@@ -12,6 +12,7 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +23,7 @@ public class OpenApiConfig {
     public OpenAPI defineOpenApi() {
         return new OpenAPI()
                 .info(defineInfo())
+                .addServersItem(new Server().url("/").description("开发服务器"))
                 .addSecurityItem(new SecurityRequirement().addList("ClientId").addList("AccessToken"))
                 .components(new Components()
                         .addResponses("Problem", defineProblemResponse())
@@ -47,16 +49,18 @@ public class OpenApiConfig {
                         .addMediaType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE, new MediaType()
                                 .schema(new Schema()
                                         .type("object")
-                                        .addProperties("type", new Schema().type("string"))
-                                        .addProperties("status", new Schema().type("integer"))
-                                        .addProperties("title", new Schema().type("string"))
+                                        .description("验证错误")
+                                        .addProperties("type", new Schema().type("string").description("错误类型"))
+                                        .addProperties("status", new Schema().type("integer").description("错误状态"))
+                                        .addProperties("title", new Schema().type("string").description("错误标题"))
                                         .addProperties(
                                                 "violations",
                                                 new ArraySchema()
                                                         .items(new Schema<>()
-                                                                .addProperties("field", new Schema().type("string"))
-                                                                .addProperties("message", new Schema().type("string"))
+                                                                .addProperties("field", new Schema().type("string").description("错误字段"))
+                                                                .addProperties("message", new Schema().type("string").description("错误信息"))
                                                         )
+                                                        .description("错误信息")
                                         )
                                 )
                         )
@@ -69,9 +73,9 @@ public class OpenApiConfig {
                         .addMediaType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE, new MediaType()
                                 .schema(new Schema()
                                         .type("object")
-                                        .addProperties("status", new Schema().type("integer"))
-                                        .addProperties("title", new Schema().type("string"))
-                                        .addProperties("detail", new Schema().type("string")
+                                        .addProperties("status", new Schema().type("integer").description("错误状态"))
+                                        .addProperties("title", new Schema().type("string").description("错误标题"))
+                                        .addProperties("detail", new Schema().type("string").description("错误详情")
                                         )
                                 )
                         )

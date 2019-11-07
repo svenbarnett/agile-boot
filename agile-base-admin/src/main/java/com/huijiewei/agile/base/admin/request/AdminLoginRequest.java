@@ -2,7 +2,7 @@ package com.huijiewei.agile.base.admin.request;
 
 import com.huijiewei.agile.base.admin.constraint.Account;
 import com.huijiewei.agile.base.admin.entity.Admin;
-import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,12 +18,14 @@ import javax.validation.constraints.NotBlank;
         passwordIncorrectMessage = "密码错误")
 public class AdminLoginRequest {
     @NotBlank(message = "帐号不能为空")
+    @Schema(description = "帐号", required = true)
     private String account;
 
     @NotBlank(message = "密码不能为空")
+    @Schema(description = "密码")
     private String password;
 
-    @Hidden
+    @Schema(hidden = true, required = true)
     private Admin admin = null;
 }
 

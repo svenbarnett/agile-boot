@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
 @RestController
 @Tag(name = "auth", description = "管理员登录注册")
 public class AuthController {
@@ -28,8 +25,12 @@ public class AuthController {
     }
 
     @Operation(description = "管理员登录",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "登陆信息",
+                    content = @Content(schema = @Schema(implementation = AdminLoginRequest.class))
+            ),
             responses = {
-                    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
+                    @ApiResponse(responseCode = "200", description = "登录成功", content = @Content(schema = @Schema(implementation = AdminLoginResponse.class))),
                     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
             })
     @PostMapping(
@@ -38,14 +39,14 @@ public class AuthController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public AdminLoginResponse actionLogin(
-            @NotBlank @Parameter(hidden = true) @RequestHeader(value = "X-Client-Id", defaultValue = "", required = true) String clientId,
-            @Parameter(hidden = true) @RequestHeader(value = "User-Agent", defaultValue = "", required = false) String userAgent,
-            @Valid @RequestBody AdminLoginRequest request) {
+            @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
+            @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,
+            @RequestBody AdminLoginRequest request) {
         return this.adminService.login(clientId, userAgent, request);
     }
 
     @Operation(description = "当前登录帐号", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AdminAccountResponse.class))),
+            @ApiResponse(responseCode = "200", description = "获取成功", content = @Content(schema = @Schema(implementation = AdminAccountResponse.class))),
     })
     @GetMapping(
             value = "/auth/account",
