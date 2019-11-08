@@ -1,10 +1,11 @@
 package com.huijiewei.agile.base.user.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.huijiewei.agile.base.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 public class UserResponse {
@@ -24,11 +25,23 @@ public class UserResponse {
     private String avatar;
 
     @Schema(description = "创建时间")
-    private Instant createdAt;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    private LocalDateTime createdAt;
 
     @Schema(description = "创建 IP")
     private String createdIp;
 
     @Schema(description = "创建来源")
-    private User.CreatedFromEnums createdFrom;
+    private CreatedFrom createdFrom;
+
+    @Data
+    public static class CreatedFrom {
+        private String name;
+        private String description;
+
+        public CreatedFrom(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+    }
 }

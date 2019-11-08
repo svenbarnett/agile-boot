@@ -7,7 +7,7 @@ import com.huijiewei.agile.base.user.mapper.UserMapper;
 import com.huijiewei.agile.base.user.repository.UserRepository;
 import com.huijiewei.agile.base.user.response.UserResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,9 +22,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public PageResponse<UserResponse> getAll(Integer page, Integer size) {
+    public PageResponse<UserResponse> getAll(Pageable pageable) {
         Page<UserResponse> users = UserMapper.INSTANCE.toPageResponse(this.userRepository
-                .findAll(PageRequest.of(page, size)));
+                .findAllByOrderByIdDesc(pageable));
 
         return new PageResponse<UserResponse>()
                 .data(users);

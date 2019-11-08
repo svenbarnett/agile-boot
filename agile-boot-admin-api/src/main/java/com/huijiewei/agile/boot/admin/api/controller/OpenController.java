@@ -14,9 +14,8 @@ import java.util.List;
 @RestController
 @Tag(name = "open", description = "开放接口")
 public class OpenController {
-    @Operation(description = "管理组 ACL 列表", responses = {
-            @ApiResponse(responseCode = "200", description = "管理组 ACL 列表")
-    })
+    @Operation(description = "管理组 ACL 列表")
+    @ApiResponse(responseCode = "200", description = "管理组 ACL 列表")
     @GetMapping(
             value = "/open/admin-group-acl",
             produces = {MediaType.APPLICATION_JSON_VALUE}

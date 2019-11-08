@@ -27,6 +27,14 @@ public class AdminGroupAcl {
                 )
         );
 
+        all.add(new AdminGroupAclItem().name("用户管理")
+                .addChild(new AdminGroupAclItem().name("用户列表").actionId("user/index"))
+                .addChild(new AdminGroupAclItem().name("用户新建").actionId("user/create"))
+                .addChild(new AdminGroupAclItem().name("用户导入").actionId("user/import"))
+                .addChild(new AdminGroupAclItem().name("用户编辑").actionId("user/edit"))
+                .addChild(new AdminGroupAclItem().name("用户删除").actionId("user/delete"))
+        );
+
         return all;
     }
 }

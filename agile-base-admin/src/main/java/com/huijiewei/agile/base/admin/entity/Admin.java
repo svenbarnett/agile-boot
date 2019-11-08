@@ -1,23 +1,19 @@
 package com.huijiewei.agile.base.admin.entity;
 
-import com.huijiewei.agile.base.entity.DeletedEntity;
 import com.huijiewei.agile.base.entity.TimestampEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "ag_admin")
-public class Admin implements DeletedEntity, TimestampEntity {
+public class Admin extends TimestampEntity {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
     @Column(unique = true)
     private String phone;

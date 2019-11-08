@@ -22,11 +22,9 @@ public class AuthController {
         this.adminService = adminService;
     }
 
-    @Operation(description = "管理员登录",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "登录成功"),
-                    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-            })
+    @Operation(description = "管理员登录")
+    @ApiResponse(responseCode = "200", description = "登录成功")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     @PostMapping(
             value = "/auth/login",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
@@ -39,9 +37,8 @@ public class AuthController {
         return this.adminService.login(clientId, userAgent, request);
     }
 
-    @Operation(description = "当前登录帐号", responses = {
-            @ApiResponse(responseCode = "200", description = "获取成功"),
-    })
+    @Operation(description = "当前登录帐号")
+    @ApiResponse(responseCode = "200", description = "获取成功")
     @GetMapping(
             value = "/auth/account",
             produces = {MediaType.APPLICATION_JSON_VALUE}

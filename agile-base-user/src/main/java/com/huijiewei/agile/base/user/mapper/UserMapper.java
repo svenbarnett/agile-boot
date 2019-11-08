@@ -19,4 +19,8 @@ public interface UserMapper {
     default Page<UserResponse> toPageResponse(Page<User> page) {
         return page.map(this::toUserResponse);
     }
+
+    default UserResponse.CreatedFrom createdFromEnumsToCreatedFrom(User.CreatedFromEnums type) {
+        return new UserResponse.CreatedFrom(type.name(), type.getDescription());
+    }
 }

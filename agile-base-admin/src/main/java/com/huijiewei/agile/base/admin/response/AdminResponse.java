@@ -1,26 +1,16 @@
 package com.huijiewei.agile.base.admin.response;
 
-import com.huijiewei.agile.base.admin.entity.AdminGroup;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class AdminResponse {
-    @Schema(description = "管理员 Id")
-    private Integer id;
-
-    @Schema(description = "管理员电话")
-    private String phone;
-
-    @Schema(description = "管理员邮箱")
-    private String email;
-
-    @Schema(description = "管理员名称")
-    private String name;
-
-    @Schema(description = "管理员头像")
-    private String avatar;
-
-    @Schema(description = "所属管理组")
-    private AdminGroup adminGroup;
+public class AdminResponse extends AdminBaseResponse {
+    @Schema(description = "创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    private LocalDateTime createdAt;
 }

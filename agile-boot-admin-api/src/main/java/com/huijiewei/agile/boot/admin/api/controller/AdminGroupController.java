@@ -21,9 +21,8 @@ public class AdminGroupController {
         this.adminGroupService = adminGroupService;
     }
 
-    @Operation(description = "管理组列表", responses = {
-            @ApiResponse(responseCode = "200", description = "管理组列表")
-    })
+    @Operation(description = "管理组列表")
+    @ApiResponse(responseCode = "200", description = "管理组列表")
     @GetMapping(
             value = "/admin-groups",
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -36,12 +35,14 @@ public class AdminGroupController {
             value = "/admin-groups/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组详情", responses = {
-            @ApiResponse(responseCode = "200", description = "管理组"),
-            @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
-    })
+    @Operation(description = "管理组详情")
+    @ApiResponse(responseCode = "200", description = "管理组")
+    @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
     public AdminGroupResponse actionDetail(@PathVariable("id") Integer id) {
-        return this.adminGroupService.getById(id);
+        AdminGroupResponse adminGroupResponse = this.adminGroupService.getById(id);
+        adminGroupResponse.setPermissions(this.adminGroupService.getPermissionsById(adminGroupResponse.getId()));
+
+        return adminGroupResponse;
     }
 
     @PostMapping(
@@ -49,11 +50,9 @@ public class AdminGroupController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组新建",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "管理组"),
-                    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-            })
+    @Operation(description = "管理组新建")
+    @ApiResponse(responseCode = "201", description = "管理组")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     public AdminGroupResponse actionCreate(@RequestBody AdminGroupRequest request) {
         return this.adminGroupService.create(request);
     }

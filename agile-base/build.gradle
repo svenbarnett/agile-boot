@@ -8,4 +8,7 @@ dependencies {
     implementation libs.hibernateCore
     implementation libs.hibernateValidator
     implementation libs.validationApi
+    implementation libs.mapstruct
+
+    annotationProcessor libs.mapstructProcessor
 }

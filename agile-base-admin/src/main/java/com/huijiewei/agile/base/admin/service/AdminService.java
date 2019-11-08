@@ -59,7 +59,7 @@ public class AdminService {
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
         adminLoginResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
         adminLoginResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
@@ -77,7 +77,7 @@ public class AdminService {
         Admin admin = this.getCurrentAdminUser().getAdmin();
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
-        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
         adminAccountResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
         adminAccountResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
 

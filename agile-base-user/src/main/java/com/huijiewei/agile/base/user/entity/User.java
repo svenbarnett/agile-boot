@@ -1,17 +1,18 @@
 package com.huijiewei.agile.base.user.entity;
 
-import com.huijiewei.agile.base.entity.DeletedEntity;
 import com.huijiewei.agile.base.entity.TimestampEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "ag_user")
-public class User implements DeletedEntity, TimestampEntity {
+public class User extends TimestampEntity {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Id
@@ -40,10 +41,20 @@ public class User implements DeletedEntity, TimestampEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    public static enum CreatedFromEnums {
-        WEB,
-        APP,
-        WECHAT,
-        SYSTEM;
+    public enum CreatedFromEnums {
+        WEB("网站"),
+        APP("APP"),
+        WECHAT("微信"),
+        SYSTEM("系统");
+
+        private String description;
+
+        private CreatedFromEnums(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return this.description;
+        }
     }
 }
