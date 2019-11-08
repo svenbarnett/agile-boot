@@ -3,14 +3,13 @@ package com.huijiewei.agile.boot.admin.api.controller;
 import com.huijiewei.agile.base.admin.request.AdminGroupRequest;
 import com.huijiewei.agile.base.admin.response.AdminGroupResponse;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
+import com.huijiewei.agile.base.response.ListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Tag(name = "admin-group", description = "管理组")
@@ -29,7 +28,7 @@ public class AdminGroupController {
             value = "/admin-groups",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public List<AdminGroupResponse> actionList() {
+    public ListResponse<AdminGroupResponse> actionList() {
         return this.adminGroupService.getAll();
     }
 

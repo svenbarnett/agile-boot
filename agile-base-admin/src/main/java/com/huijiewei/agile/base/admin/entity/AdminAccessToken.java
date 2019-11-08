@@ -12,7 +12,7 @@ import java.time.Instant;
 public class AdminAccessToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id = 0;
 
     private Integer adminId;
     private String clientId;
@@ -21,4 +21,8 @@ public class AdminAccessToken {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    public Boolean isAdult() {
+        return this.getId() > 0;
+    }
 }

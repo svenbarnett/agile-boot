@@ -13,13 +13,13 @@ import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.security.AdminUser;
 import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import com.huijiewei.agile.base.exception.NotFoundException;
+import com.huijiewei.agile.base.response.ListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,31 +27,41 @@ import java.util.Optional;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final AdminAccessTokenRepository adminAccessTokenRepository;
+    private final AdminGroupService adminGroupService;
 
     @Autowired
-    public AdminService(AdminRepository adminRepository, AdminAccessTokenRepository adminAccessTokenRepository) {
+    public AdminService(AdminRepository adminRepository,
+                        AdminAccessTokenRepository adminAccessTokenRepository,
+                        AdminGroupService adminGroupService) {
         this.adminRepository = adminRepository;
         this.adminAccessTokenRepository = adminAccessTokenRepository;
+        this.adminGroupService = adminGroupService;
     }
 
     public AdminLoginResponse login(String clientId, String userAgent, @Valid AdminLoginRequest request) {
         Admin admin = request.getAdmin();
         String accessToken = FriendlyId.createFriendlyId();
 
-        AdminAccessToken adminAccessToken = this.adminAccessTokenRepository.findByClientId(clientId);
+        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientId(clientId);
 
-        if (adminAccessToken == null) {
-            adminAccessToken = new AdminAccessToken();
+        AdminAccessToken adminAccessToken = adminAccessTokenOptional.isEmpty()
+                ? new AdminAccessToken()
+                : adminAccessTokenOptional.get();
+
+        if (!adminAccessToken.isAdult()) {
             adminAccessToken.setAdminId(admin.getId());
             adminAccessToken.setClientId(clientId);
-            adminAccessToken.setUserAgent(userAgent);
         }
 
+        adminAccessToken.setUserAgent(userAgent);
         adminAccessToken.setAccessToken(accessToken);
+
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
         adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminLoginResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
+        adminLoginResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
 
         return adminLoginResponse;
@@ -59,6 +69,7 @@ public class AdminService {
 
     private AdminUser getCurrentAdminUser() {
         AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         return adminUserDetails.getAdminUser();
     }
 
@@ -67,12 +78,15 @@ public class AdminService {
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
         adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminAccountResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
+        adminAccountResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
 
         return adminAccountResponse;
     }
 
-    public List<AdminResponse> getAll() {
-        return AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll());
+    public ListResponse<AdminResponse> getAll() {
+        return new ListResponse<AdminResponse>()
+                .data(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll()));
     }
 
     public AdminResponse getById(Integer id) {

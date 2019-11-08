@@ -12,4 +12,5 @@ dependencies {
 
     implementation project(':agile-base')
     implementation project(':agile-base-admin')
+    implementation project(':agile-base-user')
 }

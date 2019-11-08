@@ -6,9 +6,11 @@ import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.security.AdminUser;
 import com.huijiewei.agile.base.admin.security.AdminUserDetails;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import java.util.Optional;
@@ -23,24 +25,26 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
     }
 
     @Override
-    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
+    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws AuthenticationException {
         String clientId = (String) token.getPrincipal();
         String accessToken = (String) token.getCredentials();
 
-        if (accessToken.isEmpty()) {
-            return null;
+        if (StringUtils.isEmpty(accessToken)) {
+            throw new BadCredentialsException("无效的 AccessToken");
         }
 
-        AdminAccessToken adminAccessToken = this.adminAccessTokenRepository.findByClientIdAndAccessToken(clientId, accessToken);
+        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientIdAndAccessToken(clientId, accessToken);
 
-        if (adminAccessToken == null) {
-            return null;
+        if (adminAccessTokenOptional.isEmpty()) {
+            throw new BadCredentialsException("无效的 AccessToken");
         }
+
+        AdminAccessToken adminAccessToken = adminAccessTokenOptional.get();
 
         Optional<Admin> adminOptional = this.adminRepository.findById(adminAccessToken.getAdminId());
 
         if (adminOptional.isEmpty()) {
-            return null;
+            throw new BadCredentialsException("无效的 AccessToken");
         }
 
         AdminUser adminUser = new AdminUser();

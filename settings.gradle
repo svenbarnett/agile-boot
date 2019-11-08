@@ -1,6 +1,6 @@
 rootProject.name = 'AgileBoot'
 include 'agile-base'
-include 'agile-base-admin'
 include 'agile-boot-admin-api'
-include 'agile-swagger-ui'
+include 'agile-base-admin'
+include 'agile-base-user'
 
