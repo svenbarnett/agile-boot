@@ -25,5 +25,5 @@ public class AdminBaseResponse {
     private String avatar;
 
     @Schema(description = "所属管理组")
-    private AdminGroup adminGroup;
+    private AdminGroupResponse adminGroup;
 }

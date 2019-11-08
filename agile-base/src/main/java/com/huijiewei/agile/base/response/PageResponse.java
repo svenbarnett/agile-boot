@@ -13,7 +13,7 @@ public class PageResponse<E> extends ListResponse<E> {
         this.setItems(page.getContent());
 
         Pagination pages = new Pagination();
-        pages.currentPage = page.getNumber();
+        pages.currentPage = page.getNumber() + 1;
         pages.totalCount = page.getTotalElements();
         pages.pageCount = page.getTotalPages();
         pages.perPage = page.getSize();
