@@ -1,14 +1,15 @@
 package com.huijiewei.agile.base.admin.service;
 
 import com.devskiller.friendly_id.FriendlyId;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.huijiewei.agile.base.admin.entity.Admin;
 import com.huijiewei.agile.base.admin.entity.AdminAccessToken;
+import com.huijiewei.agile.base.admin.mapper.AdminMapper;
 import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.security.AdminUser;
 import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import com.huijiewei.agile.base.exception.NotFoundException;
@@ -50,7 +51,7 @@ public class AdminService {
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-        adminLoginResponse.setCurrentUser(admin);
+        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
         adminLoginResponse.setAccessToken(accessToken);
 
         return adminLoginResponse;
@@ -65,22 +66,22 @@ public class AdminService {
         Admin admin = this.getCurrentAdminUser().getAdmin();
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
-        adminAccountResponse.setCurrentUser(admin);
+        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
 
         return adminAccountResponse;
     }
 
-    public List<Admin> getAll() {
-        return this.adminRepository.findAll();
+    public List<AdminResponse> getAll() {
+        return AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll());
     }
 
-    public Admin getById(Integer id) {
+    public AdminResponse getById(Integer id) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
         if (adminOptional.isEmpty()) {
             throw new NotFoundException("管理员不存在");
         }
 
-        return adminOptional.get();
+        return AdminMapper.INSTANCE.toAdminResponse(adminOptional.get());
     }
 }

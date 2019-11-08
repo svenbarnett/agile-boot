@@ -18,14 +18,14 @@ import javax.validation.constraints.NotBlank;
         passwordIncorrectMessage = "密码错误")
 public class AdminLoginRequest {
     @NotBlank(message = "帐号不能为空")
-    @Schema(description = "帐号", required = true)
+    @Schema(description = "帐号，手机或者邮箱", required = true)
     private String account;
 
     @NotBlank(message = "密码不能为空")
-    @Schema(description = "密码")
+    @Schema(description = "密码", required = true)
     private String password;
 
-    @Schema(hidden = true, required = true)
+    @Schema(hidden = true)
     private Admin admin = null;
 }
 
