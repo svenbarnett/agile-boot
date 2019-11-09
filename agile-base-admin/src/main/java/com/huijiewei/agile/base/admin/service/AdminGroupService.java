@@ -34,8 +34,10 @@ public class AdminGroupService {
     }
 
     public ListResponse<AdminGroupResponse> getAll() {
-        return new ListResponse<AdminGroupResponse>()
-                .data(AdminGroupMapper.INSTANCE.toAdminGroupResponses(this.adminGroupRepository.findAll()));
+        ListResponse<AdminGroupResponse> response = new ListResponse<>();
+        response.setItems(AdminGroupMapper.INSTANCE.toAdminGroupResponses(this.adminGroupRepository.findAll()));
+
+        return response;
     }
 
     public AdminGroupResponse getById(Integer id) {

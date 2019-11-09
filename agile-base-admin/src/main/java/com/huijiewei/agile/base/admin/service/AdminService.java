@@ -85,8 +85,10 @@ public class AdminService {
     }
 
     public ListResponse<AdminResponse> getAll() {
-        return new ListResponse<AdminResponse>()
-                .data(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll()));
+        ListResponse<AdminResponse> response = new ListResponse<>();
+        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll()));
+
+        return response;
     }
 
     public AdminResponse getById(Integer id) {

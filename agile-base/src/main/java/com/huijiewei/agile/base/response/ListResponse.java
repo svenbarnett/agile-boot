@@ -1,16 +1,18 @@
 package com.huijiewei.agile.base.response;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-@Data
 public class ListResponse<E> {
+    @Schema(description = "记录列表")
     private List<E> items;
 
-    public ListResponse<E> data(List<E> list) {
-        this.setItems(list);
+    public List<E> getItems() {
+        return this.items;
+    }
 
-        return this;
+    public void setItems(List<E> items) {
+        this.items = items;
     }
 }

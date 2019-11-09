@@ -82,7 +82,7 @@ public class OpenApiConfig {
 
     private Info defineInfo() {
         return new Info()
-                .title("Agile Admin API")
+                .title("Agile 后台管理 API")
                 .description("Agile 后台管理 API")
                 .contact(new Contact().name("Huijie Wei").email("huijiewei@outlook.com"))
                 .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html"))

@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -51,6 +53,16 @@ public class User extends TimestampEntity {
 
         private CreatedFromEnums(String description) {
             this.description = description;
+        }
+
+        public static Map<String, String> toMap() {
+            Map<String, String> map = new HashMap<>();
+
+            for (CreatedFromEnums createdFormEnum : CreatedFromEnums.values()) {
+                map.put(createdFormEnum.name(), createdFormEnum.getDescription());
+            }
+
+            return map;
         }
 
         public String getDescription() {

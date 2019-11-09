@@ -8,6 +8,7 @@ dependencies {
     implementation libs.hibernateCore
     implementation libs.hibernateValidator
     implementation libs.validationApi
+    implementation libs.springdocOpenApi
     implementation libs.mapstruct
 
     annotationProcessor libs.mapstructProcessor

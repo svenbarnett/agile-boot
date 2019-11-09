@@ -1,6 +1,7 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
 import com.huijiewei.agile.base.response.PageResponse;
+import com.huijiewei.agile.base.user.request.UserSearchRequest;
 import com.huijiewei.agile.base.user.response.UserResponse;
 import com.huijiewei.agile.base.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,11 +34,13 @@ public class UserController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public PageResponse<UserResponse> actionList(
-            @Parameter(name = "page", required = false) @RequestParam(required = false) Integer page,
-            @Parameter(name = "size", required = false) @RequestParam(required = false) Integer size,
+            @Parameter(name = "withSearchFields", required = false, description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
+            @Parameter(description = "搜索信息", required = false) UserSearchRequest userSearchRequest,
+            @Parameter(name = "page", required = false, description = "分页页码") @RequestParam(required = false) Integer page,
+            @Parameter(name = "size", required = false, description = "分页大小") @RequestParam(required = false) Integer size,
             @Parameter(hidden = true) Pageable pageable
     ) {
-        return this.userService.getAll(pageable);
+        return this.userService.getAll(withSearchFields, userSearchRequest, pageable);
     }
 
     @Operation(description = "用户详情")

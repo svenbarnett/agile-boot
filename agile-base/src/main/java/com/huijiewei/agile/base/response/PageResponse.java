@@ -1,15 +1,18 @@
 package com.huijiewei.agile.base.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Page;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class PageResponse<E> extends ListResponse<E> {
-    private Pagination pages;
+    @Schema(description = "分页信息")
+    private Pagination pagination;
 
-    public PageResponse<E> data(Page<E> page) {
+    public Pagination getPages() {
+        return this.pagination;
+    }
+
+    public void setPage(Page<E> page) {
         this.setItems(page.getContent());
 
         Pagination pages = new Pagination();
@@ -18,13 +21,11 @@ public class PageResponse<E> extends ListResponse<E> {
         pages.pageCount = page.getTotalPages();
         pages.perPage = page.getSize();
 
-        this.setPages(pages);
-
-        return this;
+        this.pagination = pages;
     }
 
     @Data
-    public static class Pagination {
+    private static class Pagination {
         private Long totalCount;
         private Integer currentPage;
         private Integer pageCount;

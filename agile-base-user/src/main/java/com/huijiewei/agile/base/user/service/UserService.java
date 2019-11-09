@@ -2,9 +2,11 @@ package com.huijiewei.agile.base.user.service;
 
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.PageResponse;
+import com.huijiewei.agile.base.response.SearchPageResponse;
 import com.huijiewei.agile.base.user.entity.User;
 import com.huijiewei.agile.base.user.mapper.UserMapper;
 import com.huijiewei.agile.base.user.repository.UserRepository;
+import com.huijiewei.agile.base.user.request.UserSearchRequest;
 import com.huijiewei.agile.base.user.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +24,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public PageResponse<UserResponse> getAll(Pageable pageable) {
+    public PageResponse<UserResponse> getAll(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
         Page<UserResponse> users = UserMapper.INSTANCE.toPageResponse(this.userRepository
                 .findAllByOrderByIdDesc(pageable));
 
-        return new PageResponse<UserResponse>()
-                .data(users);
+        SearchPageResponse<UserResponse> response = new SearchPageResponse<>();
+        response.setPage(users);
+
+        if (withSearchFields != null && withSearchFields) {
+            response.setSearchFields(searchRequest.getSearchFields());
+        }
+
+        return response;
     }
 
     public UserResponse getById(Integer id) {
