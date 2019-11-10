@@ -15,6 +15,11 @@ import java.util.Map;
 @Entity
 @Table(name = "ag_user")
 public class User extends TimestampEntity {
+    public static final String CREATED_FROM_WEB = "WEB";
+    public static final String CREATED_FROM_APP = "APP";
+    public static final String CREATED_FROM_WECHAT = "WECHAT";
+    public static final String CREATED_FROM_SYSTEM = "SYSTEM";
+
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Id
@@ -35,38 +40,21 @@ public class User extends TimestampEntity {
 
     private String createdIp;
 
-    @Enumerated(value = EnumType.STRING)
-    private CreatedFromEnums createdFrom;
+    private String createdFrom;
+
+    public static Map<String, String> createFromMap() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put(User.CREATED_FROM_WEB, "网站");
+        map.put(User.CREATED_FROM_APP, "应用");
+        map.put(User.CREATED_FROM_WECHAT, "微信");
+        map.put(User.CREATED_FROM_SYSTEM, "系统");
+
+        return map;
+    }
 
     @PrePersist
     public void passwordEncode() {
         this.password = passwordEncoder.encode(this.password);
-    }
-
-    public enum CreatedFromEnums {
-        WEB("网站"),
-        APP("APP"),
-        WECHAT("微信"),
-        SYSTEM("系统");
-
-        private String description;
-
-        private CreatedFromEnums(String description) {
-            this.description = description;
-        }
-
-        public static Map<String, String> toMap() {
-            Map<String, String> map = new HashMap<>();
-
-            for (CreatedFromEnums createdFormEnum : CreatedFromEnums.values()) {
-                map.put(createdFormEnum.name(), createdFormEnum.getDescription());
-            }
-
-            return map;
-        }
-
-        public String getDescription() {
-            return this.description;
-        }
     }
 }

@@ -10,12 +10,6 @@ import java.util.List;
 @Data
 @MappedSuperclass
 public abstract class BaseSearchRequest {
-    @Schema(description = "搜索字段")
-    private String field;
-
-    @Schema(description = "搜索关键字")
-    private String keyword;
-
     @Schema(hidden = true)
     private List<BaseSearchField> searchFields;
 

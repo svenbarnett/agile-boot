@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 
 @Tag(name = "user", description = "用户接口")
@@ -34,10 +36,15 @@ public class UserController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public PageResponse<UserResponse> actionList(
-            @Parameter(name = "withSearchFields", required = false, description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
-            @Parameter(description = "搜索信息", required = false) UserSearchRequest userSearchRequest,
-            @Parameter(name = "page", required = false, description = "分页页码") @RequestParam(required = false) Integer page,
-            @Parameter(name = "size", required = false, description = "分页大小") @RequestParam(required = false) Integer size,
+            @Parameter(description = "名称") @RequestParam(required = false) String name,
+            @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
+            @Parameter(description = "邮箱") @RequestParam(required = false) String email,
+            @Parameter(description = "创建来源") @RequestParam(required = false) List<String> createdFrom,
+            @Parameter(description = "创建日期区间") @RequestParam(required = false) List<String> createdRange,
+            @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
+            @Parameter(description = "分页页码") @RequestParam(required = false) Integer page,
+            @Parameter(description = "分页大小") @RequestParam(required = false) Integer size,
+            @Parameter(hidden = true) UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
     ) {
         return this.userService.getAll(withSearchFields, userSearchRequest, pageable);

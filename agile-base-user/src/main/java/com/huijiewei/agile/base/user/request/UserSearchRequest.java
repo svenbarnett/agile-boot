@@ -1,25 +1,33 @@
 package com.huijiewei.agile.base.user.request;
 
+import com.github.wenhao.jpa.PredicateBuilder;
+import com.github.wenhao.jpa.Specifications;
 import com.huijiewei.agile.base.request.*;
 import com.huijiewei.agile.base.user.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserSearchRequest extends BaseSearchRequest {
-    private String createdFrom;
-    private String createdRange;
+    private String name;
+    private String phone;
+    private String email;
+    private String[] createdFrom;
+    private String[] createdRange;
 
     public UserSearchRequest() {
-        this.addSearchField(new KeywordSearchField().field("phone").label("手机号码"))
-                .addSearchField(new KeywordSearchField().field("email").label("邮箱"))
+        this
                 .addSearchField(new KeywordSearchField().field("name").label("名称"))
+                .addSearchField(new KeywordSearchField().field("phone").label("手机号码"))
+                .addSearchField(new KeywordSearchField().field("email").label("邮箱"))
                 .addSearchField(new SelectSearchField()
                         .field("createdFrom")
                         .label("注册来源")
                         .multiple(true)
-                        .options(User.CreatedFromEnums.toMap())
+                        .options(User.createFromMap())
                 )
                 .addSearchField(new DateRangeSearchField()
                         .field("createdRange")
@@ -27,5 +35,24 @@ public class UserSearchRequest extends BaseSearchRequest {
                         .labelEnd("注册结束日期")
                 )
                 .addSearchField(new BrSearchField());
+    }
+
+    public Specification<User> getSpecification() {
+        PredicateBuilder<User> predicateBuilder = Specifications.<User>and()
+                .like(StringUtils.isNotEmpty(this.name), "name", '%' + this.name + '%')
+                .like(StringUtils.isNotEmpty(this.phone), "phone", '%' + this.phone + '%')
+                .like(StringUtils.isNotEmpty(this.email), "email", '%' + this.email + '%');
+
+        if (this.createdFrom != null && this.createdFrom.length > 0) {
+            PredicateBuilder createdFromPredicateBuilder = Specifications.or();
+
+            for (String createdFrom : this.createdFrom) {
+                createdFromPredicateBuilder.eq(StringUtils.isNotEmpty(createdFrom), "createdFrom", createdFrom);
+            }
+
+            predicateBuilder.predicate(createdFromPredicateBuilder.build());
+        }
+
+        return predicateBuilder.build();
     }
 }

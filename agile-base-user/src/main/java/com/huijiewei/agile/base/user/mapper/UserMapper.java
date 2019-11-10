@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -20,7 +21,13 @@ public interface UserMapper {
         return page.map(this::toUserResponse);
     }
 
-    default UserResponse.CreatedFrom createdFromEnumsToCreatedFrom(User.CreatedFromEnums type) {
-        return new UserResponse.CreatedFrom(type.name(), type.getDescription());
+    default UserResponse.CreatedFrom createdFromEnumsToCreatedFrom(String createdFrom) {
+        Map<String, String> createdFromMap = User.createFromMap();
+
+        if (createdFromMap.containsKey(createdFrom)) {
+            return new UserResponse.CreatedFrom(createdFrom, (String) createdFromMap.get(createdFrom));
+        }
+
+        return new UserResponse.CreatedFrom(createdFrom, createdFrom);
     }
 }

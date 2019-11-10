@@ -16,6 +16,7 @@ dependencies {
     implementation libs.validationApi
     implementation libs.springdocOpenApi
     implementation libs.friendlyId
+    implementation libs.jpaSpec
 
     annotationProcessor libs.mapstructProcessor
 
