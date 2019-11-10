@@ -11,6 +11,5 @@ import java.time.LocalDateTime;
 @Data
 public class AdminResponse extends AdminBaseResponse {
     @Schema(description = "创建时间")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 }

@@ -3,11 +3,14 @@ package com.huijiewei.agile.base.user.request;
 import com.github.wenhao.jpa.PredicateBuilder;
 import com.github.wenhao.jpa.Specifications;
 import com.huijiewei.agile.base.request.*;
+import com.huijiewei.agile.base.until.DateTimeUtils;
 import com.huijiewei.agile.base.user.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -38,6 +41,7 @@ public class UserSearchRequest extends BaseSearchRequest {
     }
 
     public Specification<User> getSpecification() {
+        // READ https://github.com/wenhao/jpa-spec/blob/master/README_CN.md
         PredicateBuilder<User> predicateBuilder = Specifications.<User>and()
                 .like(StringUtils.isNotEmpty(this.name), "name", '%' + this.name + '%')
                 .like(StringUtils.isNotEmpty(this.phone), "phone", '%' + this.phone + '%')
@@ -51,6 +55,12 @@ public class UserSearchRequest extends BaseSearchRequest {
             }
 
             predicateBuilder.predicate(createdFromPredicateBuilder.build());
+        }
+
+        LocalDateTime[] createdRanges = DateTimeUtils.parseSearchDateRange(this.createdRange);
+
+        if (createdRanges != null) {
+            predicateBuilder.between("createdAt", createdRanges[0], createdRanges[1]);
         }
 
         return predicateBuilder.build();

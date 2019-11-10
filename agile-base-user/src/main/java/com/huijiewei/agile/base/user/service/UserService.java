@@ -12,6 +12,7 @@ import com.huijiewei.agile.base.user.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -27,9 +28,11 @@ public class UserService {
     }
 
     public PageResponse<UserResponse> getAll(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
+        Specification<User> userSpecification = searchRequest.getSpecification();
+
         Page<UserResponse> users = UserMapper.INSTANCE.toPageResponse(
                 this.userRepository.findAll(
-                        searchRequest.getSpecification(),
+                        userSpecification,
                         PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build())
                 )
         );

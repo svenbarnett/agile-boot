@@ -25,7 +25,6 @@ public class UserResponse {
     private String avatar;
 
     @Schema(description = "创建时间")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
     @Schema(description = "创建 IP")
