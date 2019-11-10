@@ -15,6 +15,7 @@ public class AdminGroupAcl {
         all.add(new AdminGroupAclItem().name("系统管理")
                 .addChild(new AdminGroupAclItem().name("管理员管理")
                         .addChild(new AdminGroupAclItem().name("管理员列表").actionId("admin/index"))
+                        .addChild(new AdminGroupAclItem().name("管理员查看").actionId("admin/view"))
                         .addChild(new AdminGroupAclItem().name("管理员新建").actionId("admin/create"))
                         .addChild(new AdminGroupAclItem().name("管理员编辑").actionId("admin/edit"))
                         .addChild(new AdminGroupAclItem().name("管理员删除").actionId("admin/delete"))

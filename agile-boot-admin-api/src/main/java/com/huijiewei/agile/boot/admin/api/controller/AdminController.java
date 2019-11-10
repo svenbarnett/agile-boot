@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,7 @@ public class AdminController {
     )
     @Operation(description = "管理员列表")
     @ApiResponse(responseCode = "200", description = "管理员列表")
+    @PreAuthorize("hasPermission(#admin, 'admin/index')")
     public ListResponse<AdminResponse> actionList() {
         return this.adminService.getAll();
     }
@@ -39,6 +41,7 @@ public class AdminController {
     @Operation(description = "管理员详情")
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
+    @PreAuthorize("hasPermission(#admin, {'admin/view', 'admin/edit'})")
     public AdminResponse actionDetail(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }
