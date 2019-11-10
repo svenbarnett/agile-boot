@@ -15,6 +15,6 @@ public abstract class BaseEntity {
     private Integer id;
 
     public Boolean isAdult() {
-        return this.getId() > 0;
+        return this.getId() != null && this.getId() > 0;
     }
 }
