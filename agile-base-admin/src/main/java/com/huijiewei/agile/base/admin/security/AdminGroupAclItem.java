@@ -16,6 +16,9 @@ public class AdminGroupAclItem {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AdminGroupAclItem> children;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> combines;
+
     public AdminGroupAclItem name(String name) {
         this.setName(name);
 
@@ -34,6 +37,16 @@ public class AdminGroupAclItem {
         }
 
         this.children.add(adminGroupAclItem);
+
+        return this;
+    }
+
+    AdminGroupAclItem addCombine(String combine) {
+        if (this.combines == null) {
+            this.combines = new ArrayList<>();
+        }
+
+        this.combines.add(combine);
 
         return this;
     }
