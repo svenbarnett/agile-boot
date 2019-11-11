@@ -9,6 +9,7 @@ dependencies {
 
     implementation libs.zalandoProblemWeb
     implementation libs.springdocOpenApiUi
+    implementation libs.javaFaker
 
     implementation project(':agile-base')
     implementation project(':agile-base-admin')

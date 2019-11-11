@@ -3,6 +3,8 @@ package com.huijiewei.agile.base.admin.entity;
 import com.huijiewei.agile.base.entity.TimestampEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,9 +14,9 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "ag_admin")
+@DynamicInsert
+@DynamicUpdate
 public class Admin extends TimestampEntity {
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @Column(unique = true)
     private String phone;
 
@@ -30,9 +32,4 @@ public class Admin extends TimestampEntity {
     @ManyToOne
     @JoinColumn(name = "adminGroupId")
     private AdminGroup adminGroup;
-
-    @PrePersist
-    public void passwordEncode() {
-        this.password = passwordEncoder.encode(this.password);
-    }
 }

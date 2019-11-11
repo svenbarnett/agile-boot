@@ -3,6 +3,8 @@ package com.huijiewei.agile.base.user.entity;
 import com.huijiewei.agile.base.entity.TimestampEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -14,17 +16,13 @@ import java.util.Map;
 @Data
 @Entity
 @Table(name = "ag_user")
+@DynamicInsert
+@DynamicUpdate
 public class User extends TimestampEntity {
     public static final String CREATED_FROM_WEB = "WEB";
     public static final String CREATED_FROM_APP = "APP";
     public static final String CREATED_FROM_WECHAT = "WECHAT";
     public static final String CREATED_FROM_SYSTEM = "SYSTEM";
-
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
     @Column(unique = true)
     private String phone;
@@ -51,10 +49,5 @@ public class User extends TimestampEntity {
         map.put(User.CREATED_FROM_SYSTEM, "系统");
 
         return map;
-    }
-
-    @PrePersist
-    public void passwordEncode() {
-        this.password = passwordEncoder.encode(this.password);
     }
 }

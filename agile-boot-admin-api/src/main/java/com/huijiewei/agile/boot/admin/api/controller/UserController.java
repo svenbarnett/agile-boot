@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-
 @Tag(name = "user", description = "用户接口")
 public class UserController {
     private final UserService userService;
@@ -31,7 +30,6 @@ public class UserController {
 
     @GetMapping(
             value = "/users",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(description = "用户列表")
@@ -53,7 +51,6 @@ public class UserController {
 
     @GetMapping(
             value = "/users/{id}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(description = "用户详情")

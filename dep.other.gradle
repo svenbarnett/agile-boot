@@ -12,6 +12,7 @@ ext.mapstructVersion = '1.3.1.Final'
 ext.zalandoProblemWebVersion = '0.25.2'
 ext.friendlyIdVersion = '1.1.0'
 ext.jpaSpecVersion = '3.2.5'
+ext.javaFakerVersion = '1.0.1'
 
 ext.libs = [
         lombok            : [
@@ -64,5 +65,8 @@ ext.libs = [
         ],
         jpaSpec : [
                 "com.github.wenhao:jpa-spec:${jpaSpecVersion}"
+        ],
+        javaFaker : [
+                "com.github.javafaker:javafaker:${javaFakerVersion}"
         ]
 ]

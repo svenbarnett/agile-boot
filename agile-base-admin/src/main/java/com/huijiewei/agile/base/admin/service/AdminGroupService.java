@@ -57,7 +57,7 @@ public class AdminGroupService {
         return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroupOptional.get());
     }
 
-    @Cacheable(value = "admin-group-permissions")
+    @Cacheable(value = "admin-group-permissions", key = "#id")
     public List<String> getPermissionsById(Integer id) {
         List<String> permissions = new ArrayList<>();
 
@@ -128,7 +128,7 @@ public class AdminGroupService {
         return result;
     }
 
-    @Cacheable(value = "admin-group-menus")
+    @Cacheable(value = "admin-group-menus", key = "#id")
     public List<AdminGroupMenuItem> getMenusById(Integer id) {
         List<AdminGroupMenuItem> all = AdminGroupMenu.getAll();
         List<String> adminGroupPermissions = this.getPermissionsById(id);
@@ -151,24 +151,53 @@ public class AdminGroupService {
 
         this.adminGroupRepository.save(adminGroup);
 
-        if (request.getPermissions() != null && !request.getPermissions().isEmpty()) {
-            List<AdminGroupPermission> adminGroupPermissions = new ArrayList<>();
-
-            for (String actionId : request.getPermissions()) {
-                AdminGroupPermission permission = new AdminGroupPermission();
-                permission.setActionId(actionId);
-                permission.setAdminGroupId(adminGroup.getId());
-
-                adminGroupPermissions.add(permission);
-
-                this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
-            }
-        }
+        this.updateAdminGroupPermissions(adminGroup.getId(), request.getPermissions());
 
         return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
     }
 
-    @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"})
+    private void updateAdminGroupPermissions(Integer adminGroupId, List<String> permissions) {
+        if (permissions == null) {
+            return;
+        }
+
+        if (permissions.isEmpty()) {
+            return;
+        }
+
+        List<AdminGroupPermission> adminGroupPermissions = new ArrayList<>();
+
+        for (String actionId : permissions) {
+            AdminGroupPermission permission = new AdminGroupPermission();
+            permission.setActionId(actionId);
+            permission.setAdminGroupId(adminGroupId);
+
+            adminGroupPermissions.add(permission);
+
+            this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
+        }
+    }
+
+    @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
+    public AdminGroupResponse edit(Integer id, AdminGroupRequest request) {
+        Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
+
+        if (adminGroupOptional.isEmpty()) {
+            throw new NotFoundException("管理组不存在");
+        }
+
+        AdminGroup adminGroup = adminGroupOptional.get();
+        adminGroup.setName(request.getName());
+
+        this.adminGroupRepository.save(adminGroup);
+
+        this.adminGroupPermissionRepository.deleteAllByAdminGroupId(id);
+        this.updateAdminGroupPermissions(adminGroup.getId(), request.getPermissions());
+
+        return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
+    }
+
+    @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
     public void delete(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 

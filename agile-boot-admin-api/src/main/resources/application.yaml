@@ -20,6 +20,12 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+          generate_statistics: true
   datasource:
     hikari:
       max-lifetime: 200
