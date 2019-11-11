@@ -23,6 +23,7 @@ public class AdminGroupAcl {
                 .addChild(new AdminGroupAclItem().name("管理组管理")
                         .addChild(new AdminGroupAclItem().name("管理组列表").actionId("admin-group/index"))
                         .addChild(new AdminGroupAclItem().name("管理组新建").actionId("admin-group/create"))
+                        .addChild(new AdminGroupAclItem().name("管理组查看").actionId("admin-group/view"))
                         .addChild(new AdminGroupAclItem().name("管理组编辑").actionId("admin-group/edit"))
                         .addChild(new AdminGroupAclItem().name("管理组删除").actionId("admin-group/delete"))
                 )
@@ -30,10 +31,11 @@ public class AdminGroupAcl {
 
         all.add(new AdminGroupAclItem().name("用户管理")
                 .addChild(new AdminGroupAclItem().name("用户列表").actionId("user/index"))
-                .addChild(new AdminGroupAclItem().name("用户导入").actionId("user/import"))
                 .addChild(new AdminGroupAclItem().name("用户新建").actionId("user/create"))
+                .addChild(new AdminGroupAclItem().name("用户查看").actionId("user/view"))
                 .addChild(new AdminGroupAclItem().name("用户编辑").actionId("user/edit"))
                 .addChild(new AdminGroupAclItem().name("用户删除").actionId("user/delete"))
+                .addChild(new AdminGroupAclItem().name("用户导入").actionId("user/import"))
         );
 
         return all;
