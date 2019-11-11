@@ -29,12 +29,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(description = "用户列表")
-    @ApiResponse(responseCode = "200", description = "用户列表")
     @GetMapping(
             value = "/users",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+    @Operation(description = "用户列表")
+    @ApiResponse(responseCode = "200", description = "用户列表")
     public PageResponse<UserResponse> actionList(
             @Parameter(description = "名称") @RequestParam(required = false) String name,
             @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
@@ -50,13 +51,14 @@ public class UserController {
         return this.userService.getAll(withSearchFields, userSearchRequest, pageable);
     }
 
+    @GetMapping(
+            value = "/users/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     @Operation(description = "用户详情")
     @ApiResponse(responseCode = "200", description = "用户")
     @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
-    @GetMapping(
-            value = "/users/{id}",
-            produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
     public UserResponse actionDetail(@PathVariable("id") Integer id) {
         return this.userService.getById(id);
     }

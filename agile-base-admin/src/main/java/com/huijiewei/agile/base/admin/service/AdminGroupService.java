@@ -5,14 +5,17 @@ import com.huijiewei.agile.base.admin.entity.AdminGroupPermission;
 import com.huijiewei.agile.base.admin.mapper.AdminGroupMapper;
 import com.huijiewei.agile.base.admin.repository.AdminGroupPermissionRepository;
 import com.huijiewei.agile.base.admin.repository.AdminGroupRepository;
+import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.request.AdminGroupRequest;
 import com.huijiewei.agile.base.admin.response.AdminGroupResponse;
 import com.huijiewei.agile.base.admin.security.AdminGroupMenu;
 import com.huijiewei.agile.base.admin.security.AdminGroupMenuItem;
+import com.huijiewei.agile.base.exception.ConflictException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
 import com.huijiewei.agile.base.until.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -26,11 +29,13 @@ import java.util.Optional;
 @Service
 @Validated
 public class AdminGroupService {
+    private final AdminRepository adminRepository;
     private final AdminGroupRepository adminGroupRepository;
     private final AdminGroupPermissionRepository adminGroupPermissionRepository;
 
     @Autowired
-    public AdminGroupService(AdminGroupRepository adminGroupRepository, AdminGroupPermissionRepository adminGroupPermissionRepository) {
+    public AdminGroupService(AdminRepository adminRepository, AdminGroupRepository adminGroupRepository, AdminGroupPermissionRepository adminGroupPermissionRepository) {
+        this.adminRepository = adminRepository;
         this.adminGroupRepository = adminGroupRepository;
         this.adminGroupPermissionRepository = adminGroupPermissionRepository;
     }
@@ -146,6 +151,36 @@ public class AdminGroupService {
 
         this.adminGroupRepository.save(adminGroup);
 
+        if (request.getPermissions() != null && !request.getPermissions().isEmpty()) {
+            List<AdminGroupPermission> adminGroupPermissions = new ArrayList<>();
+
+            for (String actionId : request.getPermissions()) {
+                AdminGroupPermission permission = new AdminGroupPermission();
+                permission.setActionId(actionId);
+                permission.setAdminGroupId(adminGroup.getId());
+
+                adminGroupPermissions.add(permission);
+
+                this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
+            }
+        }
+
         return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
+    }
+
+    @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"})
+    public void delete(Integer id) {
+        Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
+
+        if (adminGroupOptional.isEmpty()) {
+            throw new NotFoundException("管理组不存在");
+        }
+
+        if (this.adminRepository.existsByAdminGroupId(id)) {
+            throw new ConflictException("管理组内拥有管理员，无法删除");
+        }
+
+        this.adminGroupRepository.delete(adminGroupOptional.get());
+        this.adminGroupPermissionRepository.deleteAllByAdminGroupId(id);
     }
 }

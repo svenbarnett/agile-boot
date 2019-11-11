@@ -22,14 +22,14 @@ public class AuthController {
         this.adminService = adminService;
     }
 
-    @Operation(description = "管理员登录")
-    @ApiResponse(responseCode = "200", description = "登录成功")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     @PostMapping(
             value = "/auth/login",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+    @Operation(description = "管理员登录")
+    @ApiResponse(responseCode = "200", description = "登录成功")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     public AdminLoginResponse actionLogin(
             @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
             @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,
