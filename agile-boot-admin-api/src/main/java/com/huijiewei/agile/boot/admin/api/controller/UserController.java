@@ -37,7 +37,7 @@ public class UserController {
     public PageResponse<UserResponse> actionList(
             @Parameter(description = "名称") @RequestParam(required = false) String name,
             @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
-            @Parameter(description = "邮箱") @RequestParam(required = false) String email,
+            @Parameter(description = "电子邮箱") @RequestParam(required = false) String email,
             @Parameter(description = "创建来源") @RequestParam(required = false) List<String> createdFrom,
             @Parameter(description = "创建日期区间") @RequestParam(required = false) List<String> createdRange,
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,

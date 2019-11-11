@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -40,14 +40,25 @@ public class User extends TimestampEntity {
 
     private String createdFrom;
 
-    public static Map<String, String> createFromMap() {
-        Map<String, String> map = new HashMap<>();
+    public static List<CreatedFrom> createFromOptions() {
+        List<CreatedFrom> createdFroms = new ArrayList<>();
 
-        map.put(User.CREATED_FROM_WEB, "网站");
-        map.put(User.CREATED_FROM_APP, "应用");
-        map.put(User.CREATED_FROM_WECHAT, "微信");
-        map.put(User.CREATED_FROM_SYSTEM, "系统");
+        createdFroms.add(new CreatedFrom(User.CREATED_FROM_WEB, "网站"));
+        createdFroms.add(new CreatedFrom(User.CREATED_FROM_APP, "应用"));
+        createdFroms.add(new CreatedFrom(User.CREATED_FROM_WECHAT, "微信"));
+        createdFroms.add(new CreatedFrom(User.CREATED_FROM_SYSTEM, "系统"));
 
-        return map;
+        return createdFroms;
+    }
+
+    @Data
+    public static class CreatedFrom {
+        private String value;
+        private String label;
+
+        public CreatedFrom(String value, String label) {
+            this.value = value;
+            this.label = label;
+        }
     }
 }

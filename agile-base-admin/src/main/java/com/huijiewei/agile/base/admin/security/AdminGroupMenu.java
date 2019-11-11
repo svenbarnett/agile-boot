@@ -9,7 +9,7 @@ public class AdminGroupMenu {
 
         all.add(new AdminGroupMenuItem().label("管理首页").icon("home").open(true).url("site/index"));
 
-        all.add(new AdminGroupMenuItem().label("用户管理").icon("setting")
+        all.add(new AdminGroupMenuItem().label("用户管理").icon("user")
                 .addChild(new AdminGroupMenuItem().label("用户列表").url("user/index"))
                 .addChild(new AdminGroupMenuItem().label("用户新建")
                         .addChild(new AdminGroupMenuItem().label("手动创建").url("user/create"))

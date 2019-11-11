@@ -7,6 +7,7 @@ import com.huijiewei.agile.base.admin.mapper.AdminMapper;
 import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
@@ -16,6 +17,7 @@ import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
 @Service
 @Validated
 public class AdminService {
+    private final static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private final AdminRepository adminRepository;
     private final AdminAccessTokenRepository adminAccessTokenRepository;
     private final AdminGroupService adminGroupService;
@@ -99,5 +103,16 @@ public class AdminService {
         }
 
         return AdminMapper.INSTANCE.toAdminResponse(adminOptional.get());
+    }
+
+    @Validated(AdminRequest.Create.class)
+    public AdminResponse create(@Valid AdminRequest request) {
+        Admin admin = AdminMapper.INSTANCE.toAdmin(request);
+
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        this.adminRepository.save(admin);
+
+        return AdminMapper.INSTANCE.toAdminResponse(admin);
     }
 }

@@ -16,7 +16,6 @@ public abstract class TimestampEntity extends BaseEntity {
     static final String NOT_DELETED = "deletedAt IS NULL";
 
     @Column(updatable = false)
-    @CreationTimestamp
     LocalDateTime createdAt;
 
     @UpdateTimestamp

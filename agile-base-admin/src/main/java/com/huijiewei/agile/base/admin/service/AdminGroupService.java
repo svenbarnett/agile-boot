@@ -47,6 +47,12 @@ public class AdminGroupService {
         return response;
     }
 
+    public List<AdminGroupResponse> getOptions() {
+        List<AdminGroup> adminGroups = this.adminGroupRepository.findAll();
+
+        return AdminGroupMapper.INSTANCE.toAdminGroupResponses(adminGroups);
+    }
+
     public AdminGroupResponse getById(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 

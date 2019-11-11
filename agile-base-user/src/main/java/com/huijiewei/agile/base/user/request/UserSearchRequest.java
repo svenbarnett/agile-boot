@@ -23,14 +23,14 @@ public class UserSearchRequest extends BaseSearchRequest {
 
     public UserSearchRequest() {
         this
-                .addSearchField(new KeywordSearchField().field("name").label("名称"))
                 .addSearchField(new KeywordSearchField().field("phone").label("手机号码"))
-                .addSearchField(new KeywordSearchField().field("email").label("邮箱"))
+                .addSearchField(new KeywordSearchField().field("email").label("电子邮箱"))
+                .addSearchField(new KeywordSearchField().field("name").label("名称"))
                 .addSearchField(new SelectSearchField()
                         .field("createdFrom")
                         .label("注册来源")
                         .multiple(true)
-                        .options(User.createFromMap())
+                        .options(User.createFromOptions())
                 )
                 .addSearchField(new DateRangeSearchField()
                         .field("createdRange")

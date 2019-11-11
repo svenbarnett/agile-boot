@@ -3,14 +3,13 @@ package com.huijiewei.agile.base.request;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SelectSearchField extends BaseSearchField<SelectSearchField> {
     private Boolean multiple;
-    private Map<String, String> options;
+    private List options;
 
     public SelectSearchField() {
         this.setType("select");
@@ -22,18 +21,8 @@ public class SelectSearchField extends BaseSearchField<SelectSearchField> {
         return this;
     }
 
-    public SelectSearchField options(Map<String, String> options) {
+    public SelectSearchField options(List options) {
         this.options = options;
-
-        return this;
-    }
-
-    public SelectSearchField addOption(String key, String value) {
-        if (this.options == null) {
-            this.options = new HashMap<>();
-        }
-
-        this.options.put(key, value);
 
         return this;
     }

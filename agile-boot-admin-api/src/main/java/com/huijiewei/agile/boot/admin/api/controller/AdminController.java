@@ -1,5 +1,6 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
+import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import com.huijiewei.agile.base.response.ListResponse;
@@ -42,5 +43,18 @@ public class AdminController {
     @PreAuthorize("hasPermission(#ADMIN, {'admin/view', 'admin/edit'})")
     public AdminResponse actionDetail(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
+    }
+
+    @PostMapping(
+            value = "/admins",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "管理员新建")
+    @ApiResponse(responseCode = "201", description = "管理员")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @PreAuthorize("hasPermission(#ADMIN, 'admin/create')")
+    public AdminResponse actionCreate(@RequestBody AdminRequest request) {
+        return this.adminService.create(request);
     }
 }

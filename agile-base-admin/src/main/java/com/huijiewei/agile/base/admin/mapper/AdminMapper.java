@@ -1,6 +1,7 @@
 package com.huijiewei.agile.base.admin.mapper;
 
 import com.huijiewei.agile.base.admin.entity.Admin;
+import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminBaseResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import org.mapstruct.Mapper;
@@ -17,4 +18,6 @@ public interface AdminMapper {
     AdminResponse toAdminResponse(Admin admin);
 
     List<AdminResponse> toAdminResponses(List<Admin> admins);
+
+    Admin toAdmin(AdminRequest adminRequest);
 }
