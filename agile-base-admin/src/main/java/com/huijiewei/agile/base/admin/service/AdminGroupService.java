@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Validated
@@ -47,10 +44,16 @@ public class AdminGroupService {
         return response;
     }
 
-    public List<AdminGroupResponse> getOptions() {
+    public Map<Integer, String> getMap() {
         List<AdminGroup> adminGroups = this.adminGroupRepository.findAll();
 
-        return AdminGroupMapper.INSTANCE.toAdminGroupResponses(adminGroups);
+        Map<Integer, String> adminGroupMap = new HashMap<>();
+
+        for (AdminGroup adminGroup : adminGroups) {
+            adminGroupMap.put(adminGroup.getId(), adminGroup.getName());
+        }
+
+        return adminGroupMap;
     }
 
     public AdminGroupResponse getById(Integer id) {

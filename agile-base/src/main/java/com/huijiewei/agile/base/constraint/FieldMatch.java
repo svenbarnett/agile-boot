@@ -15,9 +15,9 @@ public @interface FieldMatch {
 
     Class<? extends Payload>[] payload() default {};
 
-    String fieldName();
+    String field();
 
-    String fieldMatchName();
+    String fieldMatch();
 
     @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)

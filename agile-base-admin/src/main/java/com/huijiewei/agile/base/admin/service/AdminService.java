@@ -13,6 +13,7 @@ import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.security.AdminUser;
 import com.huijiewei.agile.base.admin.security.AdminUserDetails;
+import com.huijiewei.agile.base.exception.BadRequestException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,14 @@ public class AdminService {
 
     @Validated(AdminRequest.Create.class)
     public AdminResponse create(@Valid AdminRequest request) {
+        if (this.adminRepository.existsByPhone(request.getPhone())) {
+            throw new BadRequestException("手机号码已存在");
+        }
+
+        if (this.adminRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("电子邮箱已存在");
+        }
+
         Admin admin = AdminMapper.INSTANCE.toAdmin(request);
 
         admin.setPassword(passwordEncoder.encode(request.getPassword()));

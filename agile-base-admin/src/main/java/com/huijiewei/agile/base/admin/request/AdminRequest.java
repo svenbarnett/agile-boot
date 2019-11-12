@@ -1,6 +1,7 @@
 package com.huijiewei.agile.base.admin.request;
 
 import com.huijiewei.agile.base.admin.entity.AdminGroup;
+import com.huijiewei.agile.base.constraint.FieldMatch;
 import com.huijiewei.agile.base.constraint.Phone;
 import lombok.Data;
 
@@ -9,7 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class AdminRequest {
+@FieldMatch(field = "password", fieldMatch = "passwordConfirm", message = "密码与密码确认必须相同")
+public class AdminRequest extends BaseRequest {
     @NotBlank(message = "手机号码不能为空")
     @Phone(message = "无效的手机号码")
     private String phone;

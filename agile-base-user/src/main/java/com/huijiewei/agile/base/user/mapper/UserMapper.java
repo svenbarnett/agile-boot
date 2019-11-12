@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -20,15 +21,13 @@ public interface UserMapper {
         return page.map(this::toUserResponse);
     }
 
-    default User.CreatedFrom createdFromStringToCreatedFrom(String createdFrom) {
-        List<User.CreatedFrom> createdFroms = User.createFromOptions();
+    default UserResponse.CreatedFrom createdFromStringToCreatedFrom(String createdFrom) {
+        Map<String, String> createdFromMap = User.createFromMap();
 
-        for (User.CreatedFrom item : createdFroms) {
-            if (item.getValue().equals(createdFrom)) {
-                return item;
-            }
+        if (createdFromMap.containsKey(createdFrom)) {
+            return new UserResponse.CreatedFrom(createdFrom, createdFromMap.get(createdFrom));
         }
 
-        return new User.CreatedFrom(createdFrom, createdFrom);
+        return new UserResponse.CreatedFrom(createdFrom, createdFrom);
     }
 }

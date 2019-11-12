@@ -6,21 +6,21 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-    private String fieldName;
-    private String fieldMatchName;
+    private String field;
+    private String fieldMatch;
     private String message;
 
     @Override
     public void initialize(final FieldMatch constraintAnnotation) {
-        this.fieldName = constraintAnnotation.fieldName();
-        this.fieldMatchName = constraintAnnotation.fieldMatchName();
+        this.field = constraintAnnotation.field();
+        this.fieldMatch = constraintAnnotation.fieldMatch();
         this.message = constraintAnnotation.message();
     }
 
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        Object fieldValue = new BeanWrapperImpl(value).getPropertyValue(fieldName);
-        Object fieldMatchValue = new BeanWrapperImpl(value).getPropertyValue(fieldMatchName);
+        Object fieldValue = new BeanWrapperImpl(value).getPropertyValue(field);
+        Object fieldMatchValue = new BeanWrapperImpl(value).getPropertyValue(fieldMatch);
 
         boolean valid;
 
@@ -33,7 +33,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         if (!valid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(this.message)
-                    .addPropertyNode(this.fieldName)
+                    .addPropertyNode(this.field)
                     .addConstraintViolation();
         }
 

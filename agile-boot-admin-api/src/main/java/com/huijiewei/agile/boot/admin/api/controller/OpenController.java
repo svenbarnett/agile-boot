@@ -1,7 +1,6 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
 import com.github.javafaker.Faker;
-import com.huijiewei.agile.base.admin.response.AdminGroupResponse;
 import com.huijiewei.agile.base.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
@@ -41,13 +40,13 @@ public class OpenController {
     }
 
     @GetMapping(
-            value = "/open/admin-group-options",
+            value = "/open/admin-group-map",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组选择列表")
-    @ApiResponse(responseCode = "200", description = "管理组选择列表")
-    public List<AdminGroupResponse> actionAdminGroupOptions() {
-        return this.adminGroupService.getOptions();
+    @Operation(description = "管理组 MAP")
+    @ApiResponse(responseCode = "200", description = "管理组 MAP")
+    public Map<Integer, String> actionAdminGroupOptions() {
+        return this.adminGroupService.getMap();
     }
 
     @GetMapping(
