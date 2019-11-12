@@ -16,6 +16,7 @@ import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import com.huijiewei.agile.base.exception.BadRequestException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -91,7 +92,7 @@ public class AdminService {
 
     public ListResponse<AdminResponse> getAll() {
         ListResponse<AdminResponse> response = new ListResponse<>();
-        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll()));
+        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAllWithAdminGroupByOrderByIdAsc()));
 
         return response;
     }
@@ -109,16 +110,48 @@ public class AdminService {
     @Validated(AdminRequest.Create.class)
     public AdminResponse create(@Valid AdminRequest request) {
         if (this.adminRepository.existsByPhone(request.getPhone())) {
-            throw new BadRequestException("手机号码已存在");
+            throw new BadRequestException("手机号码已被使用");
         }
 
         if (this.adminRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("电子邮箱已存在");
+            throw new BadRequestException("电子邮箱已被使用");
         }
 
         Admin admin = AdminMapper.INSTANCE.toAdmin(request);
-
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        this.adminRepository.save(admin);
+
+        return AdminMapper.INSTANCE.toAdminResponse(admin);
+    }
+
+    @Validated(AdminRequest.Edit.class)
+    public AdminResponse edit(Integer id, @Valid AdminRequest request) {
+        Optional<Admin> adminOptional = this.adminRepository.findById(id);
+
+        if (adminOptional.isEmpty()) {
+            throw new NotFoundException("管理员不存在");
+        }
+
+        Admin admin = adminOptional.get();
+
+        if (this.adminRepository.existsByPhoneAndIdNot(request.getPhone(), id)) {
+            throw new BadRequestException("手机号码已被使用");
+        }
+
+        if (this.adminRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+            throw new BadRequestException("电子邮箱已被使用");
+        }
+
+        admin.setName(request.getName());
+        admin.setPhone(request.getPhone());
+        admin.setEmail(request.getEmail());
+        admin.setAvatar(request.getAvatar());
+        admin.setAdminGroup(request.getAdminGroup());
+
+        if (StringUtils.isEmpty(request.getPassword())) {
+            admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
 
         this.adminRepository.save(admin);
 

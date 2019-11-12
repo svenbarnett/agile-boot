@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -29,7 +27,7 @@ public class Admin extends TimestampEntity {
 
     private String avatar;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "adminGroupId")
     private AdminGroup adminGroup;
 }
