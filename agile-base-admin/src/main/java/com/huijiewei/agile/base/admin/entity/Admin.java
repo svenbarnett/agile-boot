@@ -27,7 +27,7 @@ public class Admin extends TimestampEntity {
 
     private String avatar;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "adminGroupId")
     private AdminGroup adminGroup;
 }
