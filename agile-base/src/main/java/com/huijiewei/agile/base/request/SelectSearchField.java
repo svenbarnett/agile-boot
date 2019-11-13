@@ -26,4 +26,9 @@ public class SelectSearchField extends BaseSearchField<SelectSearchField> {
 
         return this;
     }
+
+    @Override
+    protected SelectSearchField self() {
+        return this;
+    }
 }

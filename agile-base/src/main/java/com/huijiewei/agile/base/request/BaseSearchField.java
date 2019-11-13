@@ -19,12 +19,14 @@ public abstract class BaseSearchField<T extends BaseSearchField> {
     public T field(String field) {
         this.field = field;
 
-        return (T) this;
+        return self();
     }
 
     public T label(String label) {
         this.label = label;
 
-        return (T) this;
+        return self();
     }
+
+    abstract protected T self();
 }
