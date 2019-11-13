@@ -57,4 +57,18 @@ public class AdminController {
     public AdminResponse actionCreate(@RequestBody AdminRequest request) {
         return this.adminService.create(request);
     }
+
+    @PutMapping(
+            value = "/admins/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "管理员编辑")
+    @ApiResponse(responseCode = "200", description = "管理员")
+    @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @PreAuthorize("hasPermission(#ADMIN, 'admin/edit')")
+    public AdminResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminRequest request) {
+        return this.adminService.edit(id, request);
+    }
 }

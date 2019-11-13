@@ -2,8 +2,13 @@ apply plugin: 'org.springframework.boot'
 
 apply from: '../dep.spring.boot.gradle'
 
+configurations.all {
+    exclude module: 'spring-boot-starter-tomcat'
+}
+
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 

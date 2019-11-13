@@ -5,6 +5,9 @@ import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminBaseResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -19,5 +22,6 @@ public interface AdminMapper {
 
     List<AdminResponse> toAdminResponses(List<Admin> admins);
 
+    @Mapping(target = "password", ignore = true)
     Admin toAdmin(AdminRequest adminRequest);
 }

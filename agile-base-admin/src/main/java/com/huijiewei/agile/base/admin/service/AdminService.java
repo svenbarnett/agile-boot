@@ -133,8 +133,6 @@ public class AdminService {
             throw new NotFoundException("管理员不存在");
         }
 
-        Admin admin = adminOptional.get();
-
         if (this.adminRepository.existsByPhoneAndIdNot(request.getPhone(), id)) {
             throw new BadRequestException("手机号码已被使用");
         }
@@ -143,13 +141,11 @@ public class AdminService {
             throw new BadRequestException("电子邮箱已被使用");
         }
 
-        admin.setName(request.getName());
-        admin.setPhone(request.getPhone());
-        admin.setEmail(request.getEmail());
-        admin.setAvatar(request.getAvatar());
-        admin.setAdminGroup(request.getAdminGroup());
+        Admin admin = AdminMapper.INSTANCE.toAdmin(request);
+        admin.setId(adminOptional.get().getId());
+        admin.setPassword(adminOptional.get().getPassword());
 
-        if (StringUtils.isEmpty(request.getPassword())) {
+        if (!StringUtils.isEmpty(request.getPassword())) {
             admin.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
