@@ -27,7 +27,7 @@ spring:
           generate_statistics: true
   datasource:
     hikari:
-      max-lifetime: 200
+      max-lifetime: 2888000
   resources:
     add-mappings: false
   mvc:
