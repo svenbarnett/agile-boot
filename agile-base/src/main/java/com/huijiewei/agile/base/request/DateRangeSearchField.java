@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 public class DateRangeSearchField extends BaseSearchField<DateRangeSearchField> {
     private String labelStart;
     private String labelEnd;
+    private String shortcuts;
 
     public DateRangeSearchField() {
         this.setType("dateRange");

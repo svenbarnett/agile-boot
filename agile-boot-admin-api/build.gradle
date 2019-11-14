@@ -4,6 +4,8 @@ apply from: '../dep.spring.boot.gradle'
 
 configurations.all {
     exclude module: 'spring-boot-starter-tomcat'
+    exclude module: 'log4j-to-slf4j'
+    exclude module: 'jul-to-slf4j'
 }
 
 dependencies {

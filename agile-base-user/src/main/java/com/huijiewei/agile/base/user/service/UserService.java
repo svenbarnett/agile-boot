@@ -50,7 +50,7 @@ public class UserService {
     public UserResponse getById(Integer id) {
         Optional<User> userOptional = this.userRepository.findById(id);
 
-        if (userOptional.isEmpty()) {
+        if (!userOptional.isPresent()) {
             throw new NotFoundException("用户不存在");
         }
 

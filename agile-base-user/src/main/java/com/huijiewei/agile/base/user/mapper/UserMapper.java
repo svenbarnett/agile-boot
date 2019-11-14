@@ -21,7 +21,7 @@ public interface UserMapper {
         return page.map(this::toUserResponse);
     }
 
-    default UserResponse.CreatedFrom createdFromStringToCreatedFrom(String createdFrom) {
+    default UserResponse.CreatedFrom toCreatedFrom(String createdFrom) {
         Map<String, String> createdFromMap = User.createFromMap();
 
         if (createdFromMap.containsKey(createdFrom)) {

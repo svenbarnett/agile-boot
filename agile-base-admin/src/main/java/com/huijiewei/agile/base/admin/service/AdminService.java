@@ -50,9 +50,7 @@ public class AdminService {
 
         Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientId(clientId);
 
-        AdminAccessToken adminAccessToken = adminAccessTokenOptional.isEmpty()
-                ? new AdminAccessToken()
-                : adminAccessTokenOptional.get();
+        AdminAccessToken adminAccessToken = adminAccessTokenOptional.orElseGet(AdminAccessToken::new);
 
         if (!adminAccessToken.isAdult()) {
             adminAccessToken.setAdminId(admin.getId());
@@ -100,7 +98,7 @@ public class AdminService {
     public AdminResponse getById(Integer id) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
-        if (adminOptional.isEmpty()) {
+        if (!adminOptional.isPresent()) {
             throw new NotFoundException("管理员不存在");
         }
 
@@ -129,7 +127,7 @@ public class AdminService {
     public AdminResponse edit(Integer id, @Valid AdminRequest request) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
-        if (adminOptional.isEmpty()) {
+        if (!adminOptional.isPresent()) {
             throw new NotFoundException("管理员不存在");
         }
 

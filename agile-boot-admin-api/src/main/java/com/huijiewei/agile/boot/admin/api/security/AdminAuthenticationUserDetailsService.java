@@ -35,7 +35,7 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
 
         Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientIdAndAccessToken(clientId, accessToken);
 
-        if (adminAccessTokenOptional.isEmpty()) {
+        if (!adminAccessTokenOptional.isPresent()) {
             throw new BadCredentialsException("无效的 AccessToken");
         }
 
@@ -43,7 +43,7 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
 
         Optional<Admin> adminOptional = this.adminRepository.findById(adminAccessToken.getAdminId());
 
-        if (adminOptional.isEmpty()) {
+        if (!adminOptional.isPresent()) {
             throw new BadCredentialsException("无效的 AccessToken");
         }
 

@@ -59,7 +59,7 @@ public class AdminGroupService {
     public AdminGroupResponse getById(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (adminGroupOptional.isEmpty()) {
+        if (!adminGroupOptional.isPresent()) {
             throw new NotFoundException("管理组不存在");
         }
 
@@ -191,7 +191,7 @@ public class AdminGroupService {
     public AdminGroupResponse edit(Integer id, AdminGroupRequest request) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (adminGroupOptional.isEmpty()) {
+        if (!adminGroupOptional.isPresent()) {
             throw new NotFoundException("管理组不存在");
         }
 
@@ -210,7 +210,7 @@ public class AdminGroupService {
     public void delete(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (adminGroupOptional.isEmpty()) {
+        if (!adminGroupOptional.isPresent()) {
             throw new NotFoundException("管理组不存在");
         }
 
