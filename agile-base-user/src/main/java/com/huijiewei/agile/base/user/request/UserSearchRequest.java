@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -32,10 +33,16 @@ public class UserSearchRequest extends BaseSearchRequest {
                         .multiple(true)
                         .options(User.createFromMap())
                 )
-                .addSearchField(new DateRangeSearchField()
+                .addSearchField(new DateTimeRangeSearchField()
                         .field("createdRange")
+                        .rangeType("daterange")
                         .labelStart("注册开始日期")
                         .labelEnd("注册结束日期")
+                        .addShortcut(
+                                "近一周",
+                                LocalDate.now().minusWeeks(1).toString(),
+                                LocalDate.now().toString()
+                        )
                 )
                 .addSearchField(new BrSearchField());
     }
