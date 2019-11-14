@@ -24,4 +24,9 @@ public class DateRangeSearchField extends BaseSearchField<DateRangeSearchField> 
 
         return this;
     }
+
+    @Override
+    protected DateRangeSearchField self() {
+        return this;
+    }
 }
