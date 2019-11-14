@@ -48,7 +48,7 @@ public class AuthController {
         return this.adminService.account();
     }
 
-    @Operation(description = "当前登录帐号")
+    @Operation(description = "管理员退出登录")
     @ApiResponse(responseCode = "200", description = "退出登录成功")
     @PostMapping(
             value = "/auth/logout",
