@@ -71,6 +71,15 @@ public class AdminService {
         return adminLoginResponse;
     }
 
+    public void logout() {
+        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        this.adminAccessTokenRepository.deleteByAdminIdAndClientId(
+                adminUserDetails.getAdminUser().getAdmin().getId(),
+                adminUserDetails.getAdminUser().getClientId());
+
+    }
+
     private AdminUser getCurrentAdminUser() {
         AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

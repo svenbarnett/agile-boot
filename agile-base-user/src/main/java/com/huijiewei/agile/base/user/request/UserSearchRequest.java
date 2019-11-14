@@ -39,8 +39,23 @@ public class UserSearchRequest extends BaseSearchRequest {
                         .labelStart("注册开始日期")
                         .labelEnd("注册结束日期")
                         .addShortcut(
-                                "近一周",
+                                "最近一周",
                                 LocalDate.now().minusWeeks(1).toString(),
+                                LocalDate.now().toString()
+                        )
+                        .addShortcut(
+                                "最近一个月",
+                                LocalDate.now().minusMonths(1).toString(),
+                                LocalDate.now().toString()
+                        )
+                        .addShortcut(
+                                "最近三个月",
+                                LocalDate.now().minusMonths(3).toString(),
+                                LocalDate.now().toString()
+                        )
+                        .addShortcut(
+                                "最近一年",
+                                LocalDate.now().minusYears(1).toString(),
                                 LocalDate.now().toString()
                         )
                 )

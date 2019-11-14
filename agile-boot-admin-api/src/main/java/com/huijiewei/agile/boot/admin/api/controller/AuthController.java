@@ -4,6 +4,7 @@ import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
+import com.huijiewei.agile.base.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,5 +46,17 @@ public class AuthController {
     )
     public AdminAccountResponse actionAccount() {
         return this.adminService.account();
+    }
+
+    @Operation(description = "当前登录帐号")
+    @ApiResponse(responseCode = "200", description = "退出登录成功")
+    @PostMapping(
+            value = "/auth/logout",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public MessageResponse actionLogout() {
+        this.adminService.logout();
+
+        return MessageResponse.of("退出登录成功");
     }
 }
