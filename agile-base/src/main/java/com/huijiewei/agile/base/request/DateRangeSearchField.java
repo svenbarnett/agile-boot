@@ -1,5 +1,6 @@
 package com.huijiewei.agile.base.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,6 +9,8 @@ import lombok.EqualsAndHashCode;
 public class DateRangeSearchField extends BaseSearchField<DateRangeSearchField> {
     private String labelStart;
     private String labelEnd;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String shortcuts;
 
     public DateRangeSearchField() {
