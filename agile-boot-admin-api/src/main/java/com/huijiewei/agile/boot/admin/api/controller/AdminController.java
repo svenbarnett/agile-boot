@@ -4,6 +4,7 @@ import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import com.huijiewei.agile.base.response.ListResponse;
+import com.huijiewei.agile.base.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,5 +71,20 @@ public class AdminController {
     @PreAuthorize("hasPermission(#ADMIN, 'admin/edit')")
     public AdminResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminRequest request) {
         return this.adminService.edit(id, request);
+    }
+
+    @DeleteMapping(
+            value = "/admins/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "管理员删除")
+    @ApiResponse(responseCode = "200", description = "删除成功")
+    @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
+    @ApiResponse(responseCode = "409", description = "管理员不允许删除", ref = "Problem")
+    @PreAuthorize("hasPermission(#ADMIN, 'admin/delete')")
+    public MessageResponse actionDelete(@PathVariable("id") Integer id) {
+        this.adminService.delete(id);
+
+        return MessageResponse.of("管理员删除成功");
     }
 }

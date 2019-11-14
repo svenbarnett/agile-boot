@@ -160,4 +160,14 @@ public class AdminService {
 
         return AdminMapper.INSTANCE.toAdminResponse(admin);
     }
+
+    public void delete(Integer id) {
+        Optional<Admin> adminOptional = this.adminRepository.findById(id);
+
+        if (!adminOptional.isPresent()) {
+            throw new NotFoundException("管理员不存在");
+        }
+
+        this.adminRepository.delete(adminOptional.get());
+    }
 }
