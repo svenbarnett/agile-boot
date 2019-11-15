@@ -53,7 +53,7 @@ public class AliyunOSS extends BaseUpload {
         params.put("key", directory + "${filename}");
         params.put("policy", policyString);
         params.put("signature", signature);
-        params.put("success_action_status", "200");
+        params.put("success_action_status", "201");
 
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
