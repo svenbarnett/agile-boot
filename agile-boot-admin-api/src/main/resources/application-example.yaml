@@ -21,3 +21,10 @@ agile:
         endpoint: 阿里云 OSS 数据中心访问域名
         bucket: 阿里云 OSS Bucket
         directory: 阿里云文件目录
+      tencent-cos:
+        app-id: 腾讯云 COS appId
+        secret-id: 腾讯云 COS secretId
+        secret-key: 腾讯云 COS secretKey
+        bucket: 腾讯云 COS 存储桶空间名称
+        region: 腾讯云 COS 所属区域
+        directory: 腾讯云文件目录
