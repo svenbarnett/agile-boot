@@ -133,6 +133,43 @@ public class AdminService {
     }
 
     @Validated(AdminRequest.Edit.class)
+    public void profile(@Valid AdminRequest request) {
+        Admin current = this.getCurrentAdminUser().getAdmin();
+
+        this.update(current, request, true);
+    }
+
+    public AdminResponse profile() {
+        return AdminMapper.INSTANCE.toAdminResponse(this.getCurrentAdminUser().getAdmin());
+    }
+
+    private Admin update(Admin current, AdminRequest request, boolean isOwner) {
+        if (this.adminRepository.existsByPhoneAndIdNot(request.getPhone(), current.getId())) {
+            throw new BadRequestException("手机号码已被使用");
+        }
+
+        if (this.adminRepository.existsByEmailAndIdNot(request.getEmail(), current.getId())) {
+            throw new BadRequestException("电子邮箱已被使用");
+        }
+
+        Admin admin = AdminMapper.INSTANCE.toAdmin(request);
+        admin.setId(current.getId());
+        admin.setPassword(current.getPassword());
+
+        if (!StringUtils.isEmpty(request.getPassword())) {
+            admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        if (isOwner) {
+            admin.setAdminGroup(current.getAdminGroup());
+        }
+
+        this.adminRepository.save(admin);
+
+        return admin;
+    }
+
+    @Validated(AdminRequest.Edit.class)
     public AdminResponse edit(Integer id, @Valid AdminRequest request) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
@@ -140,23 +177,9 @@ public class AdminService {
             throw new NotFoundException("管理员不存在");
         }
 
-        if (this.adminRepository.existsByPhoneAndIdNot(request.getPhone(), id)) {
-            throw new BadRequestException("手机号码已被使用");
-        }
+        Admin current = adminOptional.get();
 
-        if (this.adminRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
-            throw new BadRequestException("电子邮箱已被使用");
-        }
-
-        Admin admin = AdminMapper.INSTANCE.toAdmin(request);
-        admin.setId(adminOptional.get().getId());
-        admin.setPassword(adminOptional.get().getPassword());
-
-        if (!StringUtils.isEmpty(request.getPassword())) {
-            admin.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
-
-        this.adminRepository.save(admin);
+        Admin admin = this.update(current, request, this.getCurrentAdminUser().getAdmin().getAdminGroup().getId().equals(current.getAdminGroup().getId()));
 
         return AdminMapper.INSTANCE.toAdminResponse(admin);
     }

@@ -1,8 +1,10 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
 import com.huijiewei.agile.base.admin.request.AdminLoginRequest;
+import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import com.huijiewei.agile.base.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +48,30 @@ public class AuthController {
     )
     public AdminAccountResponse actionAccount() {
         return this.adminService.account();
+    }
+
+    @GetMapping(
+            value = "/auth/profile",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "管理员个人资料")
+    @ApiResponse(responseCode = "200", description = "管理员个人资料")
+    public AdminResponse actionProfile() {
+        return this.adminService.profile();
+    }
+
+    @PutMapping(
+            value = "/auth/profile",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "管理员个人资料更新")
+    @ApiResponse(responseCode = "200", description = "管理员个人资料")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    public MessageResponse actionProfile(@RequestBody AdminRequest request) {
+        this.adminService.profile(request);
+
+        return MessageResponse.of("个人资料更新成功");
     }
 
     @Operation(description = "管理员退出登录")
