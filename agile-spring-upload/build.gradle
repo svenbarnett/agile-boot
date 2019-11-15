@@ -1,0 +1,23 @@
+apply plugin: 'io.spring.dependency-management'
+
+ext.jacksonDatabindVersion = '2.10.1'
+ext.apacheCommonsLangVersion = '3.9'
+ext.apacheCommonsCodecVersion = '1.13'
+ext.springBootDependenciesVersion = '2.2.1.RELEASE'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootDependenciesVersion}"
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+    implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
+    implementation "commons-codec:commons-codec:${apacheCommonsCodecVersion}"
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+}

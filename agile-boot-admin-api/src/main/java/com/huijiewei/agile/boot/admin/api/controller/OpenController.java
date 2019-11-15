@@ -16,7 +16,7 @@ import java.util.*;
 @RestController
 @Tag(name = "open", description = "开放接口")
 public class OpenController {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public OpenController(UserRepository userRepository) {
         this.userRepository = userRepository;
