@@ -11,3 +11,13 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   main:
     lazy-initialization: true
+
+agile:
+  spring:
+    upload:
+      aliyun-oss:
+        access-key-id: 阿里云 OSS accessKeyId
+        access-key-secret: 阿里云 OSS accessKeySecret
+        endpoint: 阿里云 OSS 数据中心访问域名
+        bucket: 阿里云 OSS Bucket
+        directory: 阿里云文件目录
