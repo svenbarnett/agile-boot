@@ -1,8 +1,10 @@
 package com.huijiewei.agile.spring.upload.driver;
 
+import com.devskiller.friendly_id.FriendlyId;
 import com.huijiewei.agile.spring.upload.BaseUpload;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.UploadResponse;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -57,14 +62,36 @@ public class LocalFile extends BaseUpload {
 
         List<String> fileTypes = Arrays.asList(policies[2].split(","));
 
-        String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
+        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
 
-        if (!fileTypes.contains(fileExt)) {
+        if (!fileTypes.contains(fileExtension)) {
             throw new RuntimeException("文件类型限制：" + String.join(",", fileTypes));
         }
 
         ApplicationHome home = new ApplicationHome(getClass());
         String rootPath = home.getSource().getParentFile().toString();
+
+        String fileHashName;
+
+        switch (this.properties.getFilenameHash()) {
+            case "md5_file":
+                try {
+                    fileHashName = this.md5(file.getInputStream());
+                } catch (Exception ex) {
+                    throw new RuntimeException("Error while getInputStream: " + ex.getMessage(), ex);
+                }
+                break;
+            case "original":
+                fileHashName = FilenameUtils.getBaseName(file.getOriginalFilename());
+                break;
+            case "random":
+            default:
+                fileHashName = FriendlyId.createFriendlyId();
+
+        }
+
+        String fileName = fileHashName + "." + fileExtension;
+        String monthName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString();
 
         throw new RuntimeException("方法未实现");
     }
@@ -108,6 +135,14 @@ public class LocalFile extends BaseUpload {
     @Override
     public String paramName() {
         return "file";
+    }
+
+    private String md5(InputStream data) {
+        try {
+            return new String(DigestUtils.md5(data));
+        } catch (Exception ex) {
+            throw new RuntimeException("Error while md5: " + ex.getMessage(), ex);
+        }
     }
 
     private String encrypt(String data, String key) {

@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -14,7 +15,7 @@ public abstract class BaseUpload {
 
     abstract public String paramName();
 
-    public UploadResponse upload(String policy, MultipartFile file) {
+    public UploadResponse upload(String policy, MultipartFile file) throws IOException {
         throw new RuntimeException("方法未实现");
     }
 
