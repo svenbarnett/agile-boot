@@ -25,6 +25,7 @@ spring:
         jdbc:
           batch_size: 50
           generate_statistics: true
+    open-in-view: false
   datasource:
     hikari:
       max-lifetime: 120000

@@ -8,6 +8,10 @@ import java.util.Map;
 public class UploadRequest {
     private String url;
 
+    private String cropUrl;
+
+    private Integer timeout;
+
     private String paramName;
 
     private String dataType;

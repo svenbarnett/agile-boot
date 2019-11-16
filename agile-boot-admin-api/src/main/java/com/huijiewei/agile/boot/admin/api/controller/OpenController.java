@@ -3,11 +3,16 @@ package com.huijiewei.agile.boot.admin.api.controller;
 import com.github.javafaker.Faker;
 import com.huijiewei.agile.base.user.entity.User;
 import com.huijiewei.agile.base.user.repository.UserRepository;
+import com.huijiewei.agile.spring.upload.UploadResponse;
+import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -17,9 +22,20 @@ import java.util.*;
 @Tag(name = "open", description = "开放接口")
 public class OpenController {
     private final UserRepository userRepository;
+    private final LocalFile localFile;
 
-    public OpenController(UserRepository userRepository) {
+    public OpenController(UserRepository userRepository, LocalFile localFile) {
         this.userRepository = userRepository;
+        this.localFile = localFile;
+    }
+
+    @PostMapping(
+            value = "/open/upload-file",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public UploadResponse actionUploadFile(@RequestParam("policy") String policy, @RequestParam("file") MultipartFile file) {
+        return this.localFile.upload(policy, file);
     }
 
     @GetMapping(

@@ -2,11 +2,9 @@ package com.huijiewei.agile.spring.upload.driver;
 
 import com.huijiewei.agile.spring.upload.BaseUpload;
 import com.huijiewei.agile.spring.upload.UploadRequest;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -19,22 +17,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
-@Configuration
-@ConfigurationProperties(prefix = "agile.spring.upload.aliyun-oss")
+@Component
 public class AliyunOSS extends BaseUpload {
-    private String accessKeyId;
-    private String accessKeySecret;
+    private final AliyunOSSProperties properties;
 
-    private String endpoint;
-    private String bucket;
-    private String directory = "";
+    @Autowired
+    public AliyunOSS(AliyunOSSProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
     public UploadRequest build(Integer fileSize, List<String> fileTypes) {
-        String url = "https://" + this.bucket + "." + this.endpoint;
-        String directory = StringUtils.stripEnd(this.directory, "/") +
+        String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
+        String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString() +
                 "/";
@@ -57,10 +52,10 @@ public class AliyunOSS extends BaseUpload {
 
         String policyString = this.base64Encode(policyJson);
 
-        String signature = this.base64Encode(this.hmacSHA1(this.accessKeySecret, policyString));
+        String signature = this.base64Encode(this.hmacSHA1(this.properties.getAccessKeySecret(), policyString));
 
         Map<String, String> params = new HashMap<>();
-        params.put("OSSAccessKeyId", this.accessKeyId);
+        params.put("OSSAccessKeyId", this.properties.getAccessKeyId());
         params.put("key", directory + "${filename}");
         params.put("policy", policyString);
         params.put("signature", signature);
@@ -68,6 +63,7 @@ public class AliyunOSS extends BaseUpload {
 
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
+        request.setTimeout(9 * 60);
         request.setParams(params);
         request.setHeaders(null);
         request.setDataType("xml");

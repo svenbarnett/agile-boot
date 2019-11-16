@@ -3,6 +3,8 @@ apply plugin: 'io.spring.dependency-management'
 ext.jacksonDatabindVersion = '2.10.1'
 ext.apacheCommonsLangVersion = '3.9'
 ext.apacheCommonsCodecVersion = '1.13'
+ext.apacheCommonsIoVersion = '2.6'
+ext.springWebMvcVersion = '5.2.1.RELEASE'
 ext.springBootDependenciesVersion = '2.2.1.RELEASE'
 
 dependencyManagement {
@@ -17,6 +19,8 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
     implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
     implementation "commons-codec:commons-codec:${apacheCommonsCodecVersion}"
+    implementation "commons-io:commons-io:${apacheCommonsIoVersion}"
+    implementation "org.springframework:spring-webmvc:${springWebMvcVersion}"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

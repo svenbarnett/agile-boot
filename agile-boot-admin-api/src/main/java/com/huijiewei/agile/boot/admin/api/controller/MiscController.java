@@ -5,6 +5,7 @@ import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
+import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import com.huijiewei.agile.spring.upload.driver.TencentCOS;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,11 +24,13 @@ public class MiscController {
     private final AdminGroupService adminGroupService;
     private final AliyunOSS aliyunOSS;
     private final TencentCOS tencentCOS;
+    private final LocalFile localFile;
 
-    public MiscController(AdminGroupService adminGroupService, AliyunOSS aliyunOSS, TencentCOS tencentCOS) {
+    public MiscController(AdminGroupService adminGroupService, AliyunOSS aliyunOSS, TencentCOS tencentCOS, LocalFile localFile) {
         this.adminGroupService = adminGroupService;
         this.aliyunOSS = aliyunOSS;
         this.tencentCOS = tencentCOS;
+        this.localFile = localFile;
     }
 
     @GetMapping(
@@ -57,6 +60,6 @@ public class MiscController {
     @Operation(description = "头像上传设置获取")
     @ApiResponse(responseCode = "200", description = "头像上传设置")
     public UploadRequest actionAvatarUploadOptions() {
-        return this.tencentCOS.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
+        return this.localFile.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
     }
 }

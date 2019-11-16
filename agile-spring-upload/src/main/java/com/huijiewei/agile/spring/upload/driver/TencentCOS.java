@@ -2,12 +2,10 @@ package com.huijiewei.agile.spring.upload.driver;
 
 import com.huijiewei.agile.spring.upload.BaseUpload;
 import com.huijiewei.agile.spring.upload.UploadRequest;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,30 +13,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
-@Configuration
-@ConfigurationProperties(prefix = "agile.spring.upload.tencent-cos")
+@Component
 public class TencentCOS extends BaseUpload {
-    private String appId;
-    private String secretId;
-    private String secretKey;
+    private TencentCOSProperties properties;
 
-    private String bucket;
-    private String region;
-    private String directory = "";
-
+    @Autowired
+    public TencentCOS(TencentCOSProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
     public UploadRequest build(Integer fileSize, List<String> fileTypes) {
-        String host = this.bucket + ".cos." + this.region + ".myqcloud.com";
+        String host = this.properties.getBucket() + ".cos." + this.properties.getRegion() + ".myqcloud.com";
         String url = "https://" + host + "/";
-        String directory = StringUtils.stripEnd(this.directory, "/") +
+        String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString() +
                 "/";
 
-        String httpString = String.format("post\n%s\n\nhost=%s\n", this.UrlDecode("/"), host);
+        String httpString = String.format("post\n%s\n\nhost=%s\n", this.urlDecode("/"), host);
 
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
@@ -48,11 +41,11 @@ public class TencentCOS extends BaseUpload {
 
         String signString = String.format("sha1\n%s\n%s\n", signTime, httpStringSha1);
 
-        String signKey = this.hmacSHA1(this.secretKey, signTime);
+        String signKey = this.hmacSHA1(this.properties.getSecretKey(), signTime);
         String signature = this.hmacSHA1(signKey, signString);
 
         String authorization = "q-sign-algorithm=sha1&q-ak=" +
-                this.secretId +
+                this.properties.getSecretId() +
                 "&q-sign-time=" +
                 signTime + "&q-key-time=" + signTime +
                 "&q-header-list=host&q-url-param-list=&q-signature=" +
@@ -69,6 +62,7 @@ public class TencentCOS extends BaseUpload {
 
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
+        request.setTimeout(19 * 60);
         request.setParams(params);
         request.setHeaders(headers);
         request.setDataType("xml");
