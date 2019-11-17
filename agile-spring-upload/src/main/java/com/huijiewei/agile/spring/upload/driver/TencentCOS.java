@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ public class TencentCOS implements BaseDriver {
         String url = "https://" + host + "/";
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString() +
+                UploadUtils.buildMonthName() +
                 "/";
 
         String httpString = String.format("post\n%s\n\nhost=%s\n", UploadUtils.urlDecode("/"), host);

@@ -10,7 +10,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,9 +18,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -35,7 +31,7 @@ public class LocalFile implements BaseDriver {
         this.properties = properties;
     }
 
-    public UploadResponse upload(String policy, MultipartFile file) {
+    private String[] parsePolicy(String policy) {
         String policyDecrypt = UploadUtils.urlDecode(policy);
         String policyValue = this.decrypt(policyDecrypt, this.properties.getPolicyKey());
 
@@ -52,6 +48,20 @@ public class LocalFile implements BaseDriver {
         if (timestamp < currentTimestamp) {
             throw new RuntimeException("参数已过期");
         }
+
+        return policies;
+    }
+
+    public UploadResponse crop(String policy, String file, Float x, Float y, Float w, Float h) {
+        String[] policies = this.parsePolicy(policy);
+
+        UploadResponse response = new UploadResponse();
+
+        return response;
+    }
+
+    public UploadResponse upload(String policy, MultipartFile file) {
+        String[] policies = this.parsePolicy(policy);
 
         if (file.isEmpty()) {
             throw new RuntimeException("没有文件被上传");
@@ -71,12 +81,17 @@ public class LocalFile implements BaseDriver {
             throw new RuntimeException("文件类型限制：" + String.join(",", fileTypes));
         }
 
-        String path = this.properties.getUploadPath();
+        String monthName = UploadUtils.buildMonthName();
 
-        if (StringUtils.startsWith(path, "file:")) {
-            path = StringUtils.stripStart(path, "file:");
-        } else {
-            path = Paths.get(new ApplicationHome(getClass()).getSource().getParentFile().toString(), path).toAbsolutePath().normalize().toString();
+        String absoluteUploadPath = UploadUtils.buildAbsoluteUploadPath(this.properties.getUploadPath()) +
+                monthName;
+
+        File absoluteUploadPathFile = new File(absoluteUploadPath);
+
+        if (!absoluteUploadPathFile.exists()) {
+            if (!absoluteUploadPathFile.mkdirs()) {
+                throw new RuntimeException("服务器创建目录错误:" + absoluteUploadPath);
+            }
         }
 
         String fileHashName;
@@ -99,31 +114,20 @@ public class LocalFile implements BaseDriver {
         }
 
         String fileName = fileHashName + "." + fileExtension;
-        String monthName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString();
 
-        path = StringUtils.stripEnd(path, File.separator) + File.separator + monthName;
-
-        File pathFile = new File(path);
-
-        if (!pathFile.exists()) {
-            if (!pathFile.mkdirs()) {
-                throw new RuntimeException("服务器创建目录错误:" + path);
-            }
-        }
-
-        path = path + File.separator + fileName;
-
-        String url = StringUtils.stripEnd(StringUtils.stripEnd(this.properties.getAccessPath(), "*"), "/")
-                + "/" + monthName + "/" + fileName;
+        String absoluteFilePath = absoluteUploadPath + File.separator + fileName;
 
         try {
-            file.transferTo(new File(path));
+            file.transferTo(new File(absoluteFilePath));
         } catch (Exception ex) {
             throw new RuntimeException("服务器保存文件错误: " + ex.getMessage(), ex);
         }
 
+        String url = UploadUtils.buildAbsoluteAccessPathUrl(this.properties.getAccessPath()) +
+                "/" + monthName + "/" + fileName;
+
         UploadResponse response = new UploadResponse();
-        response.setUrl(ServletUriComponentsBuilder.fromCurrentRequest().replacePath(url).replaceQuery("").toUriString());
+        response.setUrl(url);
 
         return response;
     }
@@ -132,7 +136,7 @@ public class LocalFile implements BaseDriver {
     public UploadRequest build(Integer fileSize, List<String> fileTypes) {
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
-        String policy = String.format("%d;%d;%s;%s", currentTimestamp + 10 * 60, fileSize, String.join(",", fileTypes), true);
+        String policy = String.format("%d;%d;%s;%b", currentTimestamp + 10 * 60, fileSize, String.join(",", fileTypes), true);
         String policyEncrypt = this.encrypt(policy, this.properties.getPolicyKey());
         String policyValue = UploadUtils.urlEncode(policyEncrypt);
 

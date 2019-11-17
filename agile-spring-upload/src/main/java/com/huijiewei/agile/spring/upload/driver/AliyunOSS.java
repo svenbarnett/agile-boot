@@ -5,7 +5,6 @@ import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -33,7 +32,7 @@ public class AliyunOSS implements BaseDriver {
         String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString() +
+                UploadUtils.buildMonthName() +
                 "/";
 
         String jsonExpiration = String.format(
