@@ -61,6 +61,10 @@ public class LocalFile implements BaseDriver {
     public UploadResponse crop(String policy, ImageCropRequest request) {
         String[] policies = this.parsePolicy(policy);
 
+        if (!Boolean.parseBoolean(policies[3])) {
+            throw new RuntimeException("不支持图片切割");
+        }
+
         String absoluteAccessPathUrl = UploadUtils.buildAbsoluteAccessPathUrl(this.properties.getAccessPath());
 
         String filePath = StringUtils.stripStart(request.getFile(), absoluteAccessPathUrl);
