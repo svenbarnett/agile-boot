@@ -4,12 +4,11 @@ import com.huijiewei.agile.base.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
-import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
 import com.huijiewei.agile.spring.upload.driver.LocalFile;
-import com.huijiewei.agile.spring.upload.driver.TencentCOS;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,15 +21,12 @@ import java.util.Map;
 @Tag(name = "misc", description = "杂项接口")
 public class MiscController {
     private final AdminGroupService adminGroupService;
-    private final AliyunOSS aliyunOSS;
-    private final TencentCOS tencentCOS;
-    private final LocalFile localFile;
+    private final LocalFile uploadDriver;
 
-    public MiscController(AdminGroupService adminGroupService, AliyunOSS aliyunOSS, TencentCOS tencentCOS, LocalFile localFile) {
+    @Autowired
+    public MiscController(AdminGroupService adminGroupService, LocalFile uploadDriver) {
         this.adminGroupService = adminGroupService;
-        this.aliyunOSS = aliyunOSS;
-        this.tencentCOS = tencentCOS;
-        this.localFile = localFile;
+        this.uploadDriver = uploadDriver;
     }
 
     @GetMapping(
@@ -60,6 +56,6 @@ public class MiscController {
     @Operation(description = "头像上传设置获取")
     @ApiResponse(responseCode = "200", description = "头像上传设置")
     public UploadRequest actionAvatarUploadOptions() {
-        return this.localFile.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
+        return this.uploadDriver.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
     }
 }

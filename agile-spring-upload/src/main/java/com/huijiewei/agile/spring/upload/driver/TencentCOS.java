@@ -1,7 +1,8 @@
 package com.huijiewei.agile.spring.upload.driver;
 
-import com.huijiewei.agile.spring.upload.BaseUpload;
+import com.huijiewei.agile.spring.upload.BaseDriver;
 import com.huijiewei.agile.spring.upload.UploadRequest;
+import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TencentCOS extends BaseUpload {
+public class TencentCOS implements BaseDriver {
     private TencentCOSProperties properties;
 
     @Autowired
@@ -31,13 +32,13 @@ public class TencentCOS extends BaseUpload {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString() +
                 "/";
 
-        String httpString = String.format("post\n%s\n\nhost=%s\n", this.urlDecode("/"), host);
+        String httpString = String.format("post\n%s\n\nhost=%s\n", UploadUtils.urlDecode("/"), host);
 
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
         String signTime = String.format("%d;%d", currentTimestamp - 60, currentTimestamp + 60 * 20);
 
-        String httpStringSha1 = this.sha1Encode(httpString);
+        String httpStringSha1 = UploadUtils.sha1Encode(httpString);
 
         String signString = String.format("sha1\n%s\n%s\n", signTime, httpStringSha1);
 

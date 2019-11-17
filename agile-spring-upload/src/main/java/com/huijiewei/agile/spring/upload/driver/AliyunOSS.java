@@ -1,9 +1,11 @@
 package com.huijiewei.agile.spring.upload.driver;
 
-import com.huijiewei.agile.spring.upload.BaseUpload;
+import com.huijiewei.agile.spring.upload.BaseDriver;
 import com.huijiewei.agile.spring.upload.UploadRequest;
+import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -18,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AliyunOSS extends BaseUpload {
+public class AliyunOSS implements BaseDriver {
     private final AliyunOSSProperties properties;
 
     @Autowired
@@ -50,9 +52,9 @@ public class AliyunOSS extends BaseUpload {
 
         String policyJson = String.format("{%s,%s}", jsonExpiration, jsonConditions);
 
-        String policyString = this.base64Encode(policyJson);
+        String policyString = UploadUtils.base64Encode(policyJson);
 
-        String signature = this.base64Encode(this.hmacSHA1(this.properties.getAccessKeySecret(), policyString));
+        String signature = UploadUtils.base64Encode(this.hmacSHA1(this.properties.getAccessKeySecret(), policyString));
 
         Map<String, String> params = new HashMap<>();
         params.put("OSSAccessKeyId", this.properties.getAccessKeyId());

@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "agile.spring.upload.local-file")
 public class LocalFileProperties {
-    private String path;
-    private String action;
+    private String uploadPath;
+    private String accessPath;
     private String corpAction;
+    private String uploadAction;
     private String policyKey;
     private String filenameHash = "random"; //支持 random/md5_file/original
 }

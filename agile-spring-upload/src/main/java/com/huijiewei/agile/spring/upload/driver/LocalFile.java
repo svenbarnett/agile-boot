@@ -1,9 +1,10 @@
 package com.huijiewei.agile.spring.upload.driver;
 
 import com.devskiller.friendly_id.FriendlyId;
-import com.huijiewei.agile.spring.upload.BaseUpload;
+import com.huijiewei.agile.spring.upload.BaseDriver;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.UploadResponse;
+import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +26,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Component
-public class LocalFile extends BaseUpload {
+public class LocalFile implements BaseDriver {
     private LocalFileProperties properties;
 
     @Autowired
@@ -33,7 +35,7 @@ public class LocalFile extends BaseUpload {
     }
 
     public UploadResponse upload(String policy, MultipartFile file) {
-        String policyDecrypt = this.urlDecode(policy);
+        String policyDecrypt = UploadUtils.urlDecode(policy);
         String policyValue = this.decrypt(policyDecrypt, this.properties.getPolicyKey());
 
         String[] policies = policyValue.split(";");
@@ -68,8 +70,13 @@ public class LocalFile extends BaseUpload {
             throw new RuntimeException("文件类型限制：" + String.join(",", fileTypes));
         }
 
-        ApplicationHome home = new ApplicationHome(getClass());
-        String rootPath = home.getSource().getParentFile().toString();
+        String path = this.properties.getUploadPath();
+
+        if (StringUtils.startsWith(path, "file:")) {
+            path = StringUtils.stripStart(path, "file:");
+        } else {
+            path = new File(new File(new ApplicationHome(getClass()).getSource().toString()), path).getAbsolutePath();
+        }
 
         String fileHashName;
 
@@ -93,7 +100,31 @@ public class LocalFile extends BaseUpload {
         String fileName = fileHashName + "." + fileExtension;
         String monthName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString();
 
-        throw new RuntimeException("方法未实现");
+        path = StringUtils.stripEnd(path, File.separator) + File.separator + monthName;
+
+        File pathFile = new File(path);
+
+        if (!pathFile.exists()) {
+            if (!pathFile.mkdirs()) {
+                throw new RuntimeException("服务器创建目录错误:" + path);
+            }
+        }
+
+        path = path + File.separator + fileName;
+
+        String url = StringUtils.stripEnd(StringUtils.stripEnd(this.properties.getAccessPath(), "*"), "/")
+                + "/" + monthName + "/" + fileName;
+
+        try {
+            file.transferTo(new File(path));
+        } catch (Exception ex) {
+            throw new RuntimeException("服务器保存文件错误: " + ex.getMessage(), ex);
+        }
+
+        UploadResponse response = new UploadResponse();
+        response.setUrl(ServletUriComponentsBuilder.fromCurrentRequest().replacePath(url).replaceQuery("").toUriString());
+
+        return response;
     }
 
     @Override
@@ -102,18 +133,18 @@ public class LocalFile extends BaseUpload {
 
         String policy = String.format("%d;%d;%s;%s", currentTimestamp + 10 * 60, fileSize, String.join(",", fileTypes), true);
         String policyEncrypt = this.encrypt(policy, this.properties.getPolicyKey());
-        String policyValue = this.urlEncode(policyEncrypt);
+        String policyValue = UploadUtils.urlEncode(policyEncrypt);
 
         String url = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .replacePath(this.properties.getAction())
+                .replacePath(this.properties.getUploadAction())
                 .replaceQueryParam("policy", policyValue)
                 .toUriString();
 
         String cropUrl = StringUtils.isNotEmpty(this.properties.getCorpAction())
                 ? ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .replacePath(this.properties.getAction())
+                .replacePath(StringUtils.stripStart(this.properties.getUploadAction(), "/"))
                 .replaceQueryParam("policy", policyValue)
                 .toUriString()
                 : null;

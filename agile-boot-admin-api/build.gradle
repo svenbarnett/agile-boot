@@ -8,6 +8,12 @@ configurations.all {
     exclude module: 'jul-to-slf4j'
 }
 
+bootRun {
+    jvmArgs = [
+            "-Ddebug"
+    ]
+}
+
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-undertow"

@@ -6,6 +6,7 @@ import com.huijiewei.agile.base.user.repository.UserRepository;
 import com.huijiewei.agile.spring.upload.UploadResponse;
 import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +23,12 @@ import java.util.*;
 @Tag(name = "open", description = "开放接口")
 public class OpenController {
     private final UserRepository userRepository;
-    private final LocalFile localFile;
+    private final LocalFile uploadDriver;
 
-    public OpenController(UserRepository userRepository, LocalFile localFile) {
+    @Autowired
+    public OpenController(UserRepository userRepository, LocalFile uploadDriver) {
         this.userRepository = userRepository;
-        this.localFile = localFile;
+        this.uploadDriver = uploadDriver;
     }
 
     @PostMapping(
@@ -35,7 +37,7 @@ public class OpenController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public UploadResponse actionUploadFile(@RequestParam("policy") String policy, @RequestParam("file") MultipartFile file) {
-        return this.localFile.upload(policy, file);
+        return this.uploadDriver.upload(policy, file);
     }
 
     @GetMapping(
