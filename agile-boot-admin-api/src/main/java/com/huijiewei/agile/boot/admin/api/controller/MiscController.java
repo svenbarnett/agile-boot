@@ -4,6 +4,7 @@ import com.huijiewei.agile.base.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
+import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
 import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

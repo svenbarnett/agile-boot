@@ -43,7 +43,7 @@ public class OpenController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public UploadResponse actionCropImage(@RequestParam("policy") String policy,@RequestBody ImageCropRequest request) {
+    public UploadResponse actionCropImage(@RequestParam("policy") String policy, @RequestBody ImageCropRequest request) {
         return this.uploadDriver.crop(policy, request);
     }
 

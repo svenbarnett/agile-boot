@@ -13,7 +13,7 @@ public interface BaseDriver {
         throw new RuntimeException("方法未实现");
     }
 
-    default public UploadResponse crop(String policy, String file, Float x, Float y, Float w, Float h) {
+    default public UploadResponse crop(String policy, ImageCropRequest request) {
         throw new RuntimeException("方法未实现");
     }
 }

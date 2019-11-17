@@ -38,7 +38,7 @@ public class UploadDriver implements BaseDriver {
     }
 
     @Override
-    public UploadResponse crop(String policy, String file, Float x, Float y, Float w, Float h) {
-        return this.getDriver().crop(policy, file, x, y, w, h);
+    public UploadResponse crop(String policy, ImageCropRequest request) {
+        return this.getDriver().crop(policy, request);
     }
 }
