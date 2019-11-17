@@ -3,16 +3,14 @@ package com.huijiewei.agile.boot.admin.api.controller;
 import com.github.javafaker.Faker;
 import com.huijiewei.agile.base.user.entity.User;
 import com.huijiewei.agile.base.user.repository.UserRepository;
+import com.huijiewei.agile.spring.upload.ImageCropRequest;
 import com.huijiewei.agile.spring.upload.UploadResponse;
 import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -38,6 +36,15 @@ public class OpenController {
     )
     public UploadResponse actionUploadFile(@RequestParam("policy") String policy, @RequestParam("file") MultipartFile file) {
         return this.uploadDriver.upload(policy, file);
+    }
+
+    @PostMapping(
+            value = "/open/crop-image",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public UploadResponse actionCropImage(@RequestParam("policy") String policy,@RequestBody ImageCropRequest request) {
+        return this.uploadDriver.crop(policy, request);
     }
 
     @GetMapping(

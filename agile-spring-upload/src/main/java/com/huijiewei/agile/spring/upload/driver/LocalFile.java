@@ -2,9 +2,11 @@ package com.huijiewei.agile.spring.upload.driver;
 
 import com.devskiller.friendly_id.FriendlyId;
 import com.huijiewei.agile.spring.upload.BaseDriver;
+import com.huijiewei.agile.spring.upload.ImageCropRequest;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.UploadResponse;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -16,8 +18,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -52,10 +58,65 @@ public class LocalFile implements BaseDriver {
         return policies;
     }
 
-    public UploadResponse crop(String policy, String file, Float x, Float y, Float w, Float h) {
+    public UploadResponse crop(String policy, ImageCropRequest request) {
         String[] policies = this.parsePolicy(policy);
 
+        String absoluteAccessPathUrl = UploadUtils.buildAbsoluteAccessPathUrl(this.properties.getAccessPath());
+
+        String filePath = StringUtils.stripStart(request.getFile(), absoluteAccessPathUrl);
+
+        String absoluteUploadPath = UploadUtils.buildAbsoluteUploadPath(this.properties.getUploadPath());
+
+        String absoluteFilePath = Paths.get(absoluteUploadPath, filePath).normalize().toString();
+
+        File absoluteFile = new File(absoluteFilePath);
+
+        if (!absoluteFile.exists()) {
+            throw new RuntimeException("要切割的图片文件不存在");
+        }
+
+        BufferedImage image;
+
+        try {
+            image = ImageIO.read(absoluteFile);
+        } catch (IOException e) {
+            throw new RuntimeException("无效的图片文件");
+        }
+
+        String monthName = UploadUtils.buildMonthName();
+
+        String cropperFilePath = absoluteUploadPath + monthName;
+
+        File cropperFilePathFile = new File(cropperFilePath);
+
+        if (!cropperFilePathFile.exists()) {
+            if (!cropperFilePathFile.mkdirs()) {
+                throw new RuntimeException("服务器创建目录错误:" + cropperFilePath);
+            }
+        }
+
+        String fileHashName = FriendlyId.createFriendlyId();
+        String fileExtension = FilenameUtils.getExtension(filePath);
+
+        String fileName = fileHashName + "." + fileExtension;
+
+        BufferedImage cropImage = image.getSubimage(request.getX(), request.getY(), request.getW(), request.getH());
+
+        String cropperFile = cropperFilePath + File.separator + fileName;
+
+        try {
+            Thumbnails.of(cropImage)
+                    .size(request.getSize()[0], request.getSize()[1])
+                    .outputQuality(1.0f)
+                    .toFile(cropperFile);
+        } catch (IOException ex) {
+            throw new RuntimeException("服务器保存文件错误:" + cropperFile);
+        }
+
+        String url = absoluteAccessPathUrl + "/" + monthName + "/" + fileName;
+
         UploadResponse response = new UploadResponse();
+        response.setUrl(url);
 
         return response;
     }
@@ -149,7 +210,7 @@ public class LocalFile implements BaseDriver {
         String cropUrl = StringUtils.isNotEmpty(this.properties.getCorpAction())
                 ? ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .replacePath(StringUtils.stripStart(this.properties.getUploadAction(), "/"))
+                .replacePath(StringUtils.stripStart(this.properties.getCorpAction(), "/"))
                 .replaceQueryParam("policy", policyValue)
                 .toUriString()
                 : null;

@@ -6,6 +6,7 @@ ext.apacheCommonsCodecVersion = '1.13'
 ext.apacheCommonsIoVersion = '2.6'
 ext.springWebMvcVersion = '5.2.1.RELEASE'
 ext.friendlyIdVersion = '1.1.0'
+ext.thumbnailatorVersion = '0.4.8'
 ext.springBootDependenciesVersion = '2.2.1.RELEASE'
 
 dependencyManagement {
@@ -23,6 +24,7 @@ dependencies {
     implementation "commons-io:commons-io:${apacheCommonsIoVersion}"
     implementation "org.springframework:spring-webmvc:${springWebMvcVersion}"
     implementation "com.devskiller.friendly-id:friendly-id:${friendlyIdVersion}"
+    implementation "net.coobird:thumbnailator:${thumbnailatorVersion}"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
