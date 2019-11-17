@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class UploadResponse {
     private String url;
-    private String error;
 }

@@ -19,6 +19,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -75,7 +76,7 @@ public class LocalFile implements BaseDriver {
         if (StringUtils.startsWith(path, "file:")) {
             path = StringUtils.stripStart(path, "file:");
         } else {
-            path = new File(new File(new ApplicationHome(getClass()).getSource().toString()), path).getAbsolutePath();
+            path = Paths.get(new ApplicationHome(getClass()).getSource().getParentFile().toString(), path).toAbsolutePath().normalize().toString();
         }
 
         String fileHashName;
