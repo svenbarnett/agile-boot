@@ -31,6 +31,7 @@ public class AdminGroupAcl {
 
         all.add(new AdminGroupAclItem().name("用户管理")
                 .addChild(new AdminGroupAclItem().name("用户列表").actionId("user/index"))
+                .addChild(new AdminGroupAclItem().name("用户导出").actionId("user/export"))
                 .addChild(new AdminGroupAclItem().name("用户新建").actionId("user/create"))
                 .addChild(new AdminGroupAclItem().name("用户查看").actionId("user/view"))
                 .addChild(new AdminGroupAclItem().name("用户编辑").actionId("user/edit"))

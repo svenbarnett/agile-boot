@@ -13,9 +13,9 @@ import java.util.Map;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    UserResponse toUserResponse(User admin);
+    UserResponse toUserResponse(User user);
 
-    List<UserResponse> toUserResponses(List<User> admins);
+    List<UserResponse> toUserResponses(List<User> users);
 
     default Page<UserResponse> toPageResponse(Page<User> page) {
         return page.map(this::toUserResponse);

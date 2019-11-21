@@ -1,0 +1,16 @@
+apply plugin: 'io.spring.dependency-management'
+
+ext.springBootDependenciesVersion = '2.2.1.RELEASE'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootDependenciesVersion}"
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+}

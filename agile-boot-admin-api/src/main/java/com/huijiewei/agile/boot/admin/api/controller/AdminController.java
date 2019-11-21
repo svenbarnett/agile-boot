@@ -30,7 +30,7 @@ public class AdminController {
     @Operation(description = "管理员列表")
     @ApiResponse(responseCode = "200", description = "管理员列表")
     @PreAuthorize("hasPermission(#ADMIN, 'admin/index')")
-    public ListResponse<AdminResponse> actionList() {
+    public ListResponse<AdminResponse> actionIndex() {
         return this.adminService.getAll();
     }
 
@@ -42,7 +42,7 @@ public class AdminController {
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
     @PreAuthorize("hasPermission(#ADMIN, {'admin/view', 'admin/edit'})")
-    public AdminResponse actionDetail(@PathVariable("id") Integer id) {
+    public AdminResponse actionView(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }
 

@@ -1,6 +1,7 @@
 package com.huijiewei.agile.boot.admin.api.handler;
 
 import com.huijiewei.agile.base.exception.BadRequestException;
+import com.huijiewei.agile.base.exception.ConflictException;
 import com.huijiewei.agile.base.exception.ForbiddenException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import org.apiguardian.api.API;
@@ -52,5 +53,13 @@ public class ExceptionHandling extends SpringSecurityExceptionHandling {
             final ForbiddenException exception,
             final NativeWebRequest request) {
         return create(Status.FORBIDDEN, exception, request);
+    }
+
+    @API(status = INTERNAL)
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleConflict(
+            final ConflictException exception,
+            final NativeWebRequest request) {
+        return create(Status.CONFLICT, exception, request);
     }
 }

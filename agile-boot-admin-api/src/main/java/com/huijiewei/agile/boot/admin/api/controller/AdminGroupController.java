@@ -30,7 +30,7 @@ public class AdminGroupController {
     @Operation(description = "管理组列表")
     @ApiResponse(responseCode = "200", description = "管理组列表")
     @PreAuthorize("hasPermission(#ADMIN, 'admin-group/index')")
-    public ListResponse<AdminGroupResponse> actionList() {
+    public ListResponse<AdminGroupResponse> actionIndex() {
         return this.adminGroupService.getAll();
     }
 
@@ -42,7 +42,7 @@ public class AdminGroupController {
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
     @PreAuthorize("hasPermission(#ADMIN, {'admin-group/view', 'admin-group/edit'})")
-    public AdminGroupResponse actionDetail(@PathVariable("id") Integer id) {
+    public AdminGroupResponse actionView(@PathVariable("id") Integer id) {
         AdminGroupResponse adminGroupResponse = this.adminGroupService.getById(id);
         adminGroupResponse.setPermissions(this.adminGroupService.getPermissionsById(adminGroupResponse.getId()));
 

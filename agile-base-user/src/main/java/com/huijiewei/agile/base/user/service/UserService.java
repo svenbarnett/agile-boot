@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,6 +46,14 @@ public class UserService {
         }
 
         return response;
+    }
+
+    public void exportAll(UserSearchRequest searchRequest) {
+        Specification<User> userSpecification = searchRequest.getSpecification();
+
+        List<UserResponse> users = UserMapper.INSTANCE.toUserResponses(this.userRepository.findAll(userSpecification));
+
+
     }
 
     public UserResponse getById(Integer id) {

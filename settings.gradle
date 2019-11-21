@@ -4,4 +4,5 @@ include 'agile-boot-admin-api'
 include 'agile-base-admin'
 include 'agile-base-user'
 include 'agile-spring-upload'
+include 'agile-spring-excel'
 
