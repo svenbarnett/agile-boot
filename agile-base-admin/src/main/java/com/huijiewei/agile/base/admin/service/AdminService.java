@@ -107,7 +107,7 @@ public class AdminService {
     public AdminResponse getById(Integer id) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
-        if (!adminOptional.isPresent()) {
+        if (adminOptional.isEmpty()) {
             throw new NotFoundException("管理员不存在");
         }
 
@@ -173,7 +173,7 @@ public class AdminService {
     public AdminResponse edit(Integer id, @Valid AdminRequest request) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
-        if (!adminOptional.isPresent()) {
+        if (adminOptional.isEmpty()) {
             throw new NotFoundException("管理员不存在");
         }
 
@@ -187,7 +187,7 @@ public class AdminService {
     public void delete(Integer id) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
-        if (!adminOptional.isPresent()) {
+        if (adminOptional.isEmpty()) {
             throw new NotFoundException("管理员不存在");
         }
 

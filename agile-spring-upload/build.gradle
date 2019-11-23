@@ -27,5 +27,4 @@ dependencies {
     implementation "net.coobird:thumbnailator:${thumbnailatorVersion}"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
 }

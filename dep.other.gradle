@@ -1,5 +1,5 @@
 ext.lombokVersion = '1.18.10'
-ext.springdocOpenApiVersion = '1.2.6'
+ext.springdocOpenApiVersion = '1.2.10'
 ext.validationApiVersion = '2.0.1.Final'
 ext.mysqlConnectorVersion = '8.0.18'
 ext.apacheCommonsLangVersion = '3.9'
@@ -13,6 +13,7 @@ ext.zalandoProblemWebVersion = '0.25.2'
 ext.friendlyIdVersion = '1.1.0'
 ext.jpaSpecVersion = '3.2.5'
 ext.javaFakerVersion = '1.0.1'
+ext.jooqVersion = '3.12.3'
 
 ext.libs = [
         lombok            : [
@@ -36,7 +37,7 @@ ext.libs = [
         springBeans       : [
                 "org.springframework:spring-beans:${springFrameworkVersion}"
         ],
-        springContext       : [
+        springContext     : [
                 "org.springframework:spring-context:${springFrameworkVersion}"
         ],
         springSecurity    : [
@@ -60,13 +61,18 @@ ext.libs = [
         zalandoProblemWeb : [
                 "org.zalando:problem-spring-web-starter:${zalandoProblemWebVersion}"
         ],
-        friendlyId : [
+        friendlyId        : [
                 "com.devskiller.friendly-id:friendly-id:${friendlyIdVersion}"
         ],
-        jpaSpec : [
+        jpaSpec           : [
                 "com.github.wenhao:jpa-spec:${jpaSpecVersion}"
         ],
-        javaFaker : [
+        javaFaker         : [
                 "com.github.javafaker:javafaker:${javaFakerVersion}"
+        ],
+        jooq              : [
+                "org.jooq:jooq:${jooqVersion}",
+                "org.jooq:jooq-meta:${jooqVersion}",
+                "org.jooq:jooq-codegen:${jooqVersion}"
         ]
 ]

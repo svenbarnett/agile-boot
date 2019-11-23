@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.EntityManagerFactory;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -29,12 +30,14 @@ public class AdminGroupService {
     private final AdminRepository adminRepository;
     private final AdminGroupRepository adminGroupRepository;
     private final AdminGroupPermissionRepository adminGroupPermissionRepository;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public AdminGroupService(AdminRepository adminRepository, AdminGroupRepository adminGroupRepository, AdminGroupPermissionRepository adminGroupPermissionRepository) {
+    public AdminGroupService(AdminRepository adminRepository, AdminGroupRepository adminGroupRepository, AdminGroupPermissionRepository adminGroupPermissionRepository, EntityManagerFactory entityManagerFactory) {
         this.adminRepository = adminRepository;
         this.adminGroupRepository = adminGroupRepository;
         this.adminGroupPermissionRepository = adminGroupPermissionRepository;
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public ListResponse<AdminGroupResponse> getAll() {
@@ -59,7 +62,7 @@ public class AdminGroupService {
     public AdminGroupResponse getById(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (!adminGroupOptional.isPresent()) {
+        if (adminGroupOptional.isEmpty()) {
             throw new NotFoundException("管理组不存在");
         }
 
@@ -182,16 +185,26 @@ public class AdminGroupService {
             permission.setAdminGroupId(adminGroupId);
 
             adminGroupPermissions.add(permission);
-
-            this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
         }
+
+        this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
+/*
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+
+        entityManager.getTransaction().begin();
+
+        adminGroupPermissions.forEach(entityManager::persist);
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+ */
     }
 
     @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
     public AdminGroupResponse edit(Integer id, AdminGroupRequest request) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (!adminGroupOptional.isPresent()) {
+        if (adminGroupOptional.isEmpty()) {
             throw new NotFoundException("管理组不存在");
         }
 
@@ -210,7 +223,7 @@ public class AdminGroupService {
     public void delete(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
-        if (!adminGroupOptional.isPresent()) {
+        if (adminGroupOptional.isEmpty()) {
             throw new NotFoundException("管理组不存在");
         }
 

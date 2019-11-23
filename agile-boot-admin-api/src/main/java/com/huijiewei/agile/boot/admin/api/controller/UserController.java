@@ -56,7 +56,7 @@ public class UserController {
 
     @GetMapping(
             value = "/users/export",
-            produces = {MediaType.APPLICATION_JSON_VALUE}
+            produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE}
     )
     @Operation(description = "用户导出")
     @ApiResponse(responseCode = "200", description = "用户导出")

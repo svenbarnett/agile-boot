@@ -52,14 +52,12 @@ public class UserService {
         Specification<User> userSpecification = searchRequest.getSpecification();
 
         List<UserResponse> users = UserMapper.INSTANCE.toUserResponses(this.userRepository.findAll(userSpecification));
-
-
     }
 
     public UserResponse getById(Integer id) {
         Optional<User> userOptional = this.userRepository.findById(id);
 
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             throw new NotFoundException("用户不存在");
         }
 

@@ -1,4 +1,4 @@
-rootProject.name = 'AgileBoot'
+rootProject.name = 'agile-boot'
 include 'agile-base'
 include 'agile-boot-admin-api'
 include 'agile-base-admin'
