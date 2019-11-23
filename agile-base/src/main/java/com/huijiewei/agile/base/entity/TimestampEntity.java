@@ -2,7 +2,6 @@ package com.huijiewei.agile.base.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -17,7 +16,6 @@ public abstract class TimestampEntity extends BaseEntity {
     @Column(updatable = false)
     LocalDateTime createdAt;
 
-    @UpdateTimestamp
     LocalDateTime updatedAt;
 
     LocalDateTime deletedAt;

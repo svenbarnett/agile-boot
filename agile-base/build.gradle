@@ -5,7 +5,6 @@ dependencies {
 
     implementation libs.apacheCommonsLang
     implementation libs.springBeans
-    implementation libs.hibernateCore
     implementation libs.hibernateValidator
     implementation libs.validationApi
     implementation libs.springdocOpenApi

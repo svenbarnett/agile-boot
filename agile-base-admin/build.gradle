@@ -10,7 +10,6 @@ dependencies {
     implementation libs.springBeans
     implementation libs.springSecurity
     implementation libs.mapstruct
-    implementation libs.hibernateCore
     implementation libs.validationApi
     implementation libs.springdocOpenApi
     implementation libs.friendlyId
