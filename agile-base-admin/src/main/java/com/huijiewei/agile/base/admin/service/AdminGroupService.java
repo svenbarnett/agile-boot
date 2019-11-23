@@ -30,14 +30,14 @@ public class AdminGroupService {
     private final AdminRepository adminRepository;
     private final AdminGroupRepository adminGroupRepository;
     private final AdminGroupPermissionRepository adminGroupPermissionRepository;
-    private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public AdminGroupService(AdminRepository adminRepository, AdminGroupRepository adminGroupRepository, AdminGroupPermissionRepository adminGroupPermissionRepository, EntityManagerFactory entityManagerFactory) {
+    public AdminGroupService(AdminRepository adminRepository,
+                             AdminGroupRepository adminGroupRepository,
+                             AdminGroupPermissionRepository adminGroupPermissionRepository) {
         this.adminRepository = adminRepository;
         this.adminGroupRepository = adminGroupRepository;
         this.adminGroupPermissionRepository = adminGroupPermissionRepository;
-        this.entityManagerFactory = entityManagerFactory;
     }
 
     public ListResponse<AdminGroupResponse> getAll() {
@@ -188,16 +188,6 @@ public class AdminGroupService {
         }
 
         this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
-/*
-        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
-
-        entityManager.getTransaction().begin();
-
-        adminGroupPermissions.forEach(entityManager::persist);
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
- */
     }
 
     @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
