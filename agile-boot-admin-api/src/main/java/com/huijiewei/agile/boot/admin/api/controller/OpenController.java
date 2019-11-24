@@ -48,10 +48,10 @@ public class OpenController {
     }
 
     @GetMapping(
-            value = "/open/admin-faker",
+            value = "/open/fake-user",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public void actionAdminFaker(Integer count) {
+    public void actionFakeUser(Integer count) {
         Faker englishFaker = new Faker(Locale.ENGLISH);
         Faker chineseFaker = new Faker(Locale.CHINA);
 

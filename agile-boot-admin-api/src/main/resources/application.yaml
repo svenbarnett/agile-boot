@@ -20,7 +20,6 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      use-new-id-generator-mappings: true
       ddl-auto: none
     properties:
       hibernate:
@@ -39,3 +38,8 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm
     time-zone: Asia/Shanghai
+
+agile:
+  date-format: yyyy-MM-dd
+  time-format: HH:mm
+  datetime-format: yyyy-MM-dd HH:mm

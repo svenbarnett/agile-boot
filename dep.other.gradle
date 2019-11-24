@@ -1,5 +1,5 @@
 ext.lombokVersion = '1.18.10'
-ext.springdocOpenApiVersion = '1.2.10'
+ext.springdocOpenApiVersion = '1.2.11'
 ext.validationApiVersion = '2.0.1.Final'
 ext.mysqlConnectorVersion = '8.0.18'
 ext.apacheCommonsLangVersion = '3.9'
