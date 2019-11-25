@@ -25,8 +25,11 @@ spring:
       hibernate:
         jdbc:
           batch_size: 50
-        order_inserts: true
-        open-in-view: false
+          time_zone: Asia/Shanghai
+          order_inserts: true
+          order_updates: true
+          batch_versioned_data: true
+          open-in-view: false
   datasource:
     hikari:
       max-lifetime: 120000
@@ -41,6 +44,7 @@ spring:
     time-zone: Asia/Shanghai
 
 agile:
-  date-format: yyyy-MM-dd
-  time-format: HH:mm
-  datetime-format: yyyy-MM-dd HH:mm
+  format:
+    date-format: yyyy-MM-dd
+    time-format: HH:mm
+    datetime-format: yyyy-MM-dd HH:mm

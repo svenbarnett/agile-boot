@@ -18,7 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Configuration
-@ConfigurationProperties(prefix = "agile")
+@ConfigurationProperties(prefix = "agile.format")
 public class DateFormatConfig {
     private String dateFormat = "yyyy-MM-dd";
 
