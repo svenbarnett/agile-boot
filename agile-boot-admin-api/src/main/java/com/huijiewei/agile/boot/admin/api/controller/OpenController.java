@@ -34,7 +34,7 @@ public class OpenController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public UploadResponse actionUploadFile(@RequestParam("policy") String policy, @RequestParam("file") MultipartFile file) {
+    public UploadResponse actionUploadFile(@RequestParam("policy") String policy, @RequestPart("file") MultipartFile file) {
         return this.uploadDriver.upload(policy, file);
     }
 
