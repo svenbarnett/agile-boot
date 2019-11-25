@@ -15,10 +15,12 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "ag_user")
+@Table(name = User.TABLE_NAME)
 @DynamicInsert
 @DynamicUpdate
 public class User extends TimestampEntity {
+    public static final String TABLE_NAME = "ag_user";
+
     public static final String CREATED_FROM_WEB = "WEB";
     public static final String CREATED_FROM_APP = "APP";
     public static final String CREATED_FROM_WECHAT = "WECHAT";
