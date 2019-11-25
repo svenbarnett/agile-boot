@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public interface AdminGroupPermissionRepository extends JpaRepository<AdminGroupPermission, Integer> {
+public interface AdminGroupPermissionRepository extends JpaRepository<AdminGroupPermission, Integer>, AdminGroupPermissionBatchRepository {
     public List<AdminGroupPermission> findAllByAdminGroupId(Integer id);
 
     @Modifying

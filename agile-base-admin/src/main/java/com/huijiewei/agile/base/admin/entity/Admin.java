@@ -11,10 +11,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "ag_admin")
+@Table(name = Admin.TABLE_NAME)
 @DynamicInsert
 @DynamicUpdate
 public class Admin extends TimestampEntity {
+    public static final String TABLE_NAME = "ag_admin";
+
     @Column(unique = true)
     private String phone;
 

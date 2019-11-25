@@ -20,7 +20,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.EntityManagerFactory;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -187,7 +186,7 @@ public class AdminGroupService {
             adminGroupPermissions.add(permission);
         }
 
-        this.adminGroupPermissionRepository.saveAll(adminGroupPermissions);
+        this.adminGroupPermissionRepository.batchInsert(adminGroupPermissions);
     }
 
     @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
