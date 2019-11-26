@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -25,6 +24,5 @@ public class AdminAccessToken extends BaseEntity {
     private String accessToken;
     private String userAgent;
 
-    @UpdateTimestamp
     private Instant updatedAt;
 }

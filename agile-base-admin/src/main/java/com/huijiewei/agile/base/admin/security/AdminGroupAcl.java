@@ -39,6 +39,22 @@ public class AdminGroupAcl {
                 .addChild(new AdminGroupAclItem().name("用户导入").actionId("user/import"))
         );
 
+        all.add(new AdminGroupAclItem().name("商品管理")
+                .addChild(new AdminGroupAclItem().name("商品管理")
+                        .addChild(new AdminGroupAclItem().name("商品列表").actionId("shop-good/index"))
+                        .addChild(new AdminGroupAclItem().name("商品新建").actionId("shop-good/create"))
+                        .addChild(new AdminGroupAclItem().name("商品查看").actionId("shop-good/view"))
+                        .addChild(new AdminGroupAclItem().name("商品编辑").actionId("shop-good/edit").addCombine("shop-good/view"))
+                        .addChild(new AdminGroupAclItem().name("商品删除").actionId("shop-good/delete"))
+                )
+                .addChild(new AdminGroupAclItem().name("商品分类管理")
+                        .addChild(new AdminGroupAclItem().name("商品分类").actionId("shop-category/index"))
+                        .addChild(new AdminGroupAclItem().name("分类新建").actionId("shop-category/create"))
+                        .addChild(new AdminGroupAclItem().name("分类编辑").actionId("shop-category/edit"))
+                        .addChild(new AdminGroupAclItem().name("分类删除").actionId("shop-category/delete"))
+                )
+        );
+
         return all;
     }
 }

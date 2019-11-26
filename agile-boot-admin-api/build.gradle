@@ -21,6 +21,7 @@ dependencies {
     implementation project(':agile-base')
     implementation project(':agile-base-admin')
     implementation project(':agile-base-user')
+    implementation project(':agile-base-shop')
     implementation project(':agile-spring-upload')
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

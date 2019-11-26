@@ -3,6 +3,9 @@ package com.huijiewei.agile.boot.admin.api.controller;
 import com.huijiewei.agile.base.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
+import com.huijiewei.agile.base.shop.mapper.ShopCategoryMapper;
+import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
+import com.huijiewei.agile.base.shop.service.ShopCategoryService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +24,13 @@ import java.util.Map;
 @Tag(name = "misc", description = "杂项接口")
 public class MiscController {
     private final AdminGroupService adminGroupService;
+    private final ShopCategoryService shopCategoryService;
     private final LocalFile uploadDriver;
 
     @Autowired
-    public MiscController(AdminGroupService adminGroupService, LocalFile uploadDriver) {
+    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, LocalFile uploadDriver) {
         this.adminGroupService = adminGroupService;
+        this.shopCategoryService = shopCategoryService;
         this.uploadDriver = uploadDriver;
     }
 
@@ -57,5 +62,15 @@ public class MiscController {
     @ApiResponse(responseCode = "200", description = "头像上传设置")
     public UploadRequest actionAvatarUploadOptions() {
         return this.uploadDriver.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
+    }
+
+    @GetMapping(
+            value = "/misc/shop-category-tree",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "商品分类树")
+    @ApiResponse(responseCode = "200", description = "商品分类树")
+    public List<ShopCategoryResponse> actionShopCategoryTree() {
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryService.getTree());
     }
 }
