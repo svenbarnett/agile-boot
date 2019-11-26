@@ -1,21 +1,11 @@
 package com.huijiewei.agile.base.service;
 
 import com.huijiewei.agile.base.entity.TreeEntity;
-import lombok.extern.java.Log;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Log
-public abstract class TreeService<T extends TreeEntity, R extends JpaRepository<T, Integer>> {
-    abstract protected R repository();
-
-    public List<T> getTree() {
-        List<T> items = this.repository().findAll();
-
+public abstract class TreeService<T extends TreeEntity> {
+    protected List<T> buildTree(List<T> items) {
         Map<Integer, T> map = new HashMap<>();
 
         for (T current : items) {
@@ -40,5 +30,30 @@ public abstract class TreeService<T extends TreeEntity, R extends JpaRepository<
         }
 
         return tree;
+    }
+
+    protected List<T> buildParents(Integer id, List<T> items) {
+        List<T> parents = new ArrayList<>();
+
+        T parent = this.getItemInItemsById(id, items);
+
+        while (parent != null) {
+            parents.add(parent);
+            parent = this.getItemInItemsById(parent.getParentId(), items);
+        }
+
+        Collections.reverse(parents);
+
+        return parents;
+    }
+
+    private T getItemInItemsById(Integer id, List<T> items) {
+        for (T item : items) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
+
+        return null;
     }
 }

@@ -19,11 +19,11 @@ public abstract class TreeEntity<T extends TreeEntity> extends BaseEntity {
     @Transient
     private List<T> children;
 
-    public void addChild(T entity) {
+    public void addChild(T child) {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
 
-        this.children.add(entity);
+        this.children.add(child);
     }
 }

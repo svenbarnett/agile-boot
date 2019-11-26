@@ -71,6 +71,6 @@ public class MiscController {
     @Operation(description = "商品分类树")
     @ApiResponse(responseCode = "200", description = "商品分类树")
     public List<ShopCategoryResponse> actionShopCategoryTree() {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryService.getTree());
+        return this.shopCategoryService.getTree();
     }
 }

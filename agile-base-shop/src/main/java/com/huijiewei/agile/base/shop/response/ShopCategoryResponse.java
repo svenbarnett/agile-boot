@@ -26,4 +26,8 @@ public class ShopCategoryResponse {
     @Schema(description = "子分类")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<ShopCategoryResponse> children;
+
+    @Schema(description = "上级分类列表")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<ShopCategoryResponse> parents;
 }

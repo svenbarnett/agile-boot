@@ -27,12 +27,10 @@ import java.util.List;
 @Tag(name = "user", description = "用户接口")
 public class UserController {
     private final UserService userService;
-    private final HttpServletRequest servletRequest;
 
     @Autowired
-    public UserController(UserService userService, HttpServletRequest request) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.servletRequest = request;
     }
 
     @GetMapping(
@@ -96,7 +94,7 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "用户")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     @PreAuthorize("hasPermission(#ADMIN, 'user/create')")
-    public UserResponse actionCreate(@RequestBody UserRequest request) {
+    public UserResponse actionCreate(@RequestBody UserRequest request, HttpServletRequest servletRequest) {
         return this.userService.create(request, User.CREATED_FROM_SYSTEM, servletRequest.getRemoteAddr());
     }
 
