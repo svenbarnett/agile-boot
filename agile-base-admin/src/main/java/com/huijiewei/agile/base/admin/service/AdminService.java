@@ -11,14 +11,12 @@ import com.huijiewei.agile.base.admin.request.AdminRequest;
 import com.huijiewei.agile.base.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
-import com.huijiewei.agile.base.admin.security.AdminUser;
-import com.huijiewei.agile.base.admin.security.AdminUserDetails;
+import com.huijiewei.agile.base.admin.security.AdminIdentity;
 import com.huijiewei.agile.base.exception.BadRequestException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +50,7 @@ public class AdminService {
 
         AdminAccessToken adminAccessToken = adminAccessTokenOptional.orElseGet(AdminAccessToken::new);
 
-        if (!adminAccessToken.isAdult()) {
+        if (!adminAccessToken.hasId()) {
             adminAccessToken.setAdminId(admin.getId());
             adminAccessToken.setClientId(clientId);
         }
@@ -71,23 +69,15 @@ public class AdminService {
         return adminLoginResponse;
     }
 
-    public void logout() {
-        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    public void logout(AdminIdentity identity) {
         this.adminAccessTokenRepository.deleteByAdminIdAndClientId(
-                adminUserDetails.getAdminUser().getAdmin().getId(),
-                adminUserDetails.getAdminUser().getClientId());
+                identity.getAdmin().getId(),
+                identity.getClientId());
 
     }
 
-    private AdminUser getCurrentAdminUser() {
-        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        return adminUserDetails.getAdminUser();
-    }
-
-    public AdminAccountResponse account() {
-        Admin admin = this.getCurrentAdminUser().getAdmin();
+    public AdminAccountResponse account(AdminIdentity identity) {
+        Admin admin = identity.getAdmin();
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
         adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
@@ -133,14 +123,12 @@ public class AdminService {
     }
 
     @Validated(AdminRequest.Edit.class)
-    public void profile(@Valid AdminRequest request) {
-        Admin current = this.getCurrentAdminUser().getAdmin();
-
-        this.update(current, request, true);
+    public void profile(@Valid AdminRequest request, AdminIdentity identity) {
+        this.update(identity.getAdmin(), request, true);
     }
 
-    public AdminResponse profile() {
-        return AdminMapper.INSTANCE.toAdminResponse(this.getCurrentAdminUser().getAdmin());
+    public AdminResponse profile(AdminIdentity identity) {
+        return AdminMapper.INSTANCE.toAdminResponse(identity.getAdmin());
     }
 
     private Admin update(Admin current, AdminRequest request, boolean isOwner) {
@@ -170,7 +158,7 @@ public class AdminService {
     }
 
     @Validated(AdminRequest.Edit.class)
-    public AdminResponse edit(Integer id, @Valid AdminRequest request) {
+    public AdminResponse edit(Integer id, @Valid AdminRequest request, AdminIdentity identity) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
         if (adminOptional.isEmpty()) {
@@ -179,7 +167,7 @@ public class AdminService {
 
         Admin current = adminOptional.get();
 
-        Admin admin = this.update(current, request, this.getCurrentAdminUser().getAdmin().getAdminGroup().getId().equals(current.getAdminGroup().getId()));
+        Admin admin = this.update(current, request, identity.getAdmin().getId().equals(current.getId()));
 
         return AdminMapper.INSTANCE.toAdminResponse(admin);
     }

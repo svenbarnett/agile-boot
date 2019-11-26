@@ -1,6 +1,5 @@
 package com.huijiewei.agile.boot.admin.api.security;
 
-import com.huijiewei.agile.base.admin.security.AdminUserDetails;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
@@ -30,7 +29,7 @@ public class AdminPermissionEvaluator implements PermissionEvaluator {
             return false;
         }
 
-        Integer adminGroupId = adminUserDetails.getAdminUser().getAdmin().getAdminGroup().getId();
+        Integer adminGroupId = adminUserDetails.getAdminIdentity().getAdmin().getAdminGroup().getId();
 
         return this.adminGroupService.checkPermission(adminGroupId, permission);
     }

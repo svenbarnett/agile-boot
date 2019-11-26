@@ -7,11 +7,6 @@ import javax.validation.ConstraintValidatorContext;
 
 public class PhoneValidator implements ConstraintValidator<Phone, String> {
     @Override
-    public void initialize(final Phone constraintAnnotation) {
-
-    }
-
-    @Override
     public boolean isValid(final String phone, final ConstraintValidatorContext context) {
         if (StringUtils.isEmpty(phone)) {
             return true;

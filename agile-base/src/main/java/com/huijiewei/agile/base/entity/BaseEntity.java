@@ -14,7 +14,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    public Boolean isAdult() {
+    public Boolean hasId() {
         return this.getId() != null && this.getId() > 0;
     }
 }

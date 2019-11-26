@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public
-class AdminUser {
+class AdminIdentity {
     private Admin admin;
 
     private String clientId;

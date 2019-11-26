@@ -1,15 +1,26 @@
-package com.huijiewei.agile.base.admin.security;
+package com.huijiewei.agile.boot.admin.api.security;
 
+import com.huijiewei.agile.base.admin.security.AdminIdentity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 public class AdminUserDetails implements UserDetails {
-    private AdminUser adminUser;
+    private AdminIdentity identity;
 
-    public AdminUserDetails(AdminUser adminUser) {
-        this.adminUser = adminUser;
+    AdminUserDetails(AdminIdentity identity) {
+        this.identity = identity;
+    }
+
+    public static AdminIdentity getCurrentAdminIdentity() {
+        AdminUserDetails adminUserDetails = (AdminUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        return adminUserDetails.getAdminIdentity();
     }
 
     @Override
@@ -24,11 +35,11 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.adminUser.getAdmin().getName();
+        return this.identity.getAdmin().getName();
     }
 
-    public AdminUser getAdminUser() {
-        return this.adminUser;
+    AdminIdentity getAdminIdentity() {
+        return this.identity;
     }
 
     @Override

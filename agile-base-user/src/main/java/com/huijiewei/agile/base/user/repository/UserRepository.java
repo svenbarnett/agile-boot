@@ -9,9 +9,13 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
-    public Optional<User> findFirstByOrderByIdDesc();
+    Optional<User> findFirstByOrderByIdDesc();
 
-    public Boolean existsByPhone(String phone);
+    Boolean existsByPhone(String phone);
 
-    public Boolean existsByEmail(String email);
+    Boolean existsByEmail(String email);
+
+    Boolean existsByPhoneAndIdNot(String phone, Integer id);
+
+    Boolean existsByEmailAndIdNot(String email, Integer id);
 }

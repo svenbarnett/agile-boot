@@ -5,6 +5,7 @@ import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import com.huijiewei.agile.base.response.ListResponse;
 import com.huijiewei.agile.base.response.MessageResponse;
+import com.huijiewei.agile.boot.admin.api.security.AdminUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,7 +71,7 @@ public class AdminController {
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     @PreAuthorize("hasPermission(#ADMIN, 'admin/edit')")
     public AdminResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminRequest request) {
-        return this.adminService.edit(id, request);
+        return this.adminService.edit(id, request, AdminUserDetails.getCurrentAdminIdentity());
     }
 
     @DeleteMapping(

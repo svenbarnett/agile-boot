@@ -7,6 +7,7 @@ import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.service.AdminService;
 import com.huijiewei.agile.base.response.MessageResponse;
+import com.huijiewei.agile.boot.admin.api.security.AdminUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,7 +48,7 @@ public class AuthController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public AdminAccountResponse actionAccount() {
-        return this.adminService.account();
+        return this.adminService.account(AdminUserDetails.getCurrentAdminIdentity());
     }
 
     @GetMapping(
@@ -57,7 +58,7 @@ public class AuthController {
     @Operation(description = "管理员个人资料")
     @ApiResponse(responseCode = "200", description = "管理员个人资料")
     public AdminResponse actionProfile() {
-        return this.adminService.profile();
+        return this.adminService.profile(AdminUserDetails.getCurrentAdminIdentity());
     }
 
     @PutMapping(
@@ -69,7 +70,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "管理员个人资料")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     public MessageResponse actionProfile(@RequestBody AdminRequest request) {
-        this.adminService.profile(request);
+        this.adminService.profile(request, AdminUserDetails.getCurrentAdminIdentity());
 
         return MessageResponse.of("个人资料更新成功");
     }
@@ -81,7 +82,7 @@ public class AuthController {
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public MessageResponse actionLogout() {
-        this.adminService.logout();
+        this.adminService.logout(AdminUserDetails.getCurrentAdminIdentity());
 
         return MessageResponse.of("退出登录成功");
     }

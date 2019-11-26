@@ -4,8 +4,7 @@ import com.huijiewei.agile.base.admin.entity.Admin;
 import com.huijiewei.agile.base.admin.entity.AdminAccessToken;
 import com.huijiewei.agile.base.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.base.admin.repository.AdminRepository;
-import com.huijiewei.agile.base.admin.security.AdminUser;
-import com.huijiewei.agile.base.admin.security.AdminUserDetails;
+import com.huijiewei.agile.base.admin.security.AdminIdentity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -35,7 +34,7 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
 
         Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientIdAndAccessToken(clientId, accessToken);
 
-        if (!adminAccessTokenOptional.isPresent()) {
+        if (adminAccessTokenOptional.isEmpty()) {
             throw new BadCredentialsException("无效的 AccessToken");
         }
 
@@ -43,14 +42,14 @@ public class AdminAuthenticationUserDetailsService implements AuthenticationUser
 
         Optional<Admin> adminOptional = this.adminRepository.findById(adminAccessToken.getAdminId());
 
-        if (!adminOptional.isPresent()) {
+        if (adminOptional.isEmpty()) {
             throw new BadCredentialsException("无效的 AccessToken");
         }
 
-        AdminUser adminUser = new AdminUser();
-        adminUser.setAdmin(adminOptional.get());
-        adminUser.setClientId(clientId);
+        AdminIdentity identity = new AdminIdentity();
+        identity.setAdmin(adminOptional.get());
+        identity.setClientId(clientId);
 
-        return new AdminUserDetails(adminUser);
+        return new AdminUserDetails(identity);
     }
 }
