@@ -102,4 +102,15 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
 
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
+
+    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
+    public void delete(Integer id) {
+        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
+
+        if (shopCategoryOptional.isEmpty()) {
+            throw new NotFoundException("商品分类不存在");
+        }
+
+        this.shopCategoryRepository.delete(shopCategoryOptional.get());
+    }
 }

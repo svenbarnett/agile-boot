@@ -1,5 +1,6 @@
 package com.huijiewei.agile.boot.admin.api.controller;
 
+import com.huijiewei.agile.base.response.MessageResponse;
 import com.huijiewei.agile.base.shop.request.ShopCategoryRequest;
 import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.base.shop.service.ShopCategoryService;
@@ -55,5 +56,20 @@ public class ShopCategoryController {
     @PreAuthorize("hasPermission(#ADMIN, 'shop-category/edit')")
     public ShopCategoryResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.edit(id, request);
+    }
+
+    @DeleteMapping(
+            value = "/shop-categories/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "分类删除")
+    @ApiResponse(responseCode = "200", description = "删除成功")
+    @ApiResponse(responseCode = "404", description = "分类不存在", ref = "Problem")
+    @ApiResponse(responseCode = "409", description = "分类不允许删除", ref = "Problem")
+    @PreAuthorize("hasPermission(#ADMIN, 'shop-category/delete')")
+    public MessageResponse actionDelete(@PathVariable("id") Integer id) {
+        this.shopCategoryService.delete(id);
+
+        return MessageResponse.of("分类删除成功");
     }
 }
