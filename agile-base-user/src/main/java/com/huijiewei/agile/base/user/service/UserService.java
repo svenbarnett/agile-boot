@@ -71,6 +71,26 @@ public class UserService {
         return UserMapper.INSTANCE.toUserResponse(userOptional.get());
     }
 
+    @Validated(UserRequest.Create.class)
+    public UserResponse create(@Valid UserRequest request, String createdFrom, String createdIp) {
+        if (this.userRepository.existsByPhone(request.getPhone())) {
+            throw new BadRequestException("手机号码已被使用");
+        }
+
+        if (this.userRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("电子邮箱已被使用");
+        }
+
+        User user = UserMapper.INSTANCE.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedFrom(createdFrom);
+        user.setCreatedIp(createdIp);
+
+        this.userRepository.save(user);
+
+        return UserMapper.INSTANCE.toUserResponse(user);
+    }
+
     @Validated(UserRequest.Edit.class)
     public UserResponse edit(Integer id, @Valid UserRequest request) {
         Optional<User> userOptional = this.userRepository.findById(id);
@@ -99,6 +119,8 @@ public class UserService {
         User user = UserMapper.INSTANCE.toUser(request);
         user.setId(current.getId());
         user.setPassword(current.getPassword());
+        user.setCreatedFrom(current.getCreatedFrom());
+        user.setCreatedIp(current.getCreatedIp());
 
         if (!StringUtils.isEmpty(request.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));

@@ -13,7 +13,7 @@ import com.huijiewei.agile.base.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import com.huijiewei.agile.base.admin.security.AdminIdentity;
 import com.huijiewei.agile.base.exception.BadRequestException;
-import com.huijiewei.agile.base.exception.ForbiddenException;
+import com.huijiewei.agile.base.exception.ConflictException;
 import com.huijiewei.agile.base.exception.NotFoundException;
 import com.huijiewei.agile.base.response.ListResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -183,7 +183,7 @@ public class AdminService {
         Admin admin = adminOptional.get();
 
         if (admin.getId().equals(identity.getAdmin().getId())) {
-            throw new ForbiddenException("管理员不能删除自己");
+            throw new ConflictException("管理员不能删除自己");
         }
 
         this.adminRepository.delete(admin);

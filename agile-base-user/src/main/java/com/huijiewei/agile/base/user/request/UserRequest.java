@@ -31,10 +31,6 @@ public class UserRequest {
     @NotNull
     private String avatar;
 
-    private String createdIp;
-
-    private String createdFrom;
-
     public interface Create {
     }
 
