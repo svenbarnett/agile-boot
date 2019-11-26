@@ -10,7 +10,6 @@ import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -33,8 +32,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return this.shopCategoryRepository.findAll();
     }
 
-    @Cacheable(value = "shop-category-parents", key = "#id")
-    public List<ShopCategoryResponse> getParentsById(Integer id) {
+    private List<ShopCategoryResponse> getParentsById(Integer id) {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.buildParents(id, this.findAll()));
     }
 
@@ -71,10 +69,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return response;
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true),
-            @CacheEvict(value = {"shop-category-parents"}, key = "#id")
-    })
+    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
     public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request);
 
@@ -87,10 +82,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true),
-            @CacheEvict(value = {"shop-category-parents"}, key = "#id")
-    })
+    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
     public ShopCategoryResponse edit(Integer id, @Valid ShopCategoryRequest request) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
