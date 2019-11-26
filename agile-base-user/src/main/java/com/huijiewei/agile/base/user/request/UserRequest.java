@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 
 @Data
 @FieldMatch(field = "password", fieldMatch = "passwordConfirm", message = "密码与密码确认必须相同")
@@ -31,9 +32,9 @@ public class UserRequest {
     @NotNull
     private String avatar;
 
-    public interface Create {
+    public interface Create extends Default {
     }
 
-    public interface Edit {
+    public interface Edit extends Default {
     }
 }

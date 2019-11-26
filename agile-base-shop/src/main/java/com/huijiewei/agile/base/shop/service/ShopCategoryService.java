@@ -10,6 +10,7 @@ import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -42,6 +43,16 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.buildTree(this.findAll()));
     }
 
+    public List<ShopCategoryResponse> getRoute(Integer id) {
+        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
+
+        if (shopCategoryOptional.isEmpty()) {
+            throw new NotFoundException("分类不存在");
+        }
+
+        return this.getParentsById(id);
+    }
+
     public ShopCategoryResponse getById(Integer id, Boolean withParents) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
@@ -60,7 +71,10 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return response;
     }
 
-    @CacheEvict(value = {"shop-categories", "shop-category-tree", "shop-category-parents"}, key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true),
+            @CacheEvict(value = {"shop-category-parents"}, key = "#id")
+    })
     public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request);
 
@@ -73,7 +87,10 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
 
-    @CacheEvict(value = {"shop-categories", "shop-category-tree", "shop-category-parents"}, key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true),
+            @CacheEvict(value = {"shop-category-parents"}, key = "#id")
+    })
     public ShopCategoryResponse edit(Integer id, @Valid ShopCategoryRequest request) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 

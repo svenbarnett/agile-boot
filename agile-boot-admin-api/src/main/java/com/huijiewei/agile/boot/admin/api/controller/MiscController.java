@@ -3,7 +3,6 @@ package com.huijiewei.agile.boot.admin.api.controller;
 import com.huijiewei.agile.base.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.base.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.base.admin.service.AdminGroupService;
-import com.huijiewei.agile.base.shop.mapper.ShopCategoryMapper;
 import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.base.shop.service.ShopCategoryService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
@@ -72,5 +71,16 @@ public class MiscController {
     @ApiResponse(responseCode = "200", description = "商品分类树")
     public List<ShopCategoryResponse> actionShopCategoryTree() {
         return this.shopCategoryService.getTree();
+    }
+
+    @GetMapping(
+            value = "/misc/shop-category-route",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "商品分类路径")
+    @ApiResponse(responseCode = "200", description = "商品分类路径")
+    @ApiResponse(responseCode = "404", description = "分类不存在")
+    public List<ShopCategoryResponse> actionShopCategoryRoute(Integer id) {
+        return this.shopCategoryService.getRoute(id);
     }
 }
