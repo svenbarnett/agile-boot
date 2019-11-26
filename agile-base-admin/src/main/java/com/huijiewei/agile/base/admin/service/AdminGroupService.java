@@ -190,20 +190,21 @@ public class AdminGroupService {
     }
 
     @CacheEvict(value = {"admin-group-permissions", "admin-group-menus"}, key = "#id")
-    public AdminGroupResponse edit(Integer id, AdminGroupRequest request) {
+    public AdminGroupResponse edit(Integer id, @Valid AdminGroupRequest request) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
         if (adminGroupOptional.isEmpty()) {
             throw new NotFoundException("管理组不存在");
         }
 
-        AdminGroup adminGroup = adminGroupOptional.get();
-        adminGroup.setName(request.getName());
+        AdminGroup current = adminGroupOptional.get();
+
+        AdminGroup adminGroup = AdminGroupMapper.INSTANCE.toAdminGroup(request, current);
 
         this.adminGroupRepository.save(adminGroup);
 
         this.adminGroupPermissionRepository.deleteAllByAdminGroupId(id);
-        this.updateAdminGroupPermissions(adminGroup.getId(), request.getPermissions());
+        this.updateAdminGroupPermissions(current.getId(), request.getPermissions());
 
         return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
     }

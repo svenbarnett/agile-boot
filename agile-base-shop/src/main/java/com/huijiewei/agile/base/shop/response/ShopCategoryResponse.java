@@ -11,6 +11,9 @@ public class ShopCategoryResponse {
     @Schema(description = "Id")
     private Integer id;
 
+    @Schema(description = "上级分类 Id")
+    private Integer parentId;
+
     @Schema(description = "名称")
     private String name;
 

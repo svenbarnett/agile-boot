@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @Data
 @MappedSuperclass
 public abstract class TreeEntity<T extends TreeEntity> extends BaseEntity {
-    @NotBlank
+    @NotNull
     private Integer parentId;
 
     @Transient

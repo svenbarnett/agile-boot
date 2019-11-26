@@ -5,15 +5,20 @@ import com.huijiewei.agile.base.service.TreeService;
 import com.huijiewei.agile.base.shop.entity.ShopCategory;
 import com.huijiewei.agile.base.shop.mapper.ShopCategoryMapper;
 import com.huijiewei.agile.base.shop.repository.ShopCategoryRepository;
+import com.huijiewei.agile.base.shop.request.ShopCategoryRequest;
 import com.huijiewei.agile.base.shop.response.ShopCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 public class ShopCategoryService extends TreeService<ShopCategory> {
     private final ShopCategoryRepository shopCategoryRepository;
 
@@ -53,5 +58,39 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         }
 
         return response;
+    }
+
+    @CacheEvict(value = {"shop-categories", "shop-category-tree", "shop-category-parents"}, key = "#id")
+    public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
+        ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request);
+
+        if (shopCategory.getParentId() > 0 && !this.shopCategoryRepository.existsById(shopCategory.getParentId())) {
+            throw new NotFoundException("你选择的上级分类不存在");
+        }
+
+        this.shopCategoryRepository.save(shopCategory);
+
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
+    }
+
+    @CacheEvict(value = {"shop-categories", "shop-category-tree", "shop-category-parents"}, key = "#id")
+    public ShopCategoryResponse edit(Integer id, @Valid ShopCategoryRequest request) {
+        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
+
+        if (shopCategoryOptional.isEmpty()) {
+            throw new NotFoundException("商品分类不存在");
+        }
+
+        ShopCategory current = shopCategoryOptional.get();
+
+        ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request, current);
+
+        if (shopCategory.getParentId() > 0 && !this.shopCategoryRepository.existsById(shopCategory.getParentId())) {
+            throw new NotFoundException("你选择的上级分类不存在");
+        }
+
+        this.shopCategoryRepository.save(shopCategory);
+
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
 }
