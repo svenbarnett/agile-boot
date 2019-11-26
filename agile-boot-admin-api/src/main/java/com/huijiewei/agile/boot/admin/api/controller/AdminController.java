@@ -84,7 +84,7 @@ public class AdminController {
     @ApiResponse(responseCode = "409", description = "管理员不允许删除", ref = "Problem")
     @PreAuthorize("hasPermission(#ADMIN, 'admin/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
-        this.adminService.delete(id);
+        this.adminService.delete(id, AdminUserDetails.getCurrentAdminIdentity());
 
         return MessageResponse.of("管理员删除成功");
     }
