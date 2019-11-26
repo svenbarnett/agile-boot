@@ -6,6 +6,7 @@ import com.huijiewei.agile.base.admin.response.AdminBaseResponse;
 import com.huijiewei.agile.base.admin.response.AdminResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -28,4 +29,11 @@ public interface AdminMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     Admin toAdmin(AdminRequest adminRequest);
+
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    Admin toAdmin(AdminRequest adminRequest, @MappingTarget Admin admin);
 }

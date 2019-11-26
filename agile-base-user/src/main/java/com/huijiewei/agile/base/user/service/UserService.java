@@ -116,11 +116,7 @@ public class UserService {
             throw new BadRequestException("电子邮箱已被使用");
         }
 
-        User user = UserMapper.INSTANCE.toUser(request);
-        user.setId(current.getId());
-        user.setPassword(current.getPassword());
-        user.setCreatedFrom(current.getCreatedFrom());
-        user.setCreatedIp(current.getCreatedIp());
+        User user = UserMapper.INSTANCE.toUser(request, current);
 
         if (!StringUtils.isEmpty(request.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));

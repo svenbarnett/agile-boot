@@ -141,9 +141,7 @@ public class AdminService {
             throw new BadRequestException("电子邮箱已被使用");
         }
 
-        Admin admin = AdminMapper.INSTANCE.toAdmin(request);
-        admin.setId(current.getId());
-        admin.setPassword(current.getPassword());
+        Admin admin = AdminMapper.INSTANCE.toAdmin(request, current);
 
         if (!StringUtils.isEmpty(request.getPassword())) {
             admin.setPassword(passwordEncoder.encode(request.getPassword()));

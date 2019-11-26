@@ -5,6 +5,7 @@ import com.huijiewei.agile.base.user.request.UserRequest;
 import com.huijiewei.agile.base.user.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
@@ -18,6 +19,15 @@ public interface UserMapper {
     UserResponse toUserResponse(User user);
 
     List<UserResponse> toUserResponses(List<User> users);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "createdFrom", ignore = true)
+    @Mapping(target = "createdIp", ignore = true)
+    User toUser(UserRequest userRequest, @MappingTarget User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
