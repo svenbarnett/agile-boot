@@ -32,13 +32,17 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return this.shopCategoryRepository.findAll();
     }
 
+    @Cacheable(value = "shop-category-tree")
+    public List<ShopCategory> findTree() {
+        return this.buildTree(this.findAll());
+    }
+
     private List<ShopCategoryResponse> getParentsById(Integer id) {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.buildParents(id, this.findAll()));
     }
 
-    @Cacheable(value = "shop-category-tree")
     public List<ShopCategoryResponse> getTree() {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.buildTree(this.findAll()));
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.findTree());
     }
 
     public List<ShopCategoryResponse> getRoute(Integer id) {
@@ -111,6 +115,12 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
             throw new NotFoundException("商品分类不存在");
         }
 
-        this.shopCategoryRepository.delete(shopCategoryOptional.get());
+        ShopCategory shopCategory = shopCategoryOptional.get();
+
+        this.shopCategoryRepository.delete(shopCategory);
+    }
+
+    public List<Integer> getChildrenIdsById(Integer id) {
+        return this.getChildrenIdsById(id, this.findTree());
     }
 }

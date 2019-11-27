@@ -1,10 +1,17 @@
 package com.huijiewei.agile.base.service;
 
 import com.huijiewei.agile.base.entity.TreeEntity;
+import lombok.extern.java.Log;
 
 import java.util.*;
 
+@Log
+@SuppressWarnings("unchecked")
 public abstract class TreeService<T extends TreeEntity> {
+    abstract public List<T> findAll();
+
+    abstract public List<T> findTree();
+
     protected List<T> buildTree(List<T> items) {
         Map<Integer, T> map = new HashMap<>();
 
@@ -16,7 +23,6 @@ public abstract class TreeService<T extends TreeEntity> {
 
         for (T item : items) {
             final Integer parentId = item.getParentId();
-
             if (parentId != 0) {
                 final T child = map.get(item.getId());
                 final T parent = map.get(parentId);
@@ -45,6 +51,57 @@ public abstract class TreeService<T extends TreeEntity> {
         Collections.reverse(parents);
 
         return parents;
+    }
+
+    protected List<T> buildChildren(Integer id, List<T> tree) {
+        log.info(tree.toString());
+        return this.getChildrenInTreeById(id, tree);
+    }
+
+    protected List<Integer> getChildrenIdsById(Integer id, List<T> tree) {
+        return this.getChildrenIdsById(id, tree, false);
+    }
+
+    protected List<Integer> getChildrenIdsById(Integer id, List<T> tree, Boolean withOwner) {
+        List<T> children = this.buildChildren(id, tree);
+
+        log.info(children.toString());
+
+        List<Integer> childrenIds = this.getNodeIdsInTree(children);
+
+        if (withOwner) {
+            childrenIds.add(1, id);
+        }
+
+        return childrenIds;
+    }
+
+    private List<Integer> getNodeIdsInTree(List<T> tree) {
+        List<Integer> ids = new ArrayList<>();
+
+        for (T node : tree) {
+            ids.add(node.getId());
+
+            if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+                ids.addAll(this.getNodeIdsInTree(node.getChildren()));
+            }
+        }
+
+        return ids;
+    }
+
+    private List<T> getChildrenInTreeById(Integer id, List<T> tree) {
+        for (T node : tree) {
+            if (node.getId().equals(id)) {
+                return node.getChildren();
+            }
+
+            if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+                return this.getChildrenInTreeById(id, node.getChildren());
+            }
+        }
+
+        return null;
     }
 
     private T getItemInItemsById(Integer id, List<T> items) {
