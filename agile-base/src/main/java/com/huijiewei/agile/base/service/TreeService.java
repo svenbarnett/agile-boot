@@ -41,11 +41,11 @@ public abstract class TreeService<T extends TreeEntity> {
     protected List<T> buildParents(Integer id, List<T> items) {
         List<T> parents = new ArrayList<>();
 
-        T parent = this.getItemInItemsById(id, items);
+        T parent = this.getItemInListById(id, items);
 
         while (parent != null) {
             parents.add(parent);
-            parent = this.getItemInItemsById(parent.getParentId(), items);
+            parent = this.getItemInListById(parent.getParentId(), items);
         }
 
         Collections.reverse(parents);
@@ -54,8 +54,12 @@ public abstract class TreeService<T extends TreeEntity> {
     }
 
     protected List<T> buildChildren(Integer id, List<T> tree) {
-        log.info(tree.toString());
-        return this.getChildrenInTreeById(id, tree);
+        T node = this.getNodeInTreeById(id, tree);
+
+        if (node != null && node.getChildren() != null) {
+            return node.getChildren();
+        }
+        return new ArrayList<>();
     }
 
     protected List<Integer> getChildrenIdsById(Integer id, List<T> tree) {
@@ -90,22 +94,27 @@ public abstract class TreeService<T extends TreeEntity> {
         return ids;
     }
 
-    private List<T> getChildrenInTreeById(Integer id, List<T> tree) {
+    private T getNodeInTreeById(Integer id, List<T> tree) {
+        T result = null;
+
         for (T node : tree) {
-            if (node.getId().equals(id)) {
-                return node.getChildren();
+            if (result != null) {
+                break;
             }
 
-            if (node.getChildren() != null && !node.getChildren().isEmpty()) {
-                return this.getChildrenInTreeById(id, node.getChildren());
+            if (node.getId().equals(id)) {
+                result = node;
+                break;
+            } else if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+                result = (T) this.getNodeInTreeById(id, node.getChildren());
             }
         }
 
-        return null;
+        return result;
     }
 
-    private T getItemInItemsById(Integer id, List<T> items) {
-        for (T item : items) {
+    private T getItemInListById(Integer id, List<T> list) {
+        for (T item : list) {
             if (item.getId().equals(id)) {
                 return item;
             }
