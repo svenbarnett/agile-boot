@@ -83,15 +83,4 @@ public class MiscController {
     public List<ShopCategoryResponse> actionShopCategoryRoute(Integer id) {
         return this.shopCategoryService.getRoute(id);
     }
-
-    @GetMapping(
-            value = "/misc/shop-category-children",
-            produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    @Operation(description = "商品子分类")
-    @ApiResponse(responseCode = "200", description = "商品子分类")
-    @ApiResponse(responseCode = "404", description = "分类不存在")
-    public List<Integer> actionShopCategoryChildren(Integer id) {
-        return this.shopCategoryService.getChildrenIdsById(id);
-    }
 }

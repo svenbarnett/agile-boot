@@ -120,7 +120,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         this.shopCategoryRepository.delete(shopCategory);
     }
 
-    public List<Integer> getChildrenIdsById(Integer id) {
+    private List<Integer> getChildrenIdsById(Integer id) {
         return this.getChildrenIdsById(id, this.findTree());
     }
 }
