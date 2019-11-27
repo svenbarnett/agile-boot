@@ -1,11 +1,9 @@
 package com.huijiewei.agile.base.service;
 
 import com.huijiewei.agile.base.entity.TreeEntity;
-import lombok.extern.java.Log;
 
 import java.util.*;
 
-@Log
 @SuppressWarnings("unchecked")
 public abstract class TreeService<T extends TreeEntity> {
     abstract public List<T> findAll();
@@ -68,8 +66,6 @@ public abstract class TreeService<T extends TreeEntity> {
 
     protected List<Integer> getChildrenIdsById(Integer id, List<T> tree, Boolean withOwner) {
         List<T> children = this.buildChildren(id, tree);
-
-        log.info(children.toString());
 
         List<Integer> childrenIds = this.getNodeIdsInTree(children);
 
