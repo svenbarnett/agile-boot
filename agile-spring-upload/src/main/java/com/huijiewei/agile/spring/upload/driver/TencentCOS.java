@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TencentCOS implements BaseDriver {
+public class TencentCOS extends BaseDriver {
     private TencentCOSProperties properties;
 
     @Autowired
@@ -22,7 +22,7 @@ public class TencentCOS implements BaseDriver {
     }
 
     @Override
-    public UploadRequest build(Integer fileSize, List<String> fileTypes) {
+    protected UploadRequest option(Integer size, List<String> types) {
         String host = this.properties.getBucket() + ".cos." + this.properties.getRegion() + ".myqcloud.com";
         String url = "https://" + host + "/";
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +

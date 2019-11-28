@@ -2,6 +2,7 @@ package com.huijiewei.agile.spring.upload;
 
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -23,4 +24,8 @@ public class UploadRequest {
     private String imageProcess;
 
     private String responseParse;
+
+    private Integer sizeLimit;
+
+    private List<String> typesLimit;
 }

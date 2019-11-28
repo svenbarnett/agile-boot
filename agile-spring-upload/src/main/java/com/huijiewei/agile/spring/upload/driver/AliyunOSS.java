@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AliyunOSS implements BaseDriver {
+public class AliyunOSS extends BaseDriver {
     private final AliyunOSSProperties properties;
 
     @Autowired
@@ -28,7 +28,7 @@ public class AliyunOSS implements BaseDriver {
     }
 
     @Override
-    public UploadRequest build(Integer fileSize, List<String> fileTypes) {
+    protected UploadRequest option(Integer size, List<String> types) {
         String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
@@ -40,7 +40,7 @@ public class AliyunOSS implements BaseDriver {
                 LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toString()
         );
 
-        String jsonContentLengthRange = String.format("[\"content-length-range\",%d,%d]", 0, fileSize);
+        String jsonContentLengthRange = String.format("[\"content-length-range\",%d,%d]", 0, size);
         String jsonStartWith = String.format("[\"starts-with\",\"$key\",\"%s\"]", directory);
 
         String jsonConditions = String.format(
@@ -71,6 +71,8 @@ public class AliyunOSS implements BaseDriver {
         request.setParamName(this.paramName());
         request.setImageProcess("?x-oss-process=style/");
         request.setResponseParse("return result.querySelector('PostResponse > Location').textContent;");
+        request.setSizeLimit(size);
+        request.setTypesLimit(types);
 
         return request;
     }

@@ -54,13 +54,23 @@ public class MiscController {
     }
 
     @GetMapping(
-            value = "/misc/avatar-upload-options",
+            value = "/misc/image-upload-option",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "头像上传设置获取")
-    @ApiResponse(responseCode = "200", description = "头像上传设置")
-    public UploadRequest actionAvatarUploadOptions() {
+    @Operation(description = "图片上传设置获取")
+    @ApiResponse(responseCode = "200", description = "图片上传设置")
+    public UploadRequest actionImageUploadOption() {
         return this.uploadDriver.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
+    }
+
+    @GetMapping(
+            value = "/misc/file-upload-option",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "文件上传设置获取")
+    @ApiResponse(responseCode = "200", description = "文件上传设置")
+    public UploadRequest actionFileUploadOption() {
+        return this.uploadDriver.build(1024 * 1024 * 10, Arrays.asList("jpg", "jpeg", "gif", "png", "zip", "xlsx", "docx", "pptx"));
     }
 
     @GetMapping(

@@ -29,7 +29,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Component
-public class LocalFile implements BaseDriver {
+public class LocalFile extends BaseDriver {
     private LocalFileProperties properties;
 
     @Autowired
@@ -198,10 +198,10 @@ public class LocalFile implements BaseDriver {
     }
 
     @Override
-    public UploadRequest build(Integer fileSize, List<String> fileTypes) {
+    protected UploadRequest option(Integer size, List<String> types) {
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
-        String policy = String.format("%d;%d;%s;%b", currentTimestamp + 10 * 60, fileSize, String.join(",", fileTypes), true);
+        String policy = String.format("%d;%d;%s;%b", currentTimestamp + 10 * 60, size, String.join(",", types), true);
         String policyEncrypt = this.encrypt(policy, this.properties.getPolicyKey());
         String policyValue = UploadUtils.urlEncode(policyEncrypt);
 
@@ -229,6 +229,8 @@ public class LocalFile implements BaseDriver {
         request.setParamName(this.paramName());
         request.setImageProcess("");
         request.setResponseParse("return result.url;");
+        request.setSizeLimit(size);
+        request.setTypesLimit(types);
 
         return request;
     }
