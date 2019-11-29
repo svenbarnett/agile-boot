@@ -12,6 +12,7 @@ public class PageResponse<E> extends ListResponse<E> {
         return this.pagination;
     }
 
+    @Schema(hidden = true)
     public void setPage(Page<E> page) {
         this.setItems(page.getContent());
 

@@ -49,7 +49,7 @@ public class UserController {
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
             @Parameter(description = "分页页码") @RequestParam(required = false) Integer page,
             @Parameter(description = "分页大小") @RequestParam(required = false) Integer size,
-            @Parameter(description = "搜索项目") UserSearchRequest userSearchRequest,
+            @Parameter(hidden = true) UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
     ) {
         return this.userService.getAll(withSearchFields, userSearchRequest, pageable);
