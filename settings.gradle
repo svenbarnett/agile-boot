@@ -3,7 +3,7 @@ include 'agile-core'
 include 'agile-core-admin'
 include 'agile-core-user'
 include 'agile-core-shop'
-include 'agile-rest-admin'
+include 'agile-serve-admin'
 include 'agile-spring-upload'
 include 'agile-spring-excel'
 
