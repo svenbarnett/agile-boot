@@ -14,9 +14,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = "com.huijiewei.agile")
 @EnableJpaRepositories(basePackages = "com.huijiewei.agile")
 @EnableCaching
-public class AdminApiApplication {
+public class AdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AdminApiApplication.class, args);
+        SpringApplication.run(AdminApplication.class, args);
     }
 
 }
