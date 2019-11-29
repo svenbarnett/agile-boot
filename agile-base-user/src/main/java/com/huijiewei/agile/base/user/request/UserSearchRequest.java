@@ -70,7 +70,7 @@ public class UserSearchRequest extends BaseSearchRequest {
                 .like(StringUtils.isNotEmpty(this.email), "email", '%' + this.email + '%');
 
         if (this.createdFrom != null && this.createdFrom.length > 0) {
-            PredicateBuilder createdFromPredicateBuilder = Specifications.or();
+            PredicateBuilder<User> createdFromPredicateBuilder = Specifications.or();
 
             for (String createdFrom : this.createdFrom) {
                 createdFromPredicateBuilder.eq(StringUtils.isNotEmpty(createdFrom), "createdFrom", createdFrom);

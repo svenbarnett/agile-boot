@@ -30,7 +30,7 @@ public class AdminController {
     )
     @Operation(description = "管理员列表")
     @ApiResponse(responseCode = "200", description = "管理员列表")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin/index')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/index')")
     public ListResponse<AdminResponse> actionIndex() {
         return this.adminService.getAll();
     }
@@ -42,7 +42,7 @@ public class AdminController {
     @Operation(description = "管理员详情")
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, {'admin/view', 'admin/edit'})")
+    @PreAuthorize("hasPermission('ADMIN', {'admin/view', 'admin/edit'})")
     public AdminResponse actionView(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }
@@ -55,7 +55,7 @@ public class AdminController {
     @Operation(description = "管理员新建")
     @ApiResponse(responseCode = "201", description = "管理员")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin/create')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/create')")
     public AdminResponse actionCreate(@RequestBody AdminRequest request) {
         return this.adminService.create(request);
     }
@@ -69,7 +69,7 @@ public class AdminController {
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/edit')")
     public AdminResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminRequest request) {
         return this.adminService.edit(id, request, AdminUserDetails.getCurrentAdminIdentity());
     }
@@ -82,7 +82,7 @@ public class AdminController {
     @ApiResponse(responseCode = "200", description = "删除成功")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
     @ApiResponse(responseCode = "409", description = "管理员不允许删除", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin/delete')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.adminService.delete(id, AdminUserDetails.getCurrentAdminIdentity());
 

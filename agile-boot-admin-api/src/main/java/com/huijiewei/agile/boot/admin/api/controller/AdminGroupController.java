@@ -29,7 +29,7 @@ public class AdminGroupController {
     )
     @Operation(description = "管理组列表")
     @ApiResponse(responseCode = "200", description = "管理组列表")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin-group/index')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/index')")
     public ListResponse<AdminGroupResponse> actionIndex() {
         return this.adminGroupService.getAll();
     }
@@ -41,7 +41,7 @@ public class AdminGroupController {
     @Operation(description = "管理组详情")
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, {'admin-group/view', 'admin-group/edit'})")
+    @PreAuthorize("hasPermission('ADMIN', {'admin-group/view', 'admin-group/edit'})")
     public AdminGroupResponse actionView(@PathVariable("id") Integer id) {
         AdminGroupResponse adminGroupResponse = this.adminGroupService.getById(id);
         adminGroupResponse.setPermissions(this.adminGroupService.getPermissionsById(adminGroupResponse.getId()));
@@ -57,7 +57,7 @@ public class AdminGroupController {
     @Operation(description = "管理组新建")
     @ApiResponse(responseCode = "201", description = "管理组")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin-group/create')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/create')")
     public AdminGroupResponse actionCreate(@RequestBody AdminGroupRequest request) {
         return this.adminGroupService.create(request);
     }
@@ -70,7 +70,7 @@ public class AdminGroupController {
     @Operation(description = "管理组编辑")
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin-group/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/edit')")
     public AdminGroupResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminGroupRequest request) {
         return this.adminGroupService.edit(id, request);
     }
@@ -83,7 +83,7 @@ public class AdminGroupController {
     @ApiResponse(responseCode = "200", description = "删除成功")
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
     @ApiResponse(responseCode = "409", description = "管理组不允许删除", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, 'admin-group/delete')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.adminGroupService.delete(id);
 

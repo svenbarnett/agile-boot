@@ -11,9 +11,9 @@ import java.util.List;
 @MappedSuperclass
 public abstract class BaseSearchRequest {
     @Schema(hidden = true)
-    private List<BaseSearchField> searchFields;
+    private List<BaseSearchField<?>> searchFields;
 
-    public BaseSearchRequest addSearchField(BaseSearchField searchField) {
+    public BaseSearchRequest addSearchField(BaseSearchField<?> searchField) {
         if (this.searchFields == null) {
             this.searchFields = new ArrayList<>();
         }

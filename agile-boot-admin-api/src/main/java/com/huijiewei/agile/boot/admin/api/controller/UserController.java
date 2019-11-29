@@ -39,7 +39,7 @@ public class UserController {
     )
     @Operation(description = "用户列表")
     @ApiResponse(responseCode = "200", description = "用户列表")
-    @PreAuthorize("hasPermission(#ADMIN, 'user/index')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/index')")
     public PageResponse<UserResponse> actionIndex(
             @Parameter(description = "名称") @RequestParam(required = false) String name,
             @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
@@ -49,7 +49,7 @@ public class UserController {
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
             @Parameter(description = "分页页码") @RequestParam(required = false) Integer page,
             @Parameter(description = "分页大小") @RequestParam(required = false) Integer size,
-            @Parameter(hidden = true) UserSearchRequest userSearchRequest,
+            @Parameter(description = "搜索项目") UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
     ) {
         return this.userService.getAll(withSearchFields, userSearchRequest, pageable);
@@ -61,7 +61,7 @@ public class UserController {
     )
     @Operation(description = "用户导出")
     @ApiResponse(responseCode = "200", description = "用户导出")
-    @PreAuthorize("hasPermission(#ADMIN, 'user/export')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/export')")
     public ResponseEntity<Resource> actionExport(
             @Parameter(description = "名称") @RequestParam(required = false) String name,
             @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
@@ -80,7 +80,7 @@ public class UserController {
     @Operation(description = "用户详情")
     @ApiResponse(responseCode = "200", description = "用户")
     @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, {'user/view', 'user/edit'})")
+    @PreAuthorize("hasPermission('ADMIN', {'user/view', 'user/edit'})")
     public UserResponse actionView(@PathVariable("id") Integer id) {
         return this.userService.getById(id);
     }
@@ -93,7 +93,7 @@ public class UserController {
     @Operation(description = "用户新建")
     @ApiResponse(responseCode = "201", description = "用户")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'user/create')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/create')")
     public UserResponse actionCreate(@RequestBody UserRequest request, HttpServletRequest servletRequest) {
         return this.userService.create(request, User.CREATED_FROM_SYSTEM, servletRequest.getRemoteAddr());
     }
@@ -107,7 +107,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "用户")
     @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    @PreAuthorize("hasPermission(#ADMIN, 'user/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/edit')")
     public UserResponse actionEdit(@PathVariable("id") Integer id, @RequestBody UserRequest request) {
         return this.userService.edit(id, request);
     }
@@ -119,7 +119,7 @@ public class UserController {
     @Operation(description = "用户删除")
     @ApiResponse(responseCode = "200", description = "删除成功")
     @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
-    @PreAuthorize("hasPermission(#ADMIN, 'user/delete')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.userService.delete(id);
 
