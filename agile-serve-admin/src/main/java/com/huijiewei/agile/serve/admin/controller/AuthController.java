@@ -31,7 +31,7 @@ public class AuthController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理员登录")
+    @Operation(description = "管理员登录", operationId = "authLogin")
     @ApiResponse(responseCode = "200", description = "登录成功")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
     public AdminLoginResponse actionLogin(
@@ -41,7 +41,7 @@ public class AuthController {
         return this.adminService.login(clientId, userAgent, request);
     }
 
-    @Operation(description = "当前登录帐号")
+    @Operation(description = "当前登录帐号", operationId = "authAccount")
     @ApiResponse(responseCode = "200", description = "获取成功")
     @GetMapping(
             value = "/auth/account",
@@ -55,9 +55,9 @@ public class AuthController {
             value = "/auth/profile",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理员个人资料")
+    @Operation(description = "管理员个人资料", operationId = "authProfileView")
     @ApiResponse(responseCode = "200", description = "管理员个人资料")
-    public AdminResponse actionProfile() {
+    public AdminResponse actionProfileView() {
         return this.adminService.profile(AdminUserDetails.getCurrentAdminIdentity());
     }
 
@@ -66,16 +66,16 @@ public class AuthController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理员个人资料更新")
+    @Operation(description = "管理员个人资料更新", operationId = "authProfileEdit")
     @ApiResponse(responseCode = "200", description = "管理员个人资料")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
-    public MessageResponse actionProfile(@RequestBody AdminRequest request) {
+    public MessageResponse actionProfileEdit(@RequestBody AdminRequest request) {
         this.adminService.profile(request, AdminUserDetails.getCurrentAdminIdentity());
 
         return MessageResponse.of("个人资料更新成功");
     }
 
-    @Operation(description = "管理员退出登录")
+    @Operation(description = "管理员退出登录", operationId = "authLogout")
     @ApiResponse(responseCode = "200", description = "退出登录成功")
     @PostMapping(
             value = "/auth/logout",

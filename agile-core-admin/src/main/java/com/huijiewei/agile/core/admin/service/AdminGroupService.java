@@ -13,7 +13,6 @@ import com.huijiewei.agile.core.admin.security.AdminGroupMenuItem;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.ListResponse;
-import com.huijiewei.agile.core.until.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -79,25 +78,6 @@ public class AdminGroupService {
         }
 
         return permissions;
-    }
-
-    public boolean checkPermission(Integer adminGroupId, Object actionId) {
-        if (actionId instanceof String) {
-            return this.getPermissionsById(adminGroupId).contains(actionId);
-        }
-
-        if (actionId instanceof Collection) {
-            List<String> actionIds = CollectionUtils.castList(actionId, String.class);
-            List<String> groupPermissions = this.getPermissionsById(adminGroupId);
-
-            for (String everyActionId : actionIds) {
-                if (groupPermissions.contains(everyActionId)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     private AdminGroupMenuItem getAdminGroupMenuItemInPermissions(AdminGroupMenuItem adminGroupMenuItem, List<String> permissions) {

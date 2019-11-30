@@ -37,7 +37,7 @@ public class MiscController {
             value = "/misc/admin-group-acl",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组 ACL 列表")
+    @Operation(description = "管理组 ACL 列表", operationId = "miscAdminGroupAcl")
     @ApiResponse(responseCode = "200", description = "管理组 ACL 列表")
     public List<AdminGroupAclItem> actionAdminGroupAcl() {
         return AdminGroupAcl.getAll();
@@ -47,7 +47,7 @@ public class MiscController {
             value = "/misc/admin-group-map",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组 MAP")
+    @Operation(description = "管理组 MAP", operationId = "miscAdminGroupMap")
     @ApiResponse(responseCode = "200", description = "管理组 MAP")
     public Map<Integer, String> actionAdminGroupOptions() {
         return this.adminGroupService.getMap();
@@ -57,7 +57,7 @@ public class MiscController {
             value = "/misc/image-upload-option",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "图片上传设置获取")
+    @Operation(description = "图片上传设置获取", operationId = "miscImageUploadOption")
     @ApiResponse(responseCode = "200", description = "图片上传设置")
     public UploadRequest actionImageUploadOption() {
         return this.uploadDriver.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
@@ -67,7 +67,7 @@ public class MiscController {
             value = "/misc/file-upload-option",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "文件上传设置获取")
+    @Operation(description = "文件上传设置获取", operationId = "miscFileUploadOption")
     @ApiResponse(responseCode = "200", description = "文件上传设置")
     public UploadRequest actionFileUploadOption() {
         return this.uploadDriver.build(1024 * 1024 * 10, Arrays.asList("jpg", "jpeg", "gif", "png", "zip", "xlsx", "docx", "pptx"));
@@ -77,7 +77,7 @@ public class MiscController {
             value = "/misc/shop-category-tree",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "商品分类树")
+    @Operation(description = "商品分类树", operationId = "miscShopCategoryTree")
     @ApiResponse(responseCode = "200", description = "商品分类树")
     public List<ShopCategoryResponse> actionShopCategoryTree() {
         return this.shopCategoryService.getTree();
@@ -87,7 +87,7 @@ public class MiscController {
             value = "/misc/shop-category-route",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "商品分类路径")
+    @Operation(description = "商品分类路径", operationId = "miscShopCategoryRoute")
     @ApiResponse(responseCode = "200", description = "商品分类路径")
     @ApiResponse(responseCode = "404", description = "分类不存在")
     public List<ShopCategoryResponse> actionShopCategoryRoute(Integer id) {

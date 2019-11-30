@@ -42,7 +42,7 @@ public class AdminController {
     @Operation(description = "管理员详情")
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", description = "管理员不存在", ref = "Problem")
-    @PreAuthorize("hasPermission('ADMIN', {'admin/view', 'admin/edit'})")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/view, admin/edit')")
     public AdminResponse actionView(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }
