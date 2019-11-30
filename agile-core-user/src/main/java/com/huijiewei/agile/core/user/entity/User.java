@@ -9,7 +9,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
@@ -51,5 +53,9 @@ public class User extends TimestampEntity {
         map.put(User.CREATED_FROM_SYSTEM, "系统");
 
         return map;
+    }
+
+    public static List<String> createFormList() {
+        return new ArrayList<>(createFromMap().keySet());
     }
 }

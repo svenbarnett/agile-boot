@@ -10,7 +10,7 @@ import com.huijiewei.agile.core.user.response.UserResponse;
 import com.huijiewei.agile.core.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @Tag(name = "user", description = "用户接口")
@@ -39,18 +38,19 @@ public class UserController {
             value = "/users",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "用户列表", operationId = "userIndex")
+    @Operation(description = "用户列表", operationId = "userIndex", parameters = {
+            @Parameter(name = "name", description = "名称", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "phone", description = "手机号码", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "email", description = "电子邮箱", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "page", description = "分页页码", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
+            @Parameter(name = "size", description = "分页大小", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
+            @Parameter(name = "createdFrom", description = "创建来源", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedFromSearchRequestSchema")),
+            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedRangeSearchRequestSchema"))
+    })
     @ApiResponse(responseCode = "200", description = "用户列表")
     @PreAuthorize("hasPermission('ADMIN', 'user/index')")
     public PageResponse<UserResponse> actionIndex(
-            @Parameter(description = "名称") @RequestParam(required = false) String name,
-            @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
-            @Parameter(description = "电子邮箱") @RequestParam(required = false) String email,
-            @Parameter(description = "创建来源", array = @ArraySchema(arraySchema = @Schema(type = "string", format = "multi"))) @RequestParam(required = false) List<String> createdFrom,
-            @Parameter(description = "创建日期区间") @RequestParam(required = false) List<String> createdRange,
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
-            @Parameter(description = "分页页码") @RequestParam(required = false) Integer page,
-            @Parameter(description = "分页大小") @RequestParam(required = false) Integer size,
             @Parameter(hidden = true) UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
     ) {
@@ -61,15 +61,17 @@ public class UserController {
             value = "/users/export",
             produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE}
     )
-    @Operation(description = "用户导出", operationId = "userExport")
+    @Operation(description = "用户导出", operationId = "userExport", parameters = {
+            @Parameter(name = "name", description = "名称", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "phone", description = "手机号码", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "email", description = "电子邮箱", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+            @Parameter(name = "createdFrom", description = "创建来源", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedFromSearchRequestSchema")),
+            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedRangeSearchRequestSchema"))
+
+    })
     @ApiResponse(responseCode = "200", description = "用户导出")
     @PreAuthorize("hasPermission('ADMIN', 'user/export')")
     public ResponseEntity<Resource> actionExport(
-            @Parameter(description = "名称") @RequestParam(required = false) String name,
-            @Parameter(description = "手机号码") @RequestParam(required = false) String phone,
-            @Parameter(description = "电子邮箱") @RequestParam(required = false) String email,
-            @Parameter(description = "创建来源") @RequestParam(required = false) List<String> createdFrom,
-            @Parameter(description = "创建日期区间") @RequestParam(required = false) List<String> createdRange,
             @Parameter(hidden = true) UserSearchRequest userSearchRequest
     ) {
         throw new BadRequestException("方法未实现");

@@ -20,8 +20,7 @@ ext.libs = [
                 "org.springdoc:springdoc-openapi-webmvc-core:${springdocOpenApiVersion}"
         ],
         springdocOpenApiUi: [
-                "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVersion}",
-                "org.springdoc:springdoc-openapi-data-rest:${springdocOpenApiVersion}"
+                "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVersion}"
         ],
         validationApi     : [
                 "javax.validation:validation-api:${validationApiVersion}"
