@@ -27,7 +27,7 @@ public class ShopCategoryController {
     @Operation(description = "分类详情", operationId = "shopCategoryView")
     @ApiResponse(responseCode = "200", description = "商品分类")
     @ApiResponse(responseCode = "404", description = "商品分类不存在", ref = "NotFoundProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-category/view, shop-category/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-category/view, shop-category/edit, shop-category/delete')")
     public ShopCategoryResponse actionView(@PathVariable("id") Integer id, @RequestParam(required = false) Boolean withParents) {
         return this.shopCategoryService.getById(id, withParents);
     }

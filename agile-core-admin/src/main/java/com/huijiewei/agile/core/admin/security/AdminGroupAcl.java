@@ -50,8 +50,9 @@ public class AdminGroupAcl {
                 .addChild(new AdminGroupAclItem().name("商品分类管理")
                         .addChild(new AdminGroupAclItem().name("商品分类").actionId("shop-category/index"))
                         .addChild(new AdminGroupAclItem().name("分类新建").actionId("shop-category/create"))
-                        .addChild(new AdminGroupAclItem().name("分类编辑").actionId("shop-category/edit"))
-                        .addChild(new AdminGroupAclItem().name("分类删除").actionId("shop-category/delete"))
+                        .addChild(new AdminGroupAclItem().name("分类查看").actionId("shop-category/view"))
+                        .addChild(new AdminGroupAclItem().name("分类编辑").actionId("shop-category/edit").addCombine("shop-category/view"))
+                        .addChild(new AdminGroupAclItem().name("分类删除").actionId("shop-category/delete").addCombine("shop-category/view"))
                 )
         );
 
