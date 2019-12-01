@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Base64;
@@ -184,7 +185,7 @@ public class LocalFile extends BaseDriver {
         String absoluteFilePath = absoluteUploadPath + File.separator + fileName;
 
         try {
-            file.transferTo(new File(absoluteFilePath));
+            file.transferTo(Path.of(absoluteFilePath));
         } catch (Exception ex) {
             throw new RuntimeException("服务器保存文件错误: " + ex.getMessage(), ex);
         }
