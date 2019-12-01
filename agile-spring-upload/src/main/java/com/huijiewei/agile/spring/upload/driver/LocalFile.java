@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Base64;
@@ -251,9 +252,9 @@ public class LocalFile extends BaseDriver {
     private String encrypt(String data, String key) {
         try {
             Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes("utf-8"), "AES"));
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
 
-            byte[] encrypt = cipher.doFinal(data.getBytes("utf-8"));
+            byte[] encrypt = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
             return Base64.getEncoder().encodeToString(encrypt);
         } catch (Exception ex) {
@@ -264,7 +265,7 @@ public class LocalFile extends BaseDriver {
     private String decrypt(String data, String key) {
         try {
             Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes("utf-8"), "AES"));
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
 
             byte[] decrypt = cipher.doFinal(Base64.getDecoder().decode(data));
 

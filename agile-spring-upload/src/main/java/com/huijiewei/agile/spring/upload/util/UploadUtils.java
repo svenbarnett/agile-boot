@@ -7,20 +7,16 @@ import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class UploadUtils {
     public static String base64Encode(String input) {
-        try {
-            return UploadUtils.base64Encode(input.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException("Unsupported charset: " + ex.getMessage());
-        }
+        return UploadUtils.base64Encode(input.getBytes(StandardCharsets.UTF_8));
     }
 
     public static String base64Encode(byte[] input) {
@@ -28,19 +24,11 @@ public class UploadUtils {
     }
 
     public static String urlEncode(String url) {
-        try {
-            return URLEncoder.encode(url, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException("Unsupported charset: " + ex.getMessage());
-        }
+        return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
     public static String urlDecode(String url) {
-        try {
-            return URLDecoder.decode(url, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException("Unsupported charset: " + ex.getMessage());
-        }
+        return URLDecoder.decode(url, StandardCharsets.UTF_8);
     }
 
     public static String sha1Encode(String input) {

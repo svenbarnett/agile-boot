@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -86,15 +87,13 @@ public class AliyunOSS extends BaseDriver {
         try {
             Mac mac = Mac.getInstance("HmacSHA1");
 
-            mac.init(new SecretKeySpec(key.getBytes("utf-8"), "HmacSHA1"));
+            mac.init(new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA1"));
 
-            return mac.doFinal(input.getBytes("utf-8"));
+            return mac.doFinal(input.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException("Unsupported algorithm: HmacSHA1");
         } catch (InvalidKeyException ex) {
             throw new RuntimeException("Invalid key: " + key);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException("Unsupported charset: " + ex.getMessage());
         }
     }
 }

@@ -3,10 +3,12 @@ apply from: 'dep.other.gradle'
 buildscript {
     ext.springBootVersion = "2.2.1.RELEASE"
     ext.dependencyManagementVersion = "1.0.8.RELEASE"
+    ext.modernizerVersion = "1.8.0-1"
 
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+        classpath "gradle.plugin.com.simonharrer:gradle-modernizer-plugin:${modernizerVersion}"
     }
 
     repositories {
@@ -37,6 +39,7 @@ configure(allprojects) { project ->
 
 configure(subprojects) { project ->
     apply plugin: 'java'
+    apply plugin: "com.simonharrer.modernizer"
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
