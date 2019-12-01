@@ -27,7 +27,7 @@ public class AdminGroupController {
             value = "/admin-groups",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组列表")
+    @Operation(description = "管理组列表", operationId = "adminGroupIndex")
     @ApiResponse(responseCode = "200", description = "管理组列表")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/index')")
     public ListResponse<AdminGroupResponse> actionIndex() {
@@ -38,7 +38,7 @@ public class AdminGroupController {
             value = "/admin-groups/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组详情")
+    @Operation(description = "管理组详情", operationId = "adminGroupView")
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/view, admin-group/edit')")
@@ -54,9 +54,9 @@ public class AdminGroupController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组新建")
+    @Operation(description = "管理组新建", operationId = "adminGroupCreate")
     @ApiResponse(responseCode = "201", description = "管理组")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/create')")
     public AdminGroupResponse actionCreate(@RequestBody AdminGroupRequest request) {
         return this.adminGroupService.create(request);
@@ -67,9 +67,9 @@ public class AdminGroupController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组编辑")
+    @Operation(description = "管理组编辑", operationId = "adminGroupEdit")
     @ApiResponse(responseCode = "200", description = "管理组")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/edit')")
     public AdminGroupResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminGroupRequest request) {
         return this.adminGroupService.edit(id, request);
@@ -79,10 +79,10 @@ public class AdminGroupController {
             value = "/admin-groups/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组删除")
+    @Operation(description = "管理组删除", operationId = "adminGroupDelete")
     @ApiResponse(responseCode = "200", description = "删除成功")
-    @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
-    @ApiResponse(responseCode = "409", description = "管理组不允许删除", ref = "Problem")
+    @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
+    @ApiResponse(responseCode = "409", ref = "ConflictProblem")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.adminGroupService.delete(id);

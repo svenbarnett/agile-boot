@@ -24,9 +24,9 @@ public class ShopCategoryController {
             value = "/shop-categories/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "分类详情")
+    @Operation(description = "分类详情", operationId = "shopCategoryView")
     @ApiResponse(responseCode = "200", description = "商品分类")
-    @ApiResponse(responseCode = "404", description = "商品分类不存在", ref = "Problem")
+    @ApiResponse(responseCode = "404", description = "商品分类不存在", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/view, shop-category/edit')")
     public ShopCategoryResponse actionView(@PathVariable("id") Integer id, @RequestParam(required = false) Boolean withParents) {
         return this.shopCategoryService.getById(id, withParents);
@@ -37,9 +37,9 @@ public class ShopCategoryController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "分类新建")
+    @Operation(description = "分类新建", operationId = "shopCategoryCreate")
     @ApiResponse(responseCode = "201", description = "商品分类")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/create')")
     public ShopCategoryResponse actionCreate(@RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.create(request);
@@ -50,9 +50,9 @@ public class ShopCategoryController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "分类编辑")
+    @Operation(description = "分类编辑", operationId = "shopCategoryEdit")
     @ApiResponse(responseCode = "200", description = "分类")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/edit')")
     public ShopCategoryResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.edit(id, request);
@@ -62,10 +62,10 @@ public class ShopCategoryController {
             value = "/shop-categories/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "分类删除")
+    @Operation(description = "分类删除", operationId = "shopCategoryDelete")
     @ApiResponse(responseCode = "200", description = "删除成功")
-    @ApiResponse(responseCode = "404", description = "分类不存在", ref = "Problem")
-    @ApiResponse(responseCode = "409", description = "分类不允许删除", ref = "Problem")
+    @ApiResponse(responseCode = "404", description = "分类不存在", ref = "NotFoundProblem")
+    @ApiResponse(responseCode = "409", description = "分类不允许删除", ref = "ConflictProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.shopCategoryService.delete(id);

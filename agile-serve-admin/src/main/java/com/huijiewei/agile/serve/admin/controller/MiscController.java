@@ -89,7 +89,7 @@ public class MiscController {
     )
     @Operation(description = "商品分类路径", operationId = "miscShopCategoryRoute")
     @ApiResponse(responseCode = "200", description = "商品分类路径")
-    @ApiResponse(responseCode = "404", description = "分类不存在")
+    @ApiResponse(responseCode = "404", description = "分类不存在", ref = "NotFoundProblem")
     public List<ShopCategoryResponse> actionShopCategoryRoute(Integer id) {
         return this.shopCategoryService.getRoute(id);
     }

@@ -11,6 +11,7 @@ import com.huijiewei.agile.core.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +46,7 @@ public class UserController {
             @Parameter(name = "page", description = "分页页码", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
             @Parameter(name = "size", description = "分页大小", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
             @Parameter(name = "createdFrom", description = "创建来源", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedFromSearchRequestSchema")),
-            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedRangeSearchRequestSchema"))
+            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "DateRangeSearchRequestSchema"))
     })
     @ApiResponse(responseCode = "200", description = "用户列表")
     @PreAuthorize("hasPermission('ADMIN', 'user/index')")
@@ -66,7 +67,7 @@ public class UserController {
             @Parameter(name = "phone", description = "手机号码", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
             @Parameter(name = "email", description = "电子邮箱", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
             @Parameter(name = "createdFrom", description = "创建来源", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedFromSearchRequestSchema")),
-            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "UserCreatedRangeSearchRequestSchema"))
+            @Parameter(name = "createdRange", description = "创建日期区间", in = ParameterIn.QUERY, schema = @Schema(ref = "DateRangeSearchRequestSchema"))
 
     })
     @ApiResponse(responseCode = "200", description = "用户导出")
@@ -83,7 +84,7 @@ public class UserController {
     )
     @Operation(description = "用户详情", operationId = "userView")
     @ApiResponse(responseCode = "200", description = "用户")
-    @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
+    @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/view, user/edit')")
     public UserResponse actionView(@PathVariable("id") Integer id) {
         return this.userService.getById(id);
@@ -96,7 +97,7 @@ public class UserController {
     )
     @Operation(description = "用户新建", operationId = "userCreate")
     @ApiResponse(responseCode = "201", description = "用户")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/create')")
     public UserResponse actionCreate(@RequestBody UserRequest request, HttpServletRequest servletRequest) {
         return this.userService.create(request, User.CREATED_FROM_SYSTEM, servletRequest.getRemoteAddr());
@@ -109,8 +110,8 @@ public class UserController {
     )
     @Operation(description = "用户编辑", operationId = "userEdit")
     @ApiResponse(responseCode = "200", description = "用户")
-    @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/edit')")
     public UserResponse actionEdit(@PathVariable("id") Integer id, @RequestBody UserRequest request) {
         return this.userService.edit(id, request);
@@ -122,7 +123,7 @@ public class UserController {
     )
     @Operation(description = "用户删除", operationId = "userDelete")
     @ApiResponse(responseCode = "200", description = "删除成功")
-    @ApiResponse(responseCode = "404", description = "用户不存在", ref = "Problem")
+    @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/delete')")
     public MessageResponse actionDelete(@PathVariable("id") Integer id) {
         this.userService.delete(id);

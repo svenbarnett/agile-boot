@@ -33,7 +33,7 @@ public class AuthController {
     )
     @Operation(description = "管理员登录", operationId = "authLogin")
     @ApiResponse(responseCode = "200", description = "登录成功")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     public AdminLoginResponse actionLogin(
             @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
             @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,
@@ -68,7 +68,7 @@ public class AuthController {
     )
     @Operation(description = "管理员个人资料更新", operationId = "authProfileEdit")
     @ApiResponse(responseCode = "200", description = "管理员个人资料")
-    @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "ConstraintViolationProblem")
+    @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     public MessageResponse actionProfileEdit(@RequestBody AdminRequest request) {
         this.adminService.profile(request, AdminUserDetails.getCurrentAdminIdentity());
 

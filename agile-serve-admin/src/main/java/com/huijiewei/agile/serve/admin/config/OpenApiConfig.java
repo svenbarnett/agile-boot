@@ -1,5 +1,6 @@
 package com.huijiewei.agile.serve.admin.config;
 
+import com.huijiewei.agile.core.user.entity.User;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -24,14 +25,16 @@ public class OpenApiConfig {
                 .info(defineInfo())
                 .addSecurityItem(new SecurityRequirement().addList("ClientId").addList("AccessToken"))
                 .components(new Components()
-                        .addSchemas("UserCreatedFromSearchRequestSchema", new ArraySchema()
-                                .items(new Schema<>().type("string").uniqueItems(true)))
-                        .addSchemas("UserCreatedRangeSearchRequestSchema", new ArraySchema()
-                                .items(new Schema<>().type("string").format("date").uniqueItems(true))
+                        .addSchemas("DateRangeSearchRequestSchema", new ArraySchema()
+                                .items(new Schema<>().type("string").format("date-time").uniqueItems(true))
                                 .minItems(2)
                                 .maxItems(2))
-                        .addResponses("Problem", defineProblemResponse())
-                        .addResponses("ConstraintViolationProblem", defineConstraintViolationProblemResponse())
+                        .addSchemas("UserCreatedFromSearchRequestSchema", defineUserCreatedFromSearchRequest())
+                        .addResponses("NotFoundProblem", defineProblemResponse("资源不存在"))
+                        .addResponses("BadRequestProblem", defineProblemResponse("无效的请求"))
+                        .addResponses("ForbiddenProblem", defineProblemResponse("访问被拒绝"))
+                        .addResponses("ConflictProblem", defineProblemResponse("资源有冲突"))
+                        .addResponses("UnprocessableEntityProblem", defineUnprocessableEntityProblemResponse())
                         .addSecuritySchemes("ClientId", new SecurityScheme()
                                 .name("X-Client-Id")
                                 .description("客户端 Id")
@@ -47,13 +50,22 @@ public class OpenApiConfig {
                 );
     }
 
-    private ApiResponse defineConstraintViolationProblemResponse() {
+    private ArraySchema defineUserCreatedFromSearchRequest() {
+        Schema<String> schema = new Schema<>();
+        schema.setType("string");
+        schema.setUniqueItems(true);
+        schema.setEnum(User.createFormList());
+
+        return new ArraySchema().items(schema);
+    }
+
+    private ApiResponse defineUnprocessableEntityProblemResponse() {
         return new ApiResponse()
+                .description("输入验证错误")
                 .content(new Content()
                         .addMediaType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE, new MediaType()
                                 .schema(new Schema<>()
                                         .type("object")
-                                        .description("验证错误")
                                         .addProperties("type", new Schema<>().type("string").description("错误类型"))
                                         .addProperties("status", new Schema<>().type("integer").description("错误状态"))
                                         .addProperties("title", new Schema<>().type("string").description("错误标题"))
@@ -71,8 +83,9 @@ public class OpenApiConfig {
                 );
     }
 
-    private ApiResponse defineProblemResponse() {
+    private ApiResponse defineProblemResponse(String description) {
         return new ApiResponse()
+                .description(description)
                 .content(new Content()
                         .addMediaType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE, new MediaType()
                                 .schema(new Schema<>()
