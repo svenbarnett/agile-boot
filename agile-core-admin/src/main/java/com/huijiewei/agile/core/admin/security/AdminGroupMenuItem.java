@@ -40,8 +40,8 @@ public class AdminGroupMenuItem {
         return this;
     }
 
-    AdminGroupMenuItem open(Boolean open) {
-        this.setOpen(open);
+    AdminGroupMenuItem open() {
+        this.setOpen(true);
 
         return this;
     }
