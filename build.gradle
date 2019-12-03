@@ -18,7 +18,7 @@ buildscript {
     }
 }
 
-configure(allprojects) { project ->
+allprojects {
     group = 'com.huijiewei'
     version = '1.0.1'
 
@@ -26,25 +26,18 @@ configure(allprojects) { project ->
         mavenCentral()
         jcenter()
     }
-
-    apply plugin: 'idea'
-
-    idea {
-        module {
-            inheritOutputDirs = false
-            outputDir = file("$buildDir/classes/main/")
-        }
-    }
 }
 
-configure(subprojects) { project ->
-    apply plugin: 'java'
+subprojects {
+    apply plugin: "java"
     apply plugin: "com.simonharrer.modernizer"
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 
     compileJava {
+        options.annotationProcessorPath = configurations.annotationProcessor
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         options.encoding = 'UTF-8'
