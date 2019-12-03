@@ -24,16 +24,8 @@ public interface AdminMapper {
     List<AdminResponse> toAdminResponses(List<Admin> admins);
 
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "deletedAt", ignore = true)
     Admin toAdmin(AdminRequest adminRequest);
 
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "deletedAt", ignore = true)
     Admin toAdmin(AdminRequest adminRequest, @MappingTarget Admin admin);
 }
