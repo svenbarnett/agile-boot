@@ -8,17 +8,14 @@ configurations.all {
     exclude module: 'jul-to-slf4j'
 }
 
-ext['jetty.version'] = '9.4.24.v20191120'
+ext['undertow.version'] = '2.0.28.Final'
+ext['version.xnio'] = '3.7.7.Final'
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-jetty"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-
-    implementation "org.eclipse.jetty:jetty-alpn-server"
-    implementation "org.eclipse.jetty:jetty-alpn-conscrypt-server"
-    implementation "org.eclipse.jetty.http2:http2-server"
 
     implementation libs.zalandoProblemWeb
     implementation libs.springdocOpenApiUi
