@@ -7,7 +7,6 @@ dependencies {
 
     implementation libs.mysqlConnector
     implementation libs.apacheCommonsLang
-    implementation libs.springBeans
     implementation libs.springSecurity
     implementation libs.mapstruct
     implementation libs.validationApi

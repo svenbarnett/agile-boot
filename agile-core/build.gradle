@@ -4,7 +4,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     implementation libs.apacheCommonsLang
-    implementation libs.springBeans
     implementation libs.hibernateValidator
     implementation libs.validationApi
     implementation libs.springdocOpenApi
