@@ -20,6 +20,9 @@ import java.util.Optional;
 @Service
 @Validated
 public class ShopCategoryService extends TreeService<ShopCategory> {
+    private static final String SHOP_CATEGORIES_CACHE_KEY = "shop-categories";
+    private static final String SHOP_CATEGORY_TREE_CACHE_KEY = "shop-category-tree";
+
     private final ShopCategoryRepository shopCategoryRepository;
 
     @Autowired
@@ -27,12 +30,12 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         this.shopCategoryRepository = shopCategoryRepository;
     }
 
-    @Cacheable(value = "shop-categories")
+    @Cacheable(value = SHOP_CATEGORIES_CACHE_KEY)
     public List<ShopCategory> findAll() {
         return this.shopCategoryRepository.findAll();
     }
 
-    @Cacheable(value = "shop-category-tree")
+    @Cacheable(value = SHOP_CATEGORY_TREE_CACHE_KEY)
     public List<ShopCategory> findTree() {
         return this.buildTree(this.findAll());
     }
@@ -73,7 +76,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return response;
     }
 
-    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
+    @CacheEvict(value = {SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
     public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request);
 
@@ -86,7 +89,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
 
-    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
+    @CacheEvict(value = {SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
     public ShopCategoryResponse edit(Integer id, @Valid ShopCategoryRequest request) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
@@ -107,7 +110,7 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
     }
 
-    @CacheEvict(value = {"shop-categories", "shop-category-tree"}, allEntries = true)
+    @CacheEvict(value = {SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
     public void delete(Integer id) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
@@ -118,9 +121,5 @@ public class ShopCategoryService extends TreeService<ShopCategory> {
         ShopCategory shopCategory = shopCategoryOptional.get();
 
         this.shopCategoryRepository.delete(shopCategory);
-    }
-
-    private List<Integer> getChildrenIdsById(Integer id) {
-        return this.getChildrenIdsById(id, this.findTree());
     }
 }
