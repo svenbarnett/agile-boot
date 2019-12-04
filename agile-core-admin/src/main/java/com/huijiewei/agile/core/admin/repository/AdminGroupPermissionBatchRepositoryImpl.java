@@ -11,7 +11,6 @@ import java.util.List;
 public class AdminGroupPermissionBatchRepositoryImpl implements AdminGroupPermissionBatchRepository {
     private final JdbcTemplate jdbcTemplate;
 
-
     public AdminGroupPermissionBatchRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

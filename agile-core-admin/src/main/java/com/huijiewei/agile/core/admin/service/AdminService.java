@@ -3,6 +3,7 @@ package com.huijiewei.agile.core.admin.service;
 import com.devskiller.friendly_id.FriendlyId;
 import com.huijiewei.agile.core.admin.entity.Admin;
 import com.huijiewei.agile.core.admin.entity.AdminAccessToken;
+import com.huijiewei.agile.core.admin.manager.AdminGroupPermissionManager;
 import com.huijiewei.agile.core.admin.mapper.AdminMapper;
 import com.huijiewei.agile.core.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
@@ -32,15 +33,15 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final AdminAccessTokenRepository adminAccessTokenRepository;
-    private final AdminGroupService adminGroupService;
+    private final AdminGroupPermissionManager adminGroupPermissionManager;
 
     @Autowired
     public AdminService(AdminRepository adminRepository,
                         AdminAccessTokenRepository adminAccessTokenRepository,
-                        AdminGroupService adminGroupService) {
+                        AdminGroupPermissionManager adminGroupPermissionManager) {
         this.adminRepository = adminRepository;
         this.adminAccessTokenRepository = adminAccessTokenRepository;
-        this.adminGroupService = adminGroupService;
+        this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
 
     public AdminLoginResponse login(String clientId, String userAgent, @Valid AdminLoginRequest request) {
@@ -63,8 +64,8 @@ public class AdminService {
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
         adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
-        adminLoginResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
-        adminLoginResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
+        adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
+        adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
 
         return adminLoginResponse;
@@ -82,8 +83,8 @@ public class AdminService {
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
         adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
-        adminAccountResponse.setGroupPermissions(this.adminGroupService.getPermissionsById(admin.getAdminGroup().getId()));
-        adminAccountResponse.setGroupMenus(this.adminGroupService.getMenusById(admin.getAdminGroup().getId()));
+        adminAccountResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
+        adminAccountResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
 
         return adminAccountResponse;
     }
