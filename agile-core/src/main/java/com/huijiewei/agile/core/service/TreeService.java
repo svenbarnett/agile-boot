@@ -4,8 +4,7 @@ import com.huijiewei.agile.core.entity.TreeEntity;
 
 import java.util.*;
 
-@SuppressWarnings("unchecked")
-public abstract class TreeService<T extends TreeEntity> {
+public abstract class TreeService<T extends TreeEntity<T>> {
     abstract public List<T> findAll();
 
     abstract public List<T> findTree();
