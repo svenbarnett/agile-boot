@@ -59,6 +59,12 @@ public class TencentCOS extends BaseDriver {
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", authorization);
 
+        String imageProcess = "";
+
+        if (!StringUtils.isEmpty(this.properties.getCiHost())) {
+            imageProcess = "var uri = new URL(url); uri.hostname = '" + this.properties.getCiHost() + "'; return uri.href + '" + this.properties.getCiDelimiter() + "' + imageStyle;";
+        }
+
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
         request.setTimeout(19 * 60);
@@ -66,7 +72,7 @@ public class TencentCOS extends BaseDriver {
         request.setHeaders(headers);
         request.setDataType("xml");
         request.setParamName(this.paramName());
-        request.setImageProcess("");
+        request.setImageProcess(imageProcess);
         request.setResponseParse("return result.querySelector('PostResponse > Location').textContent;");
 
         return request;

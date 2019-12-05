@@ -70,7 +70,7 @@ public class AliyunOSS extends BaseDriver {
         request.setHeaders(null);
         request.setDataType("xml");
         request.setParamName(this.paramName());
-        request.setImageProcess("?x-oss-process=style/");
+        request.setImageProcess("return url + '?x-oss-process=style/' + imageStyle");
         request.setResponseParse("return result.querySelector('PostResponse > Location').textContent;");
         request.setSizeLimit(size);
         request.setTypesLimit(types);

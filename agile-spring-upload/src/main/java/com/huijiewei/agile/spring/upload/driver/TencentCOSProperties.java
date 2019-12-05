@@ -17,4 +17,6 @@ public class TencentCOSProperties {
     private String bucket;
     private String region;
     private String directory = "";
+    private String ciHost = "";
+    private String ciDelimiter = "/";
 }
