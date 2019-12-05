@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @Tag(name = "auth", description = "管理员登录注册")
 public class AuthController {
@@ -37,8 +39,9 @@ public class AuthController {
     public AdminLoginResponse actionLogin(
             @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
             @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,
-            @RequestBody AdminLoginRequest request) {
-        return this.adminService.login(clientId, userAgent, request);
+            @RequestBody AdminLoginRequest request,
+            HttpServletRequest servletRequest) {
+        return this.adminService.login(clientId, userAgent, servletRequest.getRemoteAddr(), request);
     }
 
     @Operation(description = "当前登录帐号", operationId = "authAccount")

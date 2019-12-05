@@ -22,6 +22,7 @@ public class AdminAccessToken extends BaseEntity {
     private Integer adminId;
     private String clientId;
     private String accessToken;
+    private String remoteAddr;
     private String userAgent;
 
     private Instant updatedAt;

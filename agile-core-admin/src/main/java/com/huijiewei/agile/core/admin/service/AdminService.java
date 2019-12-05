@@ -44,7 +44,7 @@ public class AdminService {
         this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
 
-    public AdminLoginResponse login(String clientId, String userAgent, @Valid AdminLoginRequest request) {
+    public AdminLoginResponse login(String clientId, String userAgent, String remoteAddr, @Valid AdminLoginRequest request) {
         Admin admin = request.getAdmin();
         String accessToken = FriendlyId.createFriendlyId();
 
@@ -58,6 +58,7 @@ public class AdminService {
         }
 
         adminAccessToken.setUserAgent(userAgent);
+        adminAccessToken.setRemoteAddr(remoteAddr);
         adminAccessToken.setAccessToken(accessToken);
 
         this.adminAccessTokenRepository.save(adminAccessToken);

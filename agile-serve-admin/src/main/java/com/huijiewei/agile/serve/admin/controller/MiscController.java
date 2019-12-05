@@ -7,7 +7,6 @@ import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.core.shop.service.ShopCategoryService;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
-import com.huijiewei.agile.spring.upload.driver.TencentCOS;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,10 +24,10 @@ import java.util.Map;
 public class MiscController {
     private final AdminGroupService adminGroupService;
     private final ShopCategoryService shopCategoryService;
-    private final TencentCOS uploadDriver;
+    private final AliyunOSS uploadDriver;
 
     @Autowired
-    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, TencentCOS uploadDriver) {
+    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, AliyunOSS uploadDriver) {
         this.adminGroupService = adminGroupService;
         this.shopCategoryService = shopCategoryService;
         this.uploadDriver = uploadDriver;
