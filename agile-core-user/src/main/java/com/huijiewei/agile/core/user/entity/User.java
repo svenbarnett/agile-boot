@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.user.entity;
 
+import com.huijiewei.agile.core.constraint.Unique;
 import com.huijiewei.agile.core.entity.TimestampEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,10 @@ import java.util.Map;
 @Table(name = User.TABLE_NAME)
 @DynamicInsert
 @DynamicUpdate
+@Unique.List({
+        @Unique(fields = {"phone"}, message = "手机号码已被使用"),
+        @Unique(fields = {"email"}, message = "电子邮箱已被使用")
+})
 public class User extends TimestampEntity {
     public static final String TABLE_NAME = "ag_user";
 

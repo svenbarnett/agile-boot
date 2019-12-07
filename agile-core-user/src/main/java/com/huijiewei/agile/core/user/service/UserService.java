@@ -73,21 +73,12 @@ public class UserService {
 
     @Validated(UserRequest.Create.class)
     public UserResponse create(@Valid UserRequest request, String createdFrom, String createdIp) {
-        /*
-        if (this.userRepository.existsByPhone(request.getPhone())) {
-            throw new BadRequestException("手机号码已被使用");
-        }
-
-        if (this.userRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("电子邮箱已被使用");
-        }*/
-
         User user = UserMapper.INSTANCE.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedFrom(createdFrom);
         user.setCreatedIp(createdIp);
 
-        this.userRepository.save(user);
+        this.userRepository.saveWithValid(user);
 
         return UserMapper.INSTANCE.toUserResponse(user);
     }
@@ -109,21 +100,13 @@ public class UserService {
 
 
     private User update(User current, UserRequest request) {
-        if (this.userRepository.existsByPhoneAndIdNot(request.getPhone(), current.getId())) {
-            throw new BadRequestException("手机号码已被使用");
-        }
-
-        if (this.userRepository.existsByEmailAndIdNot(request.getEmail(), current.getId())) {
-            throw new BadRequestException("电子邮箱已被使用");
-        }
-
         User user = UserMapper.INSTANCE.toUser(request, current);
 
         if (!StringUtils.isEmpty(request.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
-        this.userRepository.save(user);
+        this.userRepository.saveWithValid(user);
 
         return user;
     }
