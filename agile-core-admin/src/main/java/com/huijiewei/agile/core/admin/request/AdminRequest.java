@@ -1,6 +1,7 @@
 package com.huijiewei.agile.core.admin.request;
 
 import com.huijiewei.agile.core.admin.entity.AdminGroup;
+import com.huijiewei.agile.core.constraint.Exist;
 import com.huijiewei.agile.core.constraint.FieldMatch;
 import com.huijiewei.agile.core.constraint.Phone;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class AdminRequest {
     private String avatar;
 
     @NotNull
+    @Exist(targetEntity = AdminGroup.class, targetProperty = "id", sourceProperty = "id", message = "你选择的管理组不存在")
     private AdminGroup adminGroup;
 
     public interface Create extends Default {
