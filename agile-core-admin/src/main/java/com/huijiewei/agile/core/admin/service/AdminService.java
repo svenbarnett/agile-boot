@@ -13,7 +13,6 @@ import com.huijiewei.agile.core.admin.response.AdminAccountResponse;
 import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.security.AdminIdentity;
-import com.huijiewei.agile.core.exception.BadRequestException;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.ListResponse;
@@ -109,18 +108,10 @@ public class AdminService {
 
     @Validated(AdminRequest.Create.class)
     public AdminResponse create(@Valid AdminRequest request) {
-        if (this.adminRepository.existsByPhone(request.getPhone())) {
-            throw new BadRequestException("手机号码已被使用");
-        }
-
-        if (this.adminRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("电子邮箱已被使用");
-        }
-
         Admin admin = AdminMapper.INSTANCE.toAdmin(request);
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        this.adminRepository.save(admin);
+        this.adminRepository.saveWithValid(admin);
 
         return AdminMapper.INSTANCE.toAdminResponse(admin);
     }
@@ -135,14 +126,6 @@ public class AdminService {
     }
 
     private Admin update(Admin current, AdminRequest request, boolean isOwner) {
-        if (this.adminRepository.existsByPhoneAndIdNot(request.getPhone(), current.getId())) {
-            throw new BadRequestException("手机号码已被使用");
-        }
-
-        if (this.adminRepository.existsByEmailAndIdNot(request.getEmail(), current.getId())) {
-            throw new BadRequestException("电子邮箱已被使用");
-        }
-
         Admin admin = AdminMapper.INSTANCE.toAdmin(request, current);
 
         if (!StringUtils.isEmpty(request.getPassword())) {
@@ -153,7 +136,7 @@ public class AdminService {
             admin.setAdminGroup(current.getAdminGroup());
         }
 
-        this.adminRepository.save(admin);
+        this.adminRepository.saveWithValid(admin);
 
         return admin;
     }

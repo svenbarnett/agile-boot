@@ -58,9 +58,10 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
         CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
 
         Root<?> root = criteriaQuery.from(this.targetEntity);
-        criteriaQuery.select(criteriaBuilder.count(root.get(this.targetProperty)));
 
-        criteriaQuery.where(criteriaBuilder.equal(root.get(this.targetProperty), value));
+        criteriaQuery
+                .select(criteriaBuilder.count(root.get(this.targetProperty)))
+                .where(criteriaBuilder.equal(root.get(this.targetProperty), value));
 
         TypedQuery<Object> typedQuery = entityManager.createQuery(criteriaQuery);
 

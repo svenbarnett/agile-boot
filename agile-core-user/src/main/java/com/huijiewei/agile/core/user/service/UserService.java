@@ -11,7 +11,6 @@ import com.huijiewei.agile.core.user.repository.UserRepository;
 import com.huijiewei.agile.core.user.request.UserRequest;
 import com.huijiewei.agile.core.user.request.UserSearchRequest;
 import com.huijiewei.agile.core.user.response.UserResponse;
-import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +26,6 @@ import java.util.Optional;
 
 @Service
 @Validated
-@Log
 public class UserService {
     private final static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -75,15 +73,14 @@ public class UserService {
 
     @Validated(UserRequest.Create.class)
     public UserResponse create(@Valid UserRequest request, String createdFrom, String createdIp) {
-        log.info(request.toString());
-
+        /*
         if (this.userRepository.existsByPhone(request.getPhone())) {
             throw new BadRequestException("手机号码已被使用");
         }
 
         if (this.userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("电子邮箱已被使用");
-        }
+        }*/
 
         User user = UserMapper.INSTANCE.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));

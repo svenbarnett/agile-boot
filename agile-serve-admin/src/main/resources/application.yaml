@@ -31,6 +31,11 @@ spring:
           order_updates: true
           batch_versioned_data: true
           open-in-view: false
+
+      javax:
+        persistence:
+          validation:
+            mode: none
   datasource:
     hikari:
       max-lifetime: 120000
@@ -53,3 +58,4 @@ agile:
     date-format: yyyy-MM-dd
     time-format: HH:mm
     datetime-format: yyyy-MM-dd HH:mm
+
