@@ -1,11 +1,6 @@
-server:
-  compression:
-    enabled: true
 spring:
   application:
     name: agile-boot-admin-api
-  profiles:
-    active: dev
   data:
     jpa:
       repositories:

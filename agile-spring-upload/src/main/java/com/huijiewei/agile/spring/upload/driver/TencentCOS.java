@@ -1,11 +1,13 @@
 package com.huijiewei.agile.spring.upload.driver;
 
-import com.huijiewei.agile.spring.upload.BaseDriver;
+import com.huijiewei.agile.spring.upload.UploadDriver;
+import com.huijiewei.agile.spring.upload.UploadProperties;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,7 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TencentCOS extends BaseDriver {
+@ConditionalOnProperty(prefix = UploadProperties.PREFIX, name = "driver-name", havingValue = TencentCOS.DRIVER_NAME)
+public class TencentCOS implements UploadDriver {
+    public static final String DRIVER_NAME = "tencent-cos";
+
     private TencentCOSProperties properties;
 
     @Autowired
@@ -22,7 +27,7 @@ public class TencentCOS extends BaseDriver {
     }
 
     @Override
-    protected UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(Integer size, List<String> types) {
         String host = this.properties.getBucket() + ".cos." + this.properties.getRegion() + ".myqcloud.com";
         String url = "https://" + host + "/";
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +

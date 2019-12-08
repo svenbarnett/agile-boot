@@ -40,4 +40,4 @@ $RECYCLE.BIN/
 !.gitignore
 *~
 
-application-dev.yaml
+application-default.yaml

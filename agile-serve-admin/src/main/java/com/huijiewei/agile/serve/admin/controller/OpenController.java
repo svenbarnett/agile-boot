@@ -4,8 +4,8 @@ import com.github.javafaker.Faker;
 import com.huijiewei.agile.core.user.entity.User;
 import com.huijiewei.agile.core.user.repository.UserRepository;
 import com.huijiewei.agile.spring.upload.ImageCropRequest;
+import com.huijiewei.agile.spring.upload.UploadDriver;
 import com.huijiewei.agile.spring.upload.UploadResponse;
-import com.huijiewei.agile.spring.upload.driver.LocalFile;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,10 +21,10 @@ import java.util.*;
 @Tag(name = "open", description = "开放接口")
 public class OpenController {
     private final UserRepository userRepository;
-    private final LocalFile uploadDriver;
+    private final UploadDriver uploadDriver;
 
     @Autowired
-    public OpenController(UserRepository userRepository, LocalFile uploadDriver) {
+    public OpenController(UserRepository userRepository, UploadDriver uploadDriver) {
         this.userRepository = userRepository;
         this.uploadDriver = uploadDriver;
     }

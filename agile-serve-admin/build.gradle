@@ -8,6 +8,16 @@ configurations.all {
 
 ext['undertow.version'] = '2.0.28.Final'
 
+bootJar {
+    exclude "**/application-default.yaml"
+    launchScript()
+}
+
+jar {
+    exclude "**/application-default.yaml"
+
+}
+
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-undertow"

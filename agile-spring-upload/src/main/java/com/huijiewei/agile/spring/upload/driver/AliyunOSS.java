@@ -1,15 +1,16 @@
 package com.huijiewei.agile.spring.upload.driver;
 
-import com.huijiewei.agile.spring.upload.BaseDriver;
+import com.huijiewei.agile.spring.upload.UploadDriver;
+import com.huijiewei.agile.spring.upload.UploadProperties;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -20,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AliyunOSS extends BaseDriver {
+@ConditionalOnProperty(prefix = UploadProperties.PREFIX, name = "driver-name", havingValue = AliyunOSS.DRIVER_NAME)
+public class AliyunOSS implements UploadDriver {
+    public static final String DRIVER_NAME = "aliyun-oss";
+
     private final AliyunOSSProperties properties;
 
     @Autowired
@@ -29,7 +33,7 @@ public class AliyunOSS extends BaseDriver {
     }
 
     @Override
-    protected UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(Integer size, List<String> types) {
         String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +

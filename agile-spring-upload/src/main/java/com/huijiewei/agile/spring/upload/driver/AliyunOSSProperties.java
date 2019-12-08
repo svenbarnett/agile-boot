@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "agile.spring.upload.aliyun-oss")
+@ConfigurationProperties(prefix = AliyunOSSProperties.PREFIX)
 public class AliyunOSSProperties {
+    public static final String PREFIX = "agile.spring.upload.aliyun-oss";
+
     private String accessKeyId;
     private String accessKeySecret;
 

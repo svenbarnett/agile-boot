@@ -1,10 +1,7 @@
 package com.huijiewei.agile.spring.upload.driver;
 
 import com.devskiller.friendly_id.FriendlyId;
-import com.huijiewei.agile.spring.upload.BaseDriver;
-import com.huijiewei.agile.spring.upload.ImageCropRequest;
-import com.huijiewei.agile.spring.upload.UploadRequest;
-import com.huijiewei.agile.spring.upload.UploadResponse;
+import com.huijiewei.agile.spring.upload.*;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -12,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,7 +29,10 @@ import java.util.Base64;
 import java.util.List;
 
 @Component
-public class LocalFile extends BaseDriver {
+@ConditionalOnProperty(prefix = UploadProperties.PREFIX, name = "driver-name", havingValue = LocalFile.DRIVER_NAME)
+public class LocalFile implements UploadDriver {
+    public static final String DRIVER_NAME = "local-file";
+
     private LocalFileProperties properties;
 
     @Autowired
@@ -200,7 +201,7 @@ public class LocalFile extends BaseDriver {
     }
 
     @Override
-    protected UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(Integer size, List<String> types) {
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
         String policy = String.format("%d;%d;%s;%b", currentTimestamp + 10 * 60, size, String.join(",", types), true);

@@ -5,6 +5,7 @@ import com.huijiewei.agile.core.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.core.admin.service.AdminGroupService;
 import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.core.shop.service.ShopCategoryService;
+import com.huijiewei.agile.spring.upload.UploadDriver;
 import com.huijiewei.agile.spring.upload.UploadRequest;
 import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,10 +25,10 @@ import java.util.Map;
 public class MiscController {
     private final AdminGroupService adminGroupService;
     private final ShopCategoryService shopCategoryService;
-    private final AliyunOSS uploadDriver;
+    private final UploadDriver uploadDriver;
 
     @Autowired
-    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, AliyunOSS uploadDriver) {
+    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, UploadDriver uploadDriver) {
         this.adminGroupService = adminGroupService;
         this.shopCategoryService = shopCategoryService;
         this.uploadDriver = uploadDriver;

@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "agile.spring.upload.local-file")
+@ConfigurationProperties(prefix = LocalFileProperties.PREFIX)
 public class LocalFileProperties {
+    public static final String PREFIX = "agile.spring.upload.local-file";
+
     private String uploadPath;
     private String accessPath;
     private String corpAction;

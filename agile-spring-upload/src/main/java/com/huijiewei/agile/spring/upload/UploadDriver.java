@@ -4,8 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public abstract class BaseDriver {
-    public UploadRequest build(Integer size, List<String> types) {
+public interface UploadDriver {
+    default UploadRequest build(Integer size, List<String> types) {
         UploadRequest request = this.option(size, types);
 
         request.setSizeLimit(size);
@@ -14,15 +14,15 @@ public abstract class BaseDriver {
         return request;
     }
 
-    abstract protected UploadRequest option(Integer size, List<String> types);
+    UploadRequest option(Integer size, List<String> types);
 
-    abstract public String paramName();
+    String paramName();
 
-    public UploadResponse upload(String policy, MultipartFile file) {
+    default UploadResponse upload(String policy, MultipartFile file) {
         throw new RuntimeException("方法未实现");
     }
 
-    public UploadResponse crop(String policy, ImageCropRequest request) {
+    default UploadResponse crop(String policy, ImageCropRequest request) {
         throw new RuntimeException("方法未实现");
     }
 }
