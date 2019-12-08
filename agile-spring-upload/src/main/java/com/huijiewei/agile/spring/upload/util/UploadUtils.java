@@ -45,9 +45,8 @@ public class UploadUtils {
                         .stripEnd(accessPath, "*"), "/");
 
         return ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .replacePath(replaceUrl)
-                .replaceQuery("")
+                .fromCurrentContextPath()
+                .path(replaceUrl)
                 .toUriString();
     }
 

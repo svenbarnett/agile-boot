@@ -209,16 +209,16 @@ public class LocalFile implements UploadDriver {
         String policyValue = UploadUtils.urlEncode(policyEncrypt);
 
         String url = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .replacePath(this.properties.getUploadAction())
-                .replaceQueryParam("policy", policyValue)
+                .fromCurrentContextPath()
+                .path("/" + StringUtils.strip(this.properties.getUploadAction(), "/"))
+                .queryParam("policy", policyValue)
                 .toUriString();
 
         String cropUrl = StringUtils.isNotEmpty(this.properties.getCorpAction())
                 ? ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .replacePath(StringUtils.stripStart(this.properties.getCorpAction(), "/"))
-                .replaceQueryParam("policy", policyValue)
+                .fromCurrentContextPath()
+                .path("/" + StringUtils.strip(this.properties.getCorpAction(), "/"))
+                .queryParam("policy", policyValue)
                 .toUriString()
                 : null;
 

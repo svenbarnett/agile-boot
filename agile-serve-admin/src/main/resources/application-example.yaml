@@ -17,6 +17,7 @@ spring:
 agile:
   spring:
     upload:
+      driver-name: 使用的上传驱动 # aliyun-oss, tencent-cos, local-file
       aliyun-oss:
         access-key-id: 阿里云 OSS accessKeyId
         access-key-secret: 阿里云 OSS accessKeySecret
