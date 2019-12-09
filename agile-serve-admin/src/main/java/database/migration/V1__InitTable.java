@@ -21,6 +21,7 @@ public class V1__InitTable extends BaseJavaMigration {
         this.createUserTable(context);
     }
 
+    // @todo 修改数据库表前缀
     private String getTableName(String table) {
         return "ag_" + table;
     }
