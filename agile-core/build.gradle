@@ -10,4 +10,5 @@ dependencies {
     implementation libs.mapstruct
 
     annotationProcessor libs.mapstructProcessor
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }

@@ -2,21 +2,17 @@ package com.huijiewei.agile.core.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @MappedSuperclass
-public abstract class TimestampEntity extends BaseEntity {
+@Where(clause = SoftDeleteEntity.NOT_DELETED)
+public abstract class SoftDeleteEntity extends BaseEntity {
     static final String NOT_DELETED = "deletedAt IS NULL";
-
-    @Column(updatable = false)
-    LocalDateTime createdAt;
-
-    LocalDateTime updatedAt;
 
     LocalDateTime deletedAt;
 

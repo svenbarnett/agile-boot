@@ -15,6 +15,8 @@ spring:
     lazy-initialization: true
 
 agile:
+  database:
+    table-prefix: 数据表名前缀
   spring:
     upload:
       driver-name: 使用的上传驱动 # aliyun-oss, tencent-cos, local-file

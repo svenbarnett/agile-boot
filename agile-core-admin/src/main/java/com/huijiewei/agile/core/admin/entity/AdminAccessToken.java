@@ -13,12 +13,9 @@ import java.time.Instant;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = AdminAccessToken.TABLE_NAME)
 @DynamicInsert
 @DynamicUpdate
 public class AdminAccessToken extends BaseEntity {
-    public static final String TABLE_NAME = "ag_admin_access_token";
-
     private Integer adminId;
     private String clientId;
     private String accessToken;

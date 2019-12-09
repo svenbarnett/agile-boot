@@ -11,10 +11,7 @@ import java.time.LocalTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = AdminLog.TABLE_NAME)
 public class AdminLog extends BaseEntity {
-    public static final String TABLE_NAME = "ag_admin_log";
-
     private String type;
     private Integer status;
     private String action;

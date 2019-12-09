@@ -12,11 +12,8 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = AdminGroup.TABLE_NAME)
 @DynamicInsert
 @DynamicUpdate
 public class AdminGroup extends BaseEntity {
-    public static final String TABLE_NAME = "ag_admin_group";
-
     private String name;
 }
