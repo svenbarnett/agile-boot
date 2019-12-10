@@ -10,4 +10,4 @@ https://github.com/huijiewei/agile-vue
 修改 application-default.yaml 里面的相关配置
 
 ### 注意
-数据表前缀需要修改两个地方，一个是 application-default.yaml 里面的配置，还有一个就是数据初始化脚本 agile-serve-admin/src/main/database/migration/V1__InitTable 里面的配置
+数据表前缀需要修改两个地方，一个是 application-default.yaml 里面的配置，还有一个就是数据初始化脚本 agile-serve-admin/src/main/database/migration/TableName 里面的配置

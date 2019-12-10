@@ -5,7 +5,7 @@ import org.flywaydb.core.api.migration.Context;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-public class V1__InitTable extends BaseJavaMigration {
+public class V1000__InitTable extends BaseJavaMigration {
     @Override
     public void migrate(Context context) throws Exception {
         this.createAdminTable(context);
@@ -21,13 +21,8 @@ public class V1__InitTable extends BaseJavaMigration {
         this.createUserTable(context);
     }
 
-    // @todo 修改数据库表前缀
-    private String getTableName(String table) {
-        return "ag_" + table;
-    }
-
     private void createAdminTable(Context context) {
-        String tableName = this.getTableName("admin");
+        String tableName = TableName.getTableName("admin");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
@@ -56,7 +51,7 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void createAdminAccessTokenTable(Context context) {
-        String tableName = this.getTableName("admin_access_token");
+        String tableName = TableName.getTableName("admin_access_token");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
@@ -80,7 +75,7 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void createAdminGroupTable(Context context) {
-        String tableName = this.getTableName("admin_group");
+        String tableName = TableName.getTableName("admin_group");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
@@ -97,7 +92,7 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void createAdminGroupPermissionTable(Context context) {
-        String tableName = this.getTableName("admin_group_permission");
+        String tableName = TableName.getTableName("admin_group_permission");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
@@ -116,21 +111,21 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void insertAdminGroupData(Context context) {
-        String tableName = this.getTableName("admin_group");
+        String tableName = TableName.getTableName("admin_group");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("INSERT INTO `" + tableName + "` (id, name) VALUES (11, '开发组');");
     }
 
     private void insertAdminData(Context context) {
-        String tableName = this.getTableName("admin");
+        String tableName = TableName.getTableName("admin");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("INSERT INTO `" + tableName + "` (id, adminGroupId, phone, email, name, avatar, password) VALUES (102, 11, '13012345678', 'admin@agile.test', '开发帐号', 'https://yuncars-other.oss-cn-shanghai.aliyuncs.com//agile/201912/6vhndpiufbuidayxg79f.jpg?x-oss-process=style/avatar', '$2a$10$Hjkwb41Fl6kgziqanBx86utS734DbfFsZoJyJ6LrQUQ81B1E/.PeC');");
     }
 
     private void insertAdminGroupPermissionData(Context context) {
-        String tableName = this.getTableName("admin_group_permission");
+        String tableName = TableName.getTableName("admin_group_permission");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("INSERT INTO `" + tableName + "`(`id`, `adminGroupId`, `actionId`) VALUES (386, 11, 'site/sms-send');");
@@ -159,7 +154,7 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void createShopCategoryTable(Context context) {
-        String tableName = this.getTableName("shop_category");
+        String tableName = TableName.getTableName("shop_category");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
@@ -181,7 +176,7 @@ public class V1__InitTable extends BaseJavaMigration {
     }
 
     private void createUserTable(Context context) {
-        String tableName = this.getTableName("user");
+        String tableName = TableName.getTableName("user");
 
         new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
                 .execute("DROP TABLE IF EXISTS `" + tableName + "`;");
