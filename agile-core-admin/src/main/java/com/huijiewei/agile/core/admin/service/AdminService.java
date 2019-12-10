@@ -47,7 +47,7 @@ public class AdminService {
         Admin admin = request.getAdmin();
         String accessToken = FriendlyId.createFriendlyId();
 
-        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientId(clientId);
+        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientIdAndAdminId(clientId, admin.getId());
 
         AdminAccessToken adminAccessToken = adminAccessTokenOptional.orElseGet(AdminAccessToken::new);
 

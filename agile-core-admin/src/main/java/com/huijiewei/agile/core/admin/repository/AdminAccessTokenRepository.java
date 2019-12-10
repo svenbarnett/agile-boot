@@ -14,6 +14,8 @@ public interface AdminAccessTokenRepository extends JpaRepository<AdminAccessTok
 
     public Optional<AdminAccessToken> findByClientIdAndAccessToken(String clientId, String accessToken);
 
+    public Optional<AdminAccessToken> findByClientIdAndAdminId(String clientId, Integer adminId);
+
     @Modifying
     @Transactional
     public void deleteByAdminIdAndClientId(Integer adminId, String clientId);
