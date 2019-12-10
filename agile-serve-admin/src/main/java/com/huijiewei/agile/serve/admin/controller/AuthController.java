@@ -38,10 +38,13 @@ public class AuthController {
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     public AdminLoginResponse actionLogin(
             @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
-            @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,
             @RequestBody AdminLoginRequest request,
             HttpServletRequest servletRequest) {
-        return this.adminService.login(clientId, userAgent, servletRequest.getRemoteAddr(), request);
+        return this.adminService.login(
+                clientId,
+                servletRequest.getHeader("User-Agent") != null ? servletRequest.getHeader("User-Agent") : "",
+                servletRequest.getRemoteAddr(),
+                request);
     }
 
     @Operation(description = "当前登录帐号", operationId = "authAccount")
@@ -84,8 +87,11 @@ public class AuthController {
             value = "/auth/logout",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public MessageResponse actionLogout() {
-        this.adminService.logout(AdminUserDetails.getCurrentAdminIdentity());
+    public MessageResponse actionLogout(HttpServletRequest servletRequest) {
+        this.adminService.logout(
+                AdminUserDetails.getCurrentAdminIdentity(),
+                servletRequest.getHeader("User-Agent") != null ? servletRequest.getHeader("User-Agent") : "",
+                servletRequest.getRemoteAddr());
 
         return MessageResponse.of("退出登录成功");
     }

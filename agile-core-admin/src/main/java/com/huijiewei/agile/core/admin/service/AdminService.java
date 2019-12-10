@@ -78,7 +78,7 @@ public class AdminService {
         adminLog.setType(AdminLog.TYPE_LOGIN);
         adminLog.setStatus(AdminLog.STATUS_SUCCESS);
         adminLog.setMethod("POST");
-        adminLog.setAction("AdminLogin");
+        adminLog.setAction("Login");
         adminLog.setUserAgent(userAgent);
         adminLog.setRemoteAddr(remoteAddr);
 
@@ -87,11 +87,23 @@ public class AdminService {
         return adminLoginResponse;
     }
 
-    public void logout(AdminIdentity identity) {
+    public void logout(AdminIdentity identity, String userAgent, String remoteAddr) {
+        Admin admin = identity.getAdmin();
+
         this.adminAccessTokenRepository.deleteByAdminIdAndClientId(
-                identity.getAdmin().getId(),
+                admin.getId(),
                 identity.getClientId());
 
+        AdminLog adminLog = new AdminLog();
+        adminLog.setAdmin(admin);
+        adminLog.setType(AdminLog.TYPE_LOGIN);
+        adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+        adminLog.setMethod("POST");
+        adminLog.setAction("Logout");
+        adminLog.setUserAgent(userAgent);
+        adminLog.setRemoteAddr(remoteAddr);
+
+        this.adminLogRepository.save(adminLog);
     }
 
     public AdminAccountResponse account(AdminIdentity identity) {

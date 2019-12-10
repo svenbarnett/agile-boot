@@ -36,7 +36,7 @@ public class AdminLogAspect {
     private void setAdminLog(AdminLog adminLog, ProceedingJoinPoint joinPoint) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        StringBuilder queryString = new StringBuilder("");
+        StringBuilder queryString = new StringBuilder();
 
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
@@ -45,7 +45,7 @@ public class AdminLogAspect {
 
             adminLog.setType(requestMethod.equals("GET") ? AdminLog.TYPE_VISIT : AdminLog.TYPE_OPERATE);
             adminLog.setMethod(requestMethod);
-            adminLog.setUserAgent(request.getHeader("User-Agent"));
+            adminLog.setUserAgent(request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "");
             adminLog.setRemoteAddr(request.getRemoteAddr());
 
             if (!StringUtils.isEmpty(request.getQueryString())) {
