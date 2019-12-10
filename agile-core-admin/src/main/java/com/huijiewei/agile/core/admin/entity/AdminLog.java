@@ -3,6 +3,8 @@ package com.huijiewei.agile.core.admin.entity;
 import com.huijiewei.agile.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,18 +16,19 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@DynamicInsert
+@DynamicUpdate
 public class AdminLog extends BaseEntity {
     public static final String TYPE_LOGIN = "LOGIN";
     public static final String TYPE_VISIT = "VISIT";
     public static final String TYPE_OPERATE = "OPERATE";
 
-    public static final Integer STATUS_NONE = 0;
-    public static final Integer STATUS_FAIL = 1;
-    public static final Integer STATUS_ERROR = 2;
-    public static final Integer STATUS_SUCCESS = 3;
+    public static final Integer STATUS_FAIL = 0;
+    public static final Integer STATUS_SUCCESS = 1;
 
     private String type;
     private Integer status;
+    private String method;
     private String action;
     private String params;
     private String userAgent;
@@ -39,9 +42,7 @@ public class AdminLog extends BaseEntity {
     public static Map<Integer, String> statusMap() {
         Map<Integer, String> map = new HashMap<>();
 
-        map.put(STATUS_NONE, "无");
         map.put(STATUS_FAIL, "失败");
-        map.put(STATUS_ERROR, "错误");
         map.put(STATUS_SUCCESS, "成功");
 
         return map;

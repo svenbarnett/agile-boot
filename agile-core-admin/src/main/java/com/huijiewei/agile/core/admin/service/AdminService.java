@@ -3,9 +3,11 @@ package com.huijiewei.agile.core.admin.service;
 import com.devskiller.friendly_id.FriendlyId;
 import com.huijiewei.agile.core.admin.entity.Admin;
 import com.huijiewei.agile.core.admin.entity.AdminAccessToken;
+import com.huijiewei.agile.core.admin.entity.AdminLog;
 import com.huijiewei.agile.core.admin.manager.AdminGroupPermissionManager;
 import com.huijiewei.agile.core.admin.mapper.AdminMapper;
 import com.huijiewei.agile.core.admin.repository.AdminAccessTokenRepository;
+import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.admin.request.AdminRequest;
@@ -31,14 +33,17 @@ public class AdminService {
     private final static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final AdminRepository adminRepository;
+    private final AdminLogRepository adminLogRepository;
     private final AdminAccessTokenRepository adminAccessTokenRepository;
     private final AdminGroupPermissionManager adminGroupPermissionManager;
 
     @Autowired
     public AdminService(AdminRepository adminRepository,
+                        AdminLogRepository adminLogRepository,
                         AdminAccessTokenRepository adminAccessTokenRepository,
                         AdminGroupPermissionManager adminGroupPermissionManager) {
         this.adminRepository = adminRepository;
+        this.adminLogRepository = adminLogRepository;
         this.adminAccessTokenRepository = adminAccessTokenRepository;
         this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
@@ -67,6 +72,17 @@ public class AdminService {
         adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
+
+        AdminLog adminLog = new AdminLog();
+        adminLog.setAdmin(admin);
+        adminLog.setType(AdminLog.TYPE_LOGIN);
+        adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+        adminLog.setMethod("POST");
+        adminLog.setAction("AdminLogin");
+        adminLog.setUserAgent(userAgent);
+        adminLog.setRemoteAddr(remoteAddr);
+
+        this.adminLogRepository.save(adminLog);
 
         return adminLoginResponse;
     }

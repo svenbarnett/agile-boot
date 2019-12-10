@@ -7,7 +7,6 @@ import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.service.AdminService;
 import com.huijiewei.agile.core.response.MessageResponse;
-import com.huijiewei.agile.serve.admin.annotation.LoginLog;
 import com.huijiewei.agile.serve.admin.security.AdminUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,7 +36,6 @@ public class AuthController {
     @Operation(description = "管理员登录", operationId = "authLogin")
     @ApiResponse(responseCode = "200", description = "登录成功")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
-    @LoginLog
     public AdminLoginResponse actionLogin(
             @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
             @Parameter(hidden = true) @RequestHeader(name = "User-Agent", defaultValue = "", required = false) String userAgent,

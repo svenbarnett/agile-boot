@@ -11,7 +11,6 @@ import com.huijiewei.agile.core.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -73,7 +72,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "用户导出")
     @PreAuthorize("hasPermission('ADMIN', 'user/export')")
     public ResponseEntity<Resource> actionExport(
-            @Parameter(hidden = true) UserSearchRequest userSearchRequest
+            @Parameter(hidden = true) @RequestParam(required = false) UserSearchRequest userSearchRequest
     ) {
         throw new BadRequestException("方法未实现");
     }
