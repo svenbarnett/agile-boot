@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AdminResponse extends AdminBaseResponse {
+public class AdminResponse extends AdminMiniResponse {
     @Schema(description = "创建时间")
     private LocalDateTime createdAt;
 }

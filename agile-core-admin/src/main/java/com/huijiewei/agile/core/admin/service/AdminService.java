@@ -1,25 +1,35 @@
 package com.huijiewei.agile.core.admin.service;
 
 import com.devskiller.friendly_id.FriendlyId;
+import com.github.wenhao.jpa.Sorts;
 import com.huijiewei.agile.core.admin.entity.Admin;
 import com.huijiewei.agile.core.admin.entity.AdminAccessToken;
 import com.huijiewei.agile.core.admin.entity.AdminLog;
 import com.huijiewei.agile.core.admin.manager.AdminGroupPermissionManager;
+import com.huijiewei.agile.core.admin.mapper.AdminLogMapper;
 import com.huijiewei.agile.core.admin.mapper.AdminMapper;
 import com.huijiewei.agile.core.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
+import com.huijiewei.agile.core.admin.request.AdminLogSearchRequest;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.admin.request.AdminRequest;
 import com.huijiewei.agile.core.admin.response.AdminAccountResponse;
+import com.huijiewei.agile.core.admin.response.AdminLogResponse;
 import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.security.AdminIdentity;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.ListResponse;
+import com.huijiewei.agile.core.response.PageResponse;
+import com.huijiewei.agile.core.response.SearchPageResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -68,7 +78,7 @@ public class AdminService {
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
+        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminMiniResponse(admin));
         adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
@@ -110,7 +120,7 @@ public class AdminService {
         Admin admin = identity.getAdmin();
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
-        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminBaseResponse(admin));
+        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminMiniResponse(admin));
         adminAccountResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminAccountResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
 
@@ -198,5 +208,25 @@ public class AdminService {
         }
 
         this.adminRepository.delete(admin);
+    }
+
+    public PageResponse<AdminLogResponse> getLog(Boolean withSearchFields, AdminLogSearchRequest searchRequest, Pageable pageable) {
+        Specification<AdminLog> adminLogSpecification = searchRequest.getSpecification();
+
+        Page<AdminLogResponse> adminLogs = AdminLogMapper.INSTANCE.toPageResponse(
+                this.adminLogRepository.findAll(
+                        adminLogSpecification,
+                        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build())
+                )
+        );
+
+        SearchPageResponse<AdminLogResponse> response = new SearchPageResponse<>();
+        response.setPage(adminLogs);
+
+        if (withSearchFields != null && withSearchFields) {
+            response.setSearchFields(searchRequest.getSearchFields());
+        }
+
+        return response;
     }
 }

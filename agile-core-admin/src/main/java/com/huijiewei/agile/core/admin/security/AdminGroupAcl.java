@@ -12,23 +12,6 @@ public class AdminGroupAcl {
                 .addChild(new AdminGroupAclItem().name("更新系统缓存").actionId("site/clean-cache"))
         );
 
-        all.add(new AdminGroupAclItem().name("系统管理")
-                .addChild(new AdminGroupAclItem().name("管理员管理")
-                        .addChild(new AdminGroupAclItem().name("管理员列表").actionId("admin/index"))
-                        .addChild(new AdminGroupAclItem().name("管理员新建").actionId("admin/create"))
-                        .addChild(new AdminGroupAclItem().name("管理员查看").actionId("admin/view"))
-                        .addChild(new AdminGroupAclItem().name("管理员编辑").actionId("admin/edit").addCombine("admin/view"))
-                        .addChild(new AdminGroupAclItem().name("管理员删除").actionId("admin/delete"))
-                )
-                .addChild(new AdminGroupAclItem().name("管理组管理")
-                        .addChild(new AdminGroupAclItem().name("管理组列表").actionId("admin-group/index"))
-                        .addChild(new AdminGroupAclItem().name("管理组新建").actionId("admin-group/create"))
-                        .addChild(new AdminGroupAclItem().name("管理组查看").actionId("admin-group/view"))
-                        .addChild(new AdminGroupAclItem().name("管理组编辑").actionId("admin-group/edit").addCombine("admin-group/view"))
-                        .addChild(new AdminGroupAclItem().name("管理组删除").actionId("admin-group/delete"))
-                )
-        );
-
         all.add(new AdminGroupAclItem().name("用户管理")
                 .addChild(new AdminGroupAclItem().name("用户列表").actionId("user/index"))
                 .addChild(new AdminGroupAclItem().name("用户导出").actionId("user/export"))
@@ -53,6 +36,26 @@ public class AdminGroupAcl {
                         .addChild(new AdminGroupAclItem().name("分类查看").actionId("shop-category/view"))
                         .addChild(new AdminGroupAclItem().name("分类编辑").actionId("shop-category/edit").addCombine("shop-category/view"))
                         .addChild(new AdminGroupAclItem().name("分类删除").actionId("shop-category/delete").addCombine("shop-category/view"))
+                )
+        );
+
+        all.add(new AdminGroupAclItem().name("系统管理")
+                .addChild(new AdminGroupAclItem().name("管理员管理")
+                        .addChild(new AdminGroupAclItem().name("管理员列表").actionId("admin/index"))
+                        .addChild(new AdminGroupAclItem().name("管理员新建").actionId("admin/create"))
+                        .addChild(new AdminGroupAclItem().name("管理员查看").actionId("admin/view"))
+                        .addChild(new AdminGroupAclItem().name("管理员编辑").actionId("admin/edit").addCombine("admin/view"))
+                        .addChild(new AdminGroupAclItem().name("管理员删除").actionId("admin/delete"))
+                )
+                .addChild(new AdminGroupAclItem().name("管理组管理")
+                        .addChild(new AdminGroupAclItem().name("管理组列表").actionId("admin-group/index"))
+                        .addChild(new AdminGroupAclItem().name("管理组新建").actionId("admin-group/create"))
+                        .addChild(new AdminGroupAclItem().name("管理组查看").actionId("admin-group/view"))
+                        .addChild(new AdminGroupAclItem().name("管理组编辑").actionId("admin-group/edit").addCombine("admin-group/view"))
+                        .addChild(new AdminGroupAclItem().name("管理组删除").actionId("admin-group/delete"))
+                )
+                .addChild(new AdminGroupAclItem().name("操作日志")
+                        .addChild(new AdminGroupAclItem().name("操作日志查看").actionId("admin-log/index"))
                 )
         );
 

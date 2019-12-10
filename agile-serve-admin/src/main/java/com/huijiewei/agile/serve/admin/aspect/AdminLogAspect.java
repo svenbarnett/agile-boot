@@ -101,14 +101,14 @@ public class AdminLogAspect {
 
         try {
             adminLog.setStatus(AdminLog.STATUS_SUCCESS);
-            this.adminLogRepository.save(adminLog);
 
             return joinPoint.proceed();
         } catch (Exception ex) {
             adminLog.setStatus(AdminLog.STATUS_FAIL);
-            this.adminLogRepository.save(adminLog);
 
             throw ex;
+        } finally {
+            this.adminLogRepository.save(adminLog);
         }
     }
 

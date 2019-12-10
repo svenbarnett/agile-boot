@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class AdminAccountResponse {
     @Schema(description = "当前用户")
-    private AdminBaseResponse currentUser;
+    private AdminMiniResponse currentUser;
 
     @Schema(description = "菜单列表")
     private List<AdminGroupMenuItem> groupMenus = new ArrayList<>();

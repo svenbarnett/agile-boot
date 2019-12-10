@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class AdminLog extends BaseEntity {
     private String params;
     private String userAgent;
     private String remoteAddr;
-    private LocalTime createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "adminId")

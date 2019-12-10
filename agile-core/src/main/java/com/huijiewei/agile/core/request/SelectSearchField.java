@@ -8,8 +8,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SelectSearchField extends BaseSearchField<SelectSearchField> {
-    private Boolean multiple;
-    private Map<String, String> options;
+    private Boolean multiple = false;
+    private Map<?, String> options;
 
     public SelectSearchField() {
         this.setType("select");
@@ -21,7 +21,7 @@ public class SelectSearchField extends BaseSearchField<SelectSearchField> {
         return this;
     }
 
-    public SelectSearchField options(Map<String, String> options) {
+    public SelectSearchField options(Map<?, String> options) {
         this.options = options;
 
         return this;

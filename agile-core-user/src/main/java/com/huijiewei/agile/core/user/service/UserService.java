@@ -1,7 +1,6 @@
 package com.huijiewei.agile.core.user.service;
 
 import com.github.wenhao.jpa.Sorts;
-import com.huijiewei.agile.core.exception.BadRequestException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.PageResponse;
 import com.huijiewei.agile.core.response.SearchPageResponse;
