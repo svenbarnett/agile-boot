@@ -1,6 +1,5 @@
 package com.huijiewei.agile.spring.upload.driver;
 
-import com.devskiller.friendly_id.FriendlyId;
 import com.huijiewei.agile.spring.upload.*;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
 import net.coobird.thumbnailator.Thumbnails;
@@ -46,13 +45,13 @@ public class LocalFile implements UploadDriver {
 
         String[] policies = policyValue.split(";");
 
-        if (policies.length != 4) {
-            throw new RuntimeException("上传参数错误");
+        if (policies.length != 5) {
+            throw new RuntimeException("策略验证错误");
         }
 
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
-        long timestamp = Long.parseLong(policies[0]);
+        long timestamp = Long.parseLong(policies[1]);
 
         if (timestamp < currentTimestamp) {
             throw new RuntimeException("参数已过期");
@@ -64,7 +63,7 @@ public class LocalFile implements UploadDriver {
     public UploadResponse crop(String policy, ImageCropRequest request) {
         String[] policies = this.parsePolicy(policy);
 
-        if (!Boolean.parseBoolean(policies[3])) {
+        if (!Boolean.parseBoolean(policies[4])) {
             throw new RuntimeException("不支持图片切割");
         }
 
@@ -102,10 +101,10 @@ public class LocalFile implements UploadDriver {
             }
         }
 
-        String fileHashName = FriendlyId.createFriendlyId();
+        String fileHashName = UploadUtils.random(10);
         String fileExtension = FilenameUtils.getExtension(filePath);
 
-        String fileName = fileHashName + "." + fileExtension;
+        String fileName = policies[0] + "_" + fileHashName + "." + fileExtension;
 
         BufferedImage cropImage = image.getSubimage(request.getX(), request.getY(), request.getW(), request.getH());
 
@@ -135,13 +134,13 @@ public class LocalFile implements UploadDriver {
             throw new RuntimeException("没有文件被上传");
         }
 
-        int fileSize = Integer.parseInt(policies[1]);
+        int fileSize = Integer.parseInt(policies[2]);
 
         if (file.getSize() > fileSize) {
             throw new RuntimeException("文件大小超出：" + FileUtils.byteCountToDisplaySize(fileSize));
         }
 
-        List<String> fileTypes = Arrays.asList(policies[2].split(","));
+        List<String> fileTypes = Arrays.asList(policies[3].split(","));
 
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
 
@@ -177,11 +176,11 @@ public class LocalFile implements UploadDriver {
                 break;
             case "random":
             default:
-                fileHashName = FriendlyId.createFriendlyId();
+                fileHashName = UploadUtils.random(10);
 
         }
 
-        String fileName = fileHashName + "." + fileExtension;
+        String fileName = policies[0] + "_" + fileHashName + "." + fileExtension;
 
         String absoluteFilePath = absoluteUploadPath + File.separator + fileName;
 
@@ -201,10 +200,10 @@ public class LocalFile implements UploadDriver {
     }
 
     @Override
-    public UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types) {
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
-        String policy = String.format("%d;%d;%s;%b", currentTimestamp + 10 * 60, size, String.join(",", types), true);
+        String policy = String.format("%s;%d;%d;%s;%b", identity, currentTimestamp + 10 * 60, size, String.join(",", types), true);
         String policyEncrypt = this.encrypt(policy, this.properties.getPolicyKey());
         String policyValue = UploadUtils.urlEncode(policyEncrypt);
 

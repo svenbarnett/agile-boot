@@ -5,9 +5,9 @@ import com.huijiewei.agile.core.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.core.admin.service.AdminGroupService;
 import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.core.shop.service.ShopCategoryService;
+import com.huijiewei.agile.serve.admin.security.AdminUserDetails;
 import com.huijiewei.agile.spring.upload.UploadDriver;
 import com.huijiewei.agile.spring.upload.UploadRequest;
-import com.huijiewei.agile.spring.upload.driver.AliyunOSS;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,7 +61,10 @@ public class MiscController {
     @Operation(description = "图片上传设置获取", operationId = "miscImageUploadOption")
     @ApiResponse(responseCode = "200", description = "图片上传设置")
     public UploadRequest actionImageUploadOption() {
-        return this.uploadDriver.build(1024 * 1024, Arrays.asList("jpg", "jpeg", "gif", "png"));
+        return this.uploadDriver.build(
+                "a" + AdminUserDetails.getCurrentAdminIdentity().getAdmin().getId().toString(),
+                1024 * 1024,
+                Arrays.asList("jpg", "jpeg", "gif", "png"));
     }
 
     @GetMapping(
@@ -71,7 +74,11 @@ public class MiscController {
     @Operation(description = "文件上传设置获取", operationId = "miscFileUploadOption")
     @ApiResponse(responseCode = "200", description = "文件上传设置")
     public UploadRequest actionFileUploadOption() {
-        return this.uploadDriver.build(1024 * 1024 * 10, Arrays.asList("jpg", "jpeg", "gif", "png", "zip", "xlsx", "docx", "pptx"));
+        return this.uploadDriver.build(
+                "a" + AdminUserDetails.getCurrentAdminIdentity().getAdmin().getId().toString(),
+                1024 * 1024 * 10,
+                Arrays.asList("jpg", "jpeg", "gif", "png", "zip", "xlsx", "docx", "pptx")
+        );
     }
 
     @GetMapping(

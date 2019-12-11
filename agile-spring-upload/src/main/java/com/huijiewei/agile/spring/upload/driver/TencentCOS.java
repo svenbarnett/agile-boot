@@ -27,7 +27,7 @@ public class TencentCOS implements UploadDriver {
     }
 
     @Override
-    public UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types) {
         String host = this.properties.getBucket() + ".cos." + this.properties.getRegion() + ".myqcloud.com";
         String url = "https://" + host + "/";
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
@@ -57,7 +57,7 @@ public class TencentCOS implements UploadDriver {
 
 
         Map<String, String> params = new HashMap<>();
-        params.put("key", directory + "${filename}");
+        params.put("key", directory + identity + "_${filename}");
         params.put("Signature", authorization);
         params.put("success_action_status", "201");
 

@@ -33,7 +33,7 @@ public class AliyunOSS implements UploadDriver {
     }
 
     @Override
-    public UploadRequest option(Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types) {
         String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
@@ -62,7 +62,7 @@ public class AliyunOSS implements UploadDriver {
 
         Map<String, String> params = new HashMap<>();
         params.put("OSSAccessKeyId", this.properties.getAccessKeyId());
-        params.put("key", directory + "${filename}");
+        params.put("key", directory + identity + "_${filename}");
         params.put("policy", policyString);
         params.put("signature", signature);
         params.put("success_action_status", "201");

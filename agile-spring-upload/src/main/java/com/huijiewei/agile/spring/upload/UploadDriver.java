@@ -5,8 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface UploadDriver {
-    default UploadRequest build(Integer size, List<String> types) {
-        UploadRequest request = this.option(size, types);
+    default UploadRequest build(String identity, Integer size, List<String> types) {
+        UploadRequest request = this.option(identity, size, types);
 
         request.setSizeLimit(size);
         request.setTypesLimit(types);
@@ -14,7 +14,7 @@ public interface UploadDriver {
         return request;
     }
 
-    UploadRequest option(Integer size, List<String> types);
+    UploadRequest option(String identity, Integer size, List<String> types);
 
     String paramName();
 
