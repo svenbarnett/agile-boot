@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 @DynamicInsert
 @DynamicUpdate
 public class ShopCategory extends TreeEntity<ShopCategory> {
-    @NotBlank
     private String name;
 
     private String icon;

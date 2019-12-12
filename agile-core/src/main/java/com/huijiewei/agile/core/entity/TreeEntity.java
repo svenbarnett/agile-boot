@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @MappedSuperclass
-public abstract class TreeEntity<T extends TreeEntity> extends BaseEntity {
+public abstract class TreeEntity<T extends TreeEntity<T>> extends BaseEntity {
     @NotNull
     private Integer parentId;
 

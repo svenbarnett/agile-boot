@@ -4,6 +4,7 @@ import com.huijiewei.agile.core.admin.entity.AdminGroup;
 import com.huijiewei.agile.core.constraint.Exist;
 import com.huijiewei.agile.core.constraint.FieldMatch;
 import com.huijiewei.agile.core.constraint.Phone;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -35,6 +36,7 @@ public class AdminRequest {
     private String avatar;
 
     @NotNull
+    @Schema(description = "所在管理组", required = true)
     @Exist(targetEntity = AdminGroup.class, targetProperty = "id", sourceProperty = "id", message = "你选择的管理组不存在")
     private AdminGroup adminGroup;
 
