@@ -7,6 +7,7 @@ import com.huijiewei.agile.core.admin.repository.AdminRepository;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.constraint.PhoneValidator;
 import com.huijiewei.agile.core.consts.AccountTypeEnums;
+import com.huijiewei.agile.core.entity.Captcha;
 import com.huijiewei.agile.core.repository.CaptchaRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 public class AccountValidator implements ConstraintValidator<Account, Object> {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -109,13 +111,16 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
                 String[] captchaSplit = captcha.split("_");
 
                 if (captchaSplit.length == 2) {
-                    if (this.captchaRepository.existsByCodeAndUuidAndUserAgentAndRemoteAddr(
+                    Optional<Captcha> captchaOptional = this.captchaRepository.findByCodeAndUuidAndUserAgentAndRemoteAddr(
                             captchaSplit[0],
                             captchaSplit[1],
                             request.getUserAgent(),
                             request.getRemoteAddr()
-                    )) {
+                    );
+
+                    if (captchaOptional.isPresent()) {
                         captchaIncorrect = false;
+                        this.captchaRepository.delete(captchaOptional.get());
                     }
                 }
             }
