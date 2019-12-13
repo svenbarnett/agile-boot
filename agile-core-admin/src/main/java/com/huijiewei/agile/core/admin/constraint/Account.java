@@ -22,10 +22,4 @@ public @interface Account {
     public Class<?>[] groups() default {};
 
     public Class<? extends Payload>[] payload() default {};
-
-    String accountFieldName();
-
-    String passwordFieldName();
-
-    String accountEntityFieldName();
 }

@@ -32,10 +32,8 @@ public class User extends BaseEntity {
     public static final String CREATED_FROM_WECHAT = "WECHAT";
     public static final String CREATED_FROM_SYSTEM = "SYSTEM";
 
-    @Column(unique = true)
     private String phone;
 
-    @Column(unique = true)
     private String email;
 
     private String password;

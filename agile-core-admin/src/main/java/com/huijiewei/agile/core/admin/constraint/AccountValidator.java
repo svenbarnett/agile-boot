@@ -1,11 +1,13 @@
 package com.huijiewei.agile.core.admin.constraint;
 
 import com.huijiewei.agile.core.admin.entity.Admin;
+import com.huijiewei.agile.core.admin.entity.AdminLog;
+import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
+import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.constraint.PhoneValidator;
 import com.huijiewei.agile.core.consts.AccountTypeEnums;
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +18,6 @@ import javax.validation.ConstraintValidatorContext;
 public class AccountValidator implements ConstraintValidator<Account, Object> {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private String accountFieldName;
-    private String passwordFieldName;
-    private String accountEntityFieldName;
     private String accountTypeMessage;
     private String accountNotExistMessage;
     private String passwordIncorrectMessage;
@@ -26,11 +25,11 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private AdminLogRepository adminLogRepository;
+
     @Override
     public void initialize(final Account constraintAnnotation) {
-        this.accountFieldName = constraintAnnotation.accountFieldName();
-        this.passwordFieldName = constraintAnnotation.passwordFieldName();
-        this.accountEntityFieldName = constraintAnnotation.accountEntityFieldName();
         this.accountTypeMessage = constraintAnnotation.accountTypeMessage();
         this.accountNotExistMessage = constraintAnnotation.accountNotExistMessage();
         this.passwordIncorrectMessage = constraintAnnotation.passwordIncorrectMessage();
@@ -38,8 +37,10 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        String account = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(accountFieldName));
-        String password = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(passwordFieldName));
+        AdminLoginRequest request = (AdminLoginRequest) value;
+
+        String account = request.getAccount();
+        String password = request.getPassword();
 
         if (account == null || account.length() == 0) {
             return true;
@@ -66,7 +67,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
         if (accountType == null) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(this.accountTypeMessage)
-                    .addPropertyNode(this.accountFieldName)
+                    .addPropertyNode("account")
                     .addConstraintViolation();
 
             return false;
@@ -85,22 +86,36 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
         if (admin == null) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(this.accountNotExistMessage)
-                    .addPropertyNode(this.accountFieldName)
+                    .addPropertyNode("account")
                     .addConstraintViolation();
 
             return false;
         }
+
+        AdminLog adminLog = new AdminLog();
+        adminLog.setAdmin(admin);
+        adminLog.setType(AdminLog.TYPE_LOGIN);
+        adminLog.setMethod("POST");
+        adminLog.setAction("Login");
+        adminLog.setUserAgent(request.getUserAgent());
+        adminLog.setRemoteAddr(request.getRemoteAddr());
 
         if (!passwordEncoder.matches(password, admin.getPassword())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
-                    .addPropertyNode(this.passwordFieldName)
+                    .addPropertyNode("password")
                     .addConstraintViolation();
+
+            adminLog.setStatus(AdminLog.STATUS_FAIL);
+            this.adminLogRepository.save(adminLog);
 
             return false;
         }
 
-        new BeanWrapperImpl(value).setPropertyValue(accountEntityFieldName, admin);
+        adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+        this.adminLogRepository.save(adminLog);
+
+        request.setAdmin(admin);
 
         return true;
     }

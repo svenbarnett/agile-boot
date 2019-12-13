@@ -7,9 +7,9 @@ import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.service.AdminService;
 import com.huijiewei.agile.core.response.MessageResponse;
+import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.serve.admin.security.AdminUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +37,14 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "登录成功")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     public AdminLoginResponse actionLogin(
-            @Parameter(hidden = true) @RequestHeader(name = "X-Client-Id", defaultValue = "") String clientId,
             @RequestBody AdminLoginRequest request,
             HttpServletRequest servletRequest) {
-        return this.adminService.login(
-                clientId,
-                servletRequest.getHeader("User-Agent") != null ? servletRequest.getHeader("User-Agent") : "",
-                servletRequest.getRemoteAddr(),
-                request);
+
+        request.setClientId(HttpUtils.getClientId(servletRequest));
+        request.setUserAgent(HttpUtils.getUserAgent(servletRequest));
+        request.setRemoteAddr(HttpUtils.getRemoteAddr(servletRequest));
+
+        return this.adminService.login(request);
     }
 
     @Operation(description = "当前登录帐号", operationId = "authAccount")
@@ -90,8 +90,8 @@ public class AuthController {
     public MessageResponse actionLogout(HttpServletRequest servletRequest) {
         this.adminService.logout(
                 AdminUserDetails.getCurrentAdminIdentity(),
-                servletRequest.getHeader("User-Agent") != null ? servletRequest.getHeader("User-Agent") : "",
-                servletRequest.getRemoteAddr());
+                HttpUtils.getUserAgent(servletRequest),
+                HttpUtils.getRemoteAddr(servletRequest));
 
         return MessageResponse.of("退出登录成功");
     }

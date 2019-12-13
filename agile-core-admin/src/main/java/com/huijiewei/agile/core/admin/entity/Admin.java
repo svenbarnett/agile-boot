@@ -20,10 +20,8 @@ import java.time.LocalDateTime;
         @Unique(fields = {"email"}, message = "电子邮箱已被使用")
 })
 public class Admin extends BaseEntity {
-    @Column(unique = true)
     private String phone;
 
-    @Column(unique = true)
     private String email;
 
     private String password;

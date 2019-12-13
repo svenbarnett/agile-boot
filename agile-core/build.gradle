@@ -8,6 +8,7 @@ dependencies {
     implementation libs.validationApi
     implementation libs.springdocOpenApi
     implementation libs.mapstruct
+    implementation libs.jakartaServeltApi
 
     annotationProcessor libs.mapstructProcessor
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

@@ -20,8 +20,6 @@ public class AdminPreAuthenticationFilter extends AbstractPreAuthenticatedProces
 
     @Override
     protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
-        String accessToken = request.getHeader(ACCESS_TOKEN);
-
         return request.getHeader(ACCESS_TOKEN);
     }
 }

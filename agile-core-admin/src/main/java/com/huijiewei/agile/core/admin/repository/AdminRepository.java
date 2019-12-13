@@ -18,12 +18,4 @@ public interface AdminRepository extends JpaRepository<Admin, Integer>, ValidSav
     Admin findByEmail(String email);
 
     Boolean existsByAdminGroupId(Integer adminGroupId);
-
-    Boolean existsByPhone(String phone);
-
-    Boolean existsByEmail(String email);
-
-    Boolean existsByPhoneAndIdNot(String phone, Integer id);
-
-    Boolean existsByEmailAndIdNot(String email, Integer id);
 }

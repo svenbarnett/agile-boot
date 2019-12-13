@@ -3,6 +3,7 @@ package com.huijiewei.agile.serve.admin.controller;
 import com.huijiewei.agile.core.exception.BadRequestException;
 import com.huijiewei.agile.core.response.MessageResponse;
 import com.huijiewei.agile.core.response.PageResponse;
+import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.core.user.entity.User;
 import com.huijiewei.agile.core.user.request.UserRequest;
 import com.huijiewei.agile.core.user.request.UserSearchRequest;
@@ -99,7 +100,7 @@ public class UserController {
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/create')")
     public UserResponse actionCreate(@RequestBody UserRequest request, HttpServletRequest servletRequest) {
-        return this.userService.create(request, User.CREATED_FROM_SYSTEM, servletRequest.getRemoteAddr());
+        return this.userService.create(request, User.CREATED_FROM_SYSTEM, HttpUtils.getRemoteAddr(servletRequest));
     }
 
     @PutMapping(

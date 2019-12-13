@@ -58,21 +58,22 @@ public class AdminService {
         this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
 
-    public AdminLoginResponse login(String clientId, String userAgent, String remoteAddr, @Valid AdminLoginRequest request) {
+    public AdminLoginResponse login(@Valid AdminLoginRequest request) {
         Admin admin = request.getAdmin();
         String accessToken = FriendlyId.createFriendlyId();
 
-        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository.findByClientIdAndAdminId(clientId, admin.getId());
+        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository
+                .findByClientIdAndAdminId(request.getClientId(), admin.getId());
 
         AdminAccessToken adminAccessToken = adminAccessTokenOptional.orElseGet(AdminAccessToken::new);
 
         if (!adminAccessToken.hasId()) {
             adminAccessToken.setAdminId(admin.getId());
-            adminAccessToken.setClientId(clientId);
+            adminAccessToken.setClientId(request.getClientId());
         }
 
-        adminAccessToken.setUserAgent(userAgent);
-        adminAccessToken.setRemoteAddr(remoteAddr);
+        adminAccessToken.setUserAgent(request.getUserAgent());
+        adminAccessToken.setRemoteAddr(request.getRemoteAddr());
         adminAccessToken.setAccessToken(accessToken);
 
         this.adminAccessTokenRepository.save(adminAccessToken);
@@ -82,17 +83,6 @@ public class AdminService {
         adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
-
-        AdminLog adminLog = new AdminLog();
-        adminLog.setAdmin(admin);
-        adminLog.setType(AdminLog.TYPE_LOGIN);
-        adminLog.setStatus(AdminLog.STATUS_SUCCESS);
-        adminLog.setMethod("POST");
-        adminLog.setAction("Login");
-        adminLog.setUserAgent(userAgent);
-        adminLog.setRemoteAddr(remoteAddr);
-
-        this.adminLogRepository.save(adminLog);
 
         return adminLoginResponse;
     }

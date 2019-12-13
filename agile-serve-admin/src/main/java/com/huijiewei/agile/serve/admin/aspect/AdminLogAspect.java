@@ -2,6 +2,7 @@ package com.huijiewei.agile.serve.admin.aspect;
 
 import com.huijiewei.agile.core.admin.entity.AdminLog;
 import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
+import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.serve.admin.security.AdminUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -45,8 +46,8 @@ public class AdminLogAspect {
 
             adminLog.setType(requestMethod.equals("GET") ? AdminLog.TYPE_VISIT : AdminLog.TYPE_OPERATE);
             adminLog.setMethod(requestMethod);
-            adminLog.setUserAgent(request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "");
-            adminLog.setRemoteAddr(request.getRemoteAddr());
+            adminLog.setUserAgent(HttpUtils.getUserAgent(request));
+            adminLog.setRemoteAddr(HttpUtils.getRemoteAddr(request));
 
             if (!StringUtils.isEmpty(request.getQueryString())) {
                 queryString.append(request.getQueryString());
@@ -111,5 +112,4 @@ public class AdminLogAspect {
             this.adminLogRepository.save(adminLog);
         }
     }
-
 }

@@ -11,10 +11,14 @@ ext.friendlyIdVersion = '1.1.0'
 ext.jpaSpecVersion = '3.2.5'
 ext.javaFakerVersion = '1.0.1'
 ext.flywayVersion = '6.1.0'
+ext.jakartaServeltApiVersion = '4.0.3'
 
 ext.libs = [
         lombok            : [
                 "org.projectlombok:lombok:$lombokVersion"
+        ],
+        jakartaServeltApi  : [
+                "jakarta.servlet:jakarta.servlet-api:${jakartaServeltApiVersion}"
         ],
         springdocOpenApi  : [
                 "org.springdoc:springdoc-openapi-webmvc-core:${springdocOpenApiVersion}"

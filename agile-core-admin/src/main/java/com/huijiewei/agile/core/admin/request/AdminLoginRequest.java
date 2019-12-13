@@ -10,10 +10,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-@Account(accountFieldName = "account",
-        passwordFieldName = "password",
-        accountEntityFieldName = "admin",
-        accountTypeMessage = "无效的帐号类型, 帐号应该是手机号码或者电子邮箱",
+@Account(accountTypeMessage = "无效的帐号类型, 帐号应该是手机号码或者电子邮箱",
         accountNotExistMessage = "帐号不存在",
         passwordIncorrectMessage = "密码错误")
 public class AdminLoginRequest {
@@ -24,6 +21,18 @@ public class AdminLoginRequest {
     @NotBlank(message = "密码不能为空")
     @Schema(description = "密码", required = true)
     private String password;
+
+    @Schema(description = "验证码")
+    private String captcha;
+
+    @Schema(hidden = true)
+    private String clientId;
+
+    @Schema(hidden = true)
+    private String userAgent;
+
+    @Schema(hidden = true)
+    private String remoteAddr;
 
     @Schema(hidden = true)
     private Admin admin = null;
