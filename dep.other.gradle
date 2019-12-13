@@ -12,6 +12,7 @@ ext.jpaSpecVersion = '3.2.5'
 ext.javaFakerVersion = '1.0.1'
 ext.flywayVersion = '6.1.0'
 ext.jakartaServeltApiVersion = '4.0.3'
+ext.easyCaptchaVersion = '1.6.2'
 
 ext.libs = [
         lombok            : [
@@ -19,6 +20,9 @@ ext.libs = [
         ],
         jakartaServeltApi  : [
                 "jakarta.servlet:jakarta.servlet-api:${jakartaServeltApiVersion}"
+        ],
+        easyCaptcha  : [
+                "com.github.whvcse:easy-captcha:${easyCaptchaVersion}"
         ],
         springdocOpenApi  : [
                 "org.springdoc:springdoc-openapi-webmvc-core:${springdocOpenApiVersion}"

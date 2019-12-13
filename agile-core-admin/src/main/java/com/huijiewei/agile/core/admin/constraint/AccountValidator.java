@@ -7,8 +7,12 @@ import com.huijiewei.agile.core.admin.repository.AdminRepository;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.constraint.PhoneValidator;
 import com.huijiewei.agile.core.consts.AccountTypeEnums;
+import com.huijiewei.agile.core.repository.CaptchaRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,6 +25,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     private String accountTypeMessage;
     private String accountNotExistMessage;
     private String passwordIncorrectMessage;
+    private String captchaIncorrectMessage;
 
     @Autowired
     private AdminRepository adminRepository;
@@ -28,11 +33,22 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     @Autowired
     private AdminLogRepository adminLogRepository;
 
+    @Autowired
+    private CaptchaRepository captchaRepository;
+
+    @Autowired
+    private ConcurrentMapCacheManager cacheManager;
+
+    private Cache loginRetryCache;
+
     @Override
     public void initialize(final Account constraintAnnotation) {
         this.accountTypeMessage = constraintAnnotation.accountTypeMessage();
         this.accountNotExistMessage = constraintAnnotation.accountNotExistMessage();
         this.passwordIncorrectMessage = constraintAnnotation.passwordIncorrectMessage();
+        this.captchaIncorrectMessage = constraintAnnotation.captchaIncorrectMessage();
+
+        this.loginRetryCache = cacheManager.getCache("AGILE_ADMIN_LOGIN_RETRY");
     }
 
     @Override
@@ -42,11 +58,11 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
         String account = request.getAccount();
         String password = request.getPassword();
 
-        if (account == null || account.length() == 0) {
+        if (StringUtils.isEmpty(account)) {
             return true;
         }
 
-        if (password == null || password.length() == 0) {
+        if (StringUtils.isEmpty(password)) {
             return true;
         }
 
@@ -73,6 +89,47 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
             return false;
         }
 
+        String loginRetryCacheKey = request.getClientId() + "_" + request.getRemoteAddr();
+
+        Integer retryCount = loginRetryCache.get(loginRetryCacheKey, Integer.class);
+
+        if (retryCount == null) {
+            retryCount = 0;
+        }
+
+        boolean needCheckCaptcha = retryCount >= 2;
+        boolean checkCaptcha = retryCount >= 3;
+
+        if (checkCaptcha) {
+            String captcha = request.getCaptcha();
+
+            boolean captchaIncorrect = true;
+
+            if (!StringUtils.isEmpty(captcha)) {
+                String[] captchaSplit = captcha.split("_");
+
+                if (captchaSplit.length == 2) {
+                    if (this.captchaRepository.existsByCodeAndUuidAndUserAgentAndRemoteAddr(
+                            captchaSplit[0],
+                            captchaSplit[1],
+                            request.getUserAgent(),
+                            request.getRemoteAddr()
+                    )) {
+                        captchaIncorrect = false;
+                    }
+                }
+            }
+
+            if (captchaIncorrect) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(this.captchaIncorrectMessage)
+                        .addPropertyNode("captcha")
+                        .addConstraintViolation();
+
+                return false;
+            }
+        }
+
         Admin admin = null;
 
         if (accountType == AccountTypeEnums.PHONE) {
@@ -89,6 +146,16 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
                     .addPropertyNode("account")
                     .addConstraintViolation();
 
+            if (needCheckCaptcha) {
+                context.buildConstraintViolationWithTemplate("")
+                        .addPropertyNode("captcha")
+                        .addConstraintViolation();
+            }
+
+            retryCount++;
+
+            loginRetryCache.put(loginRetryCacheKey, retryCount);
+
             return false;
         }
 
@@ -102,15 +169,28 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
         if (!passwordEncoder.matches(password, admin.getPassword())) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
+            context
+                    .buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
                     .addPropertyNode("password")
                     .addConstraintViolation();
+
+            if (needCheckCaptcha) {
+                context.buildConstraintViolationWithTemplate("")
+                        .addPropertyNode("captcha")
+                        .addConstraintViolation();
+            }
+
+            retryCount++;
+
+            loginRetryCache.put(loginRetryCacheKey, retryCount);
 
             adminLog.setStatus(AdminLog.STATUS_FAIL);
             this.adminLogRepository.save(adminLog);
 
             return false;
         }
+
+        loginRetryCache.evict(loginRetryCacheKey);
 
         adminLog.setStatus(AdminLog.STATUS_SUCCESS);
         this.adminLogRepository.save(adminLog);

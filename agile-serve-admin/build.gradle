@@ -28,6 +28,7 @@ dependencies {
     implementation libs.springdocOpenApiUi
     implementation libs.javaFaker
     implementation libs.flyway
+    implementation libs.easyCaptcha
 
     implementation project(':agile-core')
     implementation project(':agile-core-admin')

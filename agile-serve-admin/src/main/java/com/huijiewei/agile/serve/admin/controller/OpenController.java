@@ -1,18 +1,26 @@
 package com.huijiewei.agile.serve.admin.controller;
 
 import com.github.javafaker.Faker;
+import com.huijiewei.agile.core.entity.Captcha;
+import com.huijiewei.agile.core.exception.BadRequestException;
+import com.huijiewei.agile.core.repository.CaptchaRepository;
+import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.core.user.entity.User;
 import com.huijiewei.agile.core.user.repository.UserRepository;
 import com.huijiewei.agile.spring.upload.ImageCropRequest;
 import com.huijiewei.agile.spring.upload.UploadDriver;
 import com.huijiewei.agile.spring.upload.UploadResponse;
+import com.wf.captcha.GifCaptcha;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -22,11 +30,13 @@ import java.util.*;
 public class OpenController {
     private final UserRepository userRepository;
     private final UploadDriver uploadDriver;
+    private final CaptchaRepository captchaRepository;
 
     @Autowired
-    public OpenController(UserRepository userRepository, UploadDriver uploadDriver) {
+    public OpenController(UserRepository userRepository, UploadDriver uploadDriver, CaptchaRepository captchaRepository) {
         this.userRepository = userRepository;
         this.uploadDriver = uploadDriver;
+        this.captchaRepository = captchaRepository;
     }
 
     @PostMapping(
@@ -45,6 +55,28 @@ public class OpenController {
     )
     public UploadResponse actionCropImage(@RequestParam("policy") String policy, @RequestBody ImageCropRequest request) {
         return this.uploadDriver.crop(policy, request);
+    }
+
+    @GetMapping(
+            value = "/open/captcha"
+    )
+    public String actionCaptcha(@RequestParam("uuid") String uuid, HttpServletRequest servletRequest) {
+        if (StringUtils.isEmpty(uuid)) {
+            throw new BadRequestException("参数错误");
+        }
+
+        Captcha captcha = new Captcha();
+        captcha.setUuid(uuid);
+        captcha.setUserAgent(HttpUtils.getUserAgent(servletRequest));
+        captcha.setRemoteAddr(HttpUtils.getRemoteAddr(servletRequest));
+
+        GifCaptcha gifCaptcha = new GifCaptcha(100, 30, 5);
+
+        captcha.setCode(gifCaptcha.text());
+
+        captchaRepository.save(captcha);
+
+        return gifCaptcha.toBase64();
     }
 
     @GetMapping(

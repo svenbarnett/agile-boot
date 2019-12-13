@@ -19,6 +19,8 @@ public @interface Account {
 
     public String passwordIncorrectMessage() default "Password is incorrect";
 
+    public String captchaIncorrectMessage() default "Captcha is incorrect";
+
     public Class<?>[] groups() default {};
 
     public Class<? extends Payload>[] payload() default {};
