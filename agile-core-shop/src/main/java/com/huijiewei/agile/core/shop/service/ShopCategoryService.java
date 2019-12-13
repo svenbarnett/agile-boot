@@ -73,10 +73,6 @@ public class ShopCategoryService {
     public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request);
 
-        if (shopCategory.getParentId() > 0 && !this.shopCategoryRepository.existsById(shopCategory.getParentId())) {
-            throw new NotFoundException("你选择的上级分类不存在");
-        }
-
         this.shopCategoryManager.save(shopCategory);
 
         return ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
@@ -92,10 +88,6 @@ public class ShopCategoryService {
         ShopCategory current = shopCategoryOptional.get();
 
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request, current);
-
-        if (shopCategory.getParentId() > 0 && !this.shopCategoryRepository.existsById(shopCategory.getParentId())) {
-            throw new NotFoundException("你选择的上级分类不存在");
-        }
 
         this.shopCategoryManager.save(shopCategory);
 

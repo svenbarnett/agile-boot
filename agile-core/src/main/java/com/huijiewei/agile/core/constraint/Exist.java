@@ -23,6 +23,8 @@ public @interface Exist {
 
     String sourceProperty() default "";
 
+    String[] allowValues() default {};
+
     String message() default "Such %s not exists!";
 
     Class<?>[] groups() default {};

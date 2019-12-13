@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class ExistValidator implements ConstraintValidator<Exist, Object> {
     @Autowired
@@ -22,12 +23,14 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
     private Class<? extends BaseEntity> targetEntity;
     private String targetProperty;
     private String sourceProperty;
+    private String[] allowValues;
 
     @Override
     public void initialize(Exist annotation) {
         this.targetEntity = annotation.targetEntity();
         this.targetProperty = annotation.targetProperty();
         this.sourceProperty = annotation.sourceProperty();
+        this.allowValues = annotation.allowValues();
     }
 
     @SneakyThrows
@@ -51,6 +54,10 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
             sourcePropertyField.setAccessible(true);
 
             value = sourcePropertyField.get(object).toString();
+        }
+
+        if (this.allowValues.length > 0 && Arrays.asList(this.allowValues).contains(value)) {
+            return true;
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

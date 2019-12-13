@@ -1,5 +1,7 @@
 package com.huijiewei.agile.core.shop.request;
 
+import com.huijiewei.agile.core.constraint.Exist;
+import com.huijiewei.agile.core.shop.entity.ShopCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class ShopCategoryRequest {
     @NotNull
     @Schema(description = "上级分类", required = true)
+    @Exist(targetEntity = ShopCategory.class, targetProperty = "id", allowValues = {"0"}, message = "商品分类不存在")
     private Integer parentId;
 
     @NotBlank
