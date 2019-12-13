@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class ShopCategoryRequest {
     @NotNull
     @Schema(description = "上级分类", required = true)
-    @Exist(targetEntity = ShopCategory.class, targetProperty = "id", allowValues = {"0"}, message = "商品分类不存在")
+    @Exist(targetEntity = ShopCategory.class, targetProperty = "id", allowValues = "0", message = "商品分类不存在")
     private Integer parentId;
 
     @NotBlank
