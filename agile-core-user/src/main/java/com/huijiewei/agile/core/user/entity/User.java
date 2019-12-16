@@ -2,7 +2,6 @@ package com.huijiewei.agile.core.user.entity;
 
 import com.huijiewei.agile.core.constraint.Unique;
 import com.huijiewei.agile.core.entity.BaseEntity;
-import com.huijiewei.agile.core.entity.SoftDeleteEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -10,12 +9,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -51,18 +47,48 @@ public class User extends BaseEntity {
 
     private LocalDateTime updatedAt;
 
-    public static Map<String, String> createFromMap() {
-        Map<String, String> map = new HashMap<>();
+    public static List<CreatedFrom> createFromList() {
+        List<CreatedFrom> createdFroms = new ArrayList<>();
 
-        map.put(User.CREATED_FROM_WEB, "网站");
-        map.put(User.CREATED_FROM_APP, "应用");
-        map.put(User.CREATED_FROM_WECHAT, "微信");
-        map.put(User.CREATED_FROM_SYSTEM, "系统");
+        createdFroms.add(new CreatedFrom(CREATED_FROM_WEB, "网站"));
+        createdFroms.add(new CreatedFrom(CREATED_FROM_APP, "应用"));
+        createdFroms.add(new CreatedFrom(CREATED_FROM_WECHAT, "微信"));
+        createdFroms.add(new CreatedFrom(CREATED_FROM_SYSTEM, "系统"));
 
-        return map;
+        return createdFroms;
     }
 
-    public static List<String> createFormList() {
-        return new ArrayList<>(createFromMap().keySet());
+    public static CreatedFrom getCreateFrom(String createdFrom) {
+        List<CreatedFrom> createdFroms = User.createFromList();
+
+        for (CreatedFrom everyCreateFrom : createdFroms) {
+            if (everyCreateFrom.value.equals(createdFrom)) {
+                return everyCreateFrom;
+            }
+        }
+
+        return new CreatedFrom(createdFrom, createdFrom);
+    }
+
+    public static List<String> createFormValues() {
+        List<CreatedFrom> createdFroms = User.createFromList();
+        List<String> createFormValues = new ArrayList<>();
+
+        for (CreatedFrom everyCreateFrom : createdFroms) {
+            createFormValues.add(everyCreateFrom.value);
+        }
+
+        return createFormValues;
+    }
+
+    @Data
+    public static class CreatedFrom {
+        private String value;
+        private String description;
+
+        public CreatedFrom(String value, String label) {
+            this.value = value;
+            this.description = label;
+        }
     }
 }

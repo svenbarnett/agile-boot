@@ -54,7 +54,7 @@ public class OpenApiConfig {
         Schema<String> schema = new Schema<>();
         schema.setType("string");
         schema.setUniqueItems(true);
-        schema.setEnum(User.createFormList());
+        schema.setEnum(User.createFormValues());
 
         return new ArraySchema().items(schema);
     }

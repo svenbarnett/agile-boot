@@ -9,7 +9,4 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface AdminGroupRepository extends JpaRepository<AdminGroup, Integer> {
-    default Map<Integer, String> findMap() {
-        return findAll().stream().collect(Collectors.toMap(AdminGroup::getId, AdminGroup::getName));
-    }
 }

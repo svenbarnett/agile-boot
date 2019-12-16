@@ -11,7 +11,6 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
@@ -31,13 +30,7 @@ public interface UserMapper {
         return page.map(this::toUserResponse);
     }
 
-    default UserResponse.CreatedFrom toCreatedFrom(String createdFrom) {
-        Map<String, String> createdFromMap = User.createFromMap();
-
-        if (createdFromMap.containsKey(createdFrom)) {
-            return new UserResponse.CreatedFrom(createdFrom, createdFromMap.get(createdFrom));
-        }
-
-        return new UserResponse.CreatedFrom(createdFrom, createdFrom);
+    default User.CreatedFrom toCreatedFrom(String createdFrom) {
+        return User.getCreateFrom(createdFrom);
     }
 }

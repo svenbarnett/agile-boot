@@ -17,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,8 +43,8 @@ public class AdminGroupService {
         return response;
     }
 
-    public Map<Integer, String> getMap() {
-        return this.adminGroupRepository.findMap();
+    public List<AdminGroupResponse> getList() {
+        return AdminGroupMapper.INSTANCE.toAdminGroupResponses(this.adminGroupRepository.findAll());
     }
 
     public List<String> getPermissionsById(Integer id) {

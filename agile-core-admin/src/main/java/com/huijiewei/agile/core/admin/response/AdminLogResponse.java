@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.admin.response;
 
+import com.huijiewei.agile.core.admin.entity.AdminLog;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -11,10 +12,10 @@ public class AdminLogResponse {
     private Integer id;
 
     @Schema(description = "日志类型")
-    private Type type;
+    private AdminLog.Type type;
 
     @Schema(description = "操作状态")
-    private Status status;
+    private AdminLog.Status status;
 
     @Schema(description = "请求方法")
     private String method;
@@ -36,26 +37,4 @@ public class AdminLogResponse {
 
     @Schema(description = "所属管理员")
     private AdminBaseResponse admin;
-
-    @Data
-    public static class Type {
-        private String type;
-        private String description;
-
-        public Type(String value, String label) {
-            this.type = value;
-            this.description = label;
-        }
-    }
-
-    @Data
-    public static class Status {
-        private Integer status;
-        private String description;
-
-        public Status(Integer status, String label) {
-            this.status = status;
-            this.description = label;
-        }
-    }
 }

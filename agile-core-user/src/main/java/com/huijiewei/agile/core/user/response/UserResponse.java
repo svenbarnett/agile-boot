@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.user.response;
 
+import com.huijiewei.agile.core.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -29,17 +30,5 @@ public class UserResponse {
     private String createdIp;
 
     @Schema(description = "创建来源")
-    private CreatedFrom createdFrom;
-
-
-    @Data
-    public static class CreatedFrom {
-        private String name;
-        private String description;
-
-        public CreatedFrom(String value, String label) {
-            this.name = value;
-            this.description = label;
-        }
-    }
+    private User.CreatedFrom createdFrom;
 }

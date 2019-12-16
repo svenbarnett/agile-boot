@@ -1,5 +1,6 @@
 package com.huijiewei.agile.serve.admin.controller;
 
+import com.huijiewei.agile.core.admin.response.AdminGroupResponse;
 import com.huijiewei.agile.core.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.core.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.core.admin.service.AdminGroupService;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Tag(name = "misc", description = "杂项接口")
@@ -45,13 +45,13 @@ public class MiscController {
     }
 
     @GetMapping(
-            value = "/misc/admin-group-map",
+            value = "/misc/admin-group-list",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(description = "管理组 MAP", operationId = "miscAdminGroupMap")
     @ApiResponse(responseCode = "200", description = "管理组 MAP")
-    public Map<Integer, String> actionAdminGroupOptions() {
-        return this.adminGroupService.getMap();
+    public List<AdminGroupResponse> actionAdminGroupList() {
+        return this.adminGroupService.getList();
     }
 
     @GetMapping(

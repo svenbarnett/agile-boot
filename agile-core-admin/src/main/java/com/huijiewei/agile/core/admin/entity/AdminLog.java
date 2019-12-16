@@ -10,9 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -40,22 +39,68 @@ public class AdminLog extends BaseEntity {
     @JoinColumn(name = "adminId")
     private Admin admin;
 
-    public static Map<Integer, String> statusMap() {
-        Map<Integer, String> map = new HashMap<>();
+    public static List<Status> statusList() {
+        List<Status> statuses = new ArrayList<>();
 
-        map.put(STATUS_FAIL, "失败");
-        map.put(STATUS_SUCCESS, "成功");
+        statuses.add(new Status(STATUS_FAIL, "失败"));
+        statuses.add(new Status(STATUS_SUCCESS, "成功"));
 
-        return map;
+        return statuses;
     }
 
-    public static Map<String, String> typeMap() {
-        Map<String, String> map = new HashMap<>();
+    public static Status getStatus(Integer status) {
+        List<Status> statuses = AdminLog.statusList();
 
-        map.put(TYPE_LOGIN, "登录");
-        map.put(TYPE_VISIT, "访问");
-        map.put(TYPE_OPERATE, "操作");
+        for (Status everyStatus : statuses) {
+            if (everyStatus.value.equals(status)) {
+                return everyStatus;
+            }
+        }
 
-        return map;
+        return new Status(status, status.toString());
+    }
+
+    public static List<Type> typeList() {
+        List<Type> types = new ArrayList<>();
+
+        types.add(new Type(TYPE_LOGIN, "登录"));
+        types.add(new Type(TYPE_VISIT, "访问"));
+        types.add(new Type(TYPE_OPERATE, "操作"));
+
+        return types;
+    }
+
+    public static Type getType(String type) {
+        List<Type> types = AdminLog.typeList();
+
+        for (Type everyType : types) {
+            if (everyType.value.equals(type)) {
+                return everyType;
+            }
+        }
+
+        return new Type(type, type);
+    }
+
+    @Data
+    public static class Type {
+        private String value;
+        private String description;
+
+        public Type(String value, String label) {
+            this.value = value;
+            this.description = label;
+        }
+    }
+
+    @Data
+    public static class Status {
+        private Integer value;
+        private String description;
+
+        public Status(Integer status, String label) {
+            this.value = status;
+            this.description = label;
+        }
     }
 }
