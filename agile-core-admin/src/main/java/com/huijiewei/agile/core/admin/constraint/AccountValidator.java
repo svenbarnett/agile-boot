@@ -42,6 +42,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     private ConcurrentMapCacheManager cacheManager;
 
     private Cache loginRetryCache;
+    private Admin admin;
 
     @Override
     public void initialize(final Account constraintAnnotation) {
@@ -53,20 +54,81 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
         this.loginRetryCache = cacheManager.getCache("AGILE_ADMIN_LOGIN_RETRY");
     }
 
-    @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        AdminLoginRequest request = (AdminLoginRequest) value;
+    private boolean invalidCaptcha(AdminLoginRequest request, ConstraintValidatorContext context) {
+        String captcha = request.getCaptcha();
 
-        String account = request.getAccount();
+        boolean invalidCaptcha = true;
+
+        if (!StringUtils.isEmpty(captcha)) {
+            String[] captchaSplit = captcha.split("_");
+
+            if (captchaSplit.length == 2) {
+                Optional<Captcha> captchaOptional = this.captchaRepository.findByCodeAndUuidAndUserAgentAndRemoteAddr(
+                        captchaSplit[0],
+                        captchaSplit[1],
+                        request.getUserAgent(),
+                        request.getRemoteAddr()
+                );
+
+                if (captchaOptional.isPresent()) {
+                    invalidCaptcha = false;
+                    this.captchaRepository.delete(captchaOptional.get());
+                }
+            }
+        }
+
+        if (invalidCaptcha) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(this.captchaIncorrectMessage)
+                    .addPropertyNode("captcha")
+                    .addConstraintViolation();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validPassword(AdminLoginRequest request, ConstraintValidatorContext context) {
         String password = request.getPassword();
 
-        if (StringUtils.isEmpty(account)) {
-            return true;
+        String loginRetryCacheKey = "ADMIN_" + admin.getId();
+
+        Integer retryCount = loginRetryCache.get(loginRetryCacheKey, Integer.class);
+
+        if (retryCount == null) {
+            retryCount = 0;
         }
 
-        if (StringUtils.isEmpty(password)) {
-            return true;
+        if (retryCount >= 3 && this.invalidCaptcha(request, context)) {
+            return false;
         }
+
+        if (!passwordEncoder.matches(password, admin.getPassword())) {
+            context.disableDefaultConstraintViolation();
+            context
+                    .buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
+                    .addPropertyNode("password")
+                    .addConstraintViolation();
+
+            if (retryCount >= 2) {
+                context.buildConstraintViolationWithTemplate("")
+                        .addPropertyNode("captcha")
+                        .addConstraintViolation();
+            }
+
+            loginRetryCache.put(loginRetryCacheKey, retryCount + 1);
+
+            return false;
+        }
+
+        loginRetryCache.evict(loginRetryCacheKey);
+
+        return true;
+    }
+
+    private boolean validAccount(AdminLoginRequest request, ConstraintValidatorContext context) {
+        String account = request.getAccount();
 
         AccountTypeEnums accountType = null;
 
@@ -93,46 +155,14 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
         String loginRetryCacheKey = request.getClientId() + "_" + request.getRemoteAddr();
 
-        Integer retryCount = loginRetryCache.get(loginRetryCacheKey, Integer.class);
+        Integer retryCount = this.loginRetryCache.get(loginRetryCacheKey, Integer.class);
 
         if (retryCount == null) {
             retryCount = 0;
         }
 
-        boolean needCheckCaptcha = retryCount >= 2;
-        boolean checkCaptcha = retryCount >= 3;
-
-        if (checkCaptcha) {
-            String captcha = request.getCaptcha();
-
-            boolean captchaIncorrect = true;
-
-            if (!StringUtils.isEmpty(captcha)) {
-                String[] captchaSplit = captcha.split("_");
-
-                if (captchaSplit.length == 2) {
-                    Optional<Captcha> captchaOptional = this.captchaRepository.findByCodeAndUuidAndUserAgentAndRemoteAddr(
-                            captchaSplit[0],
-                            captchaSplit[1],
-                            request.getUserAgent(),
-                            request.getRemoteAddr()
-                    );
-
-                    if (captchaOptional.isPresent()) {
-                        captchaIncorrect = false;
-                        this.captchaRepository.delete(captchaOptional.get());
-                    }
-                }
-            }
-
-            if (captchaIncorrect) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(this.captchaIncorrectMessage)
-                        .addPropertyNode("captcha")
-                        .addConstraintViolation();
-
-                return false;
-            }
+        if (retryCount >= 3 && this.invalidCaptcha(request, context)) {
+            return false;
         }
 
         Admin admin = null;
@@ -151,56 +181,62 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
                     .addPropertyNode("account")
                     .addConstraintViolation();
 
-            if (needCheckCaptcha) {
+            if (retryCount >= 2) {
                 context.buildConstraintViolationWithTemplate("")
                         .addPropertyNode("captcha")
                         .addConstraintViolation();
             }
 
-            retryCount++;
-
-            loginRetryCache.put(loginRetryCacheKey, retryCount);
+            loginRetryCache.put(loginRetryCacheKey, retryCount + 1);
 
             return false;
         }
 
+        this.admin = admin;
+
+        loginRetryCache.evict(loginRetryCacheKey);
+
+        return true;
+    }
+
+    @Override
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        AdminLoginRequest request = (AdminLoginRequest) value;
+
+        String account = request.getAccount();
+        String password = request.getPassword();
+
+        if (StringUtils.isEmpty(account)) {
+            return true;
+        }
+
+        if (StringUtils.isEmpty(password)) {
+            return true;
+        }
+
+        if (!this.validAccount(request, context)) {
+            return false;
+        }
+
         AdminLog adminLog = new AdminLog();
-        adminLog.setAdmin(admin);
+        adminLog.setAdmin(this.admin);
         adminLog.setType(AdminLog.TYPE_LOGIN);
         adminLog.setMethod("POST");
         adminLog.setAction("Login");
         adminLog.setUserAgent(request.getUserAgent());
         adminLog.setRemoteAddr(request.getRemoteAddr());
 
-        if (!passwordEncoder.matches(password, admin.getPassword())) {
-            context.disableDefaultConstraintViolation();
-            context
-                    .buildConstraintViolationWithTemplate(this.passwordIncorrectMessage)
-                    .addPropertyNode("password")
-                    .addConstraintViolation();
-
-            if (needCheckCaptcha) {
-                context.buildConstraintViolationWithTemplate("")
-                        .addPropertyNode("captcha")
-                        .addConstraintViolation();
-            }
-
-            retryCount++;
-
-            loginRetryCache.put(loginRetryCacheKey, retryCount);
-
+        if (!this.validPassword(request, context)) {
             adminLog.setStatus(AdminLog.STATUS_FAIL);
             this.adminLogRepository.save(adminLog);
 
             return false;
         }
 
-        loginRetryCache.evict(loginRetryCacheKey);
-
         adminLog.setStatus(AdminLog.STATUS_SUCCESS);
         this.adminLogRepository.save(adminLog);
 
-        request.setAdmin(admin);
+        request.setAdmin(this.admin);
 
         return true;
     }
