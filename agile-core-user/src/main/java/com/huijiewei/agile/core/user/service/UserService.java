@@ -101,7 +101,7 @@ public class UserService {
     private User update(User current, UserRequest request) {
         User user = UserMapper.INSTANCE.toUser(request, current);
 
-        if (!StringUtils.isEmpty(request.getPassword())) {
+        if (StringUtils.isNotEmpty(request.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 

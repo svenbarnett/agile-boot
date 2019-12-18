@@ -59,7 +59,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
         boolean invalidCaptcha = true;
 
-        if (!StringUtils.isEmpty(captcha)) {
+        if (StringUtils.isNotEmpty(captcha)) {
             String[] captchaSplit = captcha.split("_");
 
             if (captchaSplit.length == 2) {

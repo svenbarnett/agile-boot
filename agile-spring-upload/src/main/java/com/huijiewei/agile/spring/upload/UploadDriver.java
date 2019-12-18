@@ -6,7 +6,11 @@ import java.util.List;
 
 public interface UploadDriver {
     default UploadRequest build(String identity, Integer size, List<String> types) {
-        UploadRequest request = this.option(identity, size, types);
+        return this.build(identity, size, types, null);
+    }
+
+    default UploadRequest build(String identity, Integer size, List<String> types, List<String> thumbs) {
+        UploadRequest request = this.option(identity, size, types, thumbs, false);
 
         request.setSizeLimit(size);
         request.setTypesLimit(types);
@@ -14,7 +18,16 @@ public interface UploadDriver {
         return request;
     }
 
-    UploadRequest option(String identity, Integer size, List<String> types);
+    default UploadRequest build(String identity, Integer size, List<String> types, List<String> thumbs, Boolean cropper) {
+        UploadRequest request = this.option(identity, size, types, thumbs, cropper == null ? false : cropper);
+
+        request.setSizeLimit(size);
+        request.setTypesLimit(types);
+
+        return request;
+    }
+
+    UploadRequest option(String identity, Integer size, List<String> types, List<String> thumbs, Boolean cropper);
 
     String paramName();
 

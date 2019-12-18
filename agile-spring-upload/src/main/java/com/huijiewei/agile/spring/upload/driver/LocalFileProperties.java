@@ -17,5 +17,4 @@ public class LocalFileProperties {
     private String corpAction;
     private String uploadAction;
     private String policyKey;
-    private String filenameHash = "random"; //支持 random/md5_file/original
 }

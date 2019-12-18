@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -60,11 +61,15 @@ public class MiscController {
     )
     @Operation(description = "图片上传设置获取", operationId = "miscImageUploadOption")
     @ApiResponse(responseCode = "200", description = "图片上传设置")
-    public UploadRequest actionImageUploadOption() {
+    public UploadRequest actionImageUploadOption(@RequestParam(required = false) List<String> thumbs,
+                                                 @RequestParam(required = false) Boolean cropper) {
         return this.uploadDriver.build(
                 "a" + AdminUserDetails.getCurrentAdminIdentity().getAdmin().getId().toString(),
-                1024 * 1024,
-                Arrays.asList("jpg", "jpeg", "gif", "png"));
+                2048 * 1024,
+                Arrays.asList("jpg", "jpeg", "gif", "png"),
+                thumbs,
+                cropper
+        );
     }
 
     @GetMapping(

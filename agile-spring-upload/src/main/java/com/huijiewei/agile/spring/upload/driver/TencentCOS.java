@@ -27,7 +27,7 @@ public class TencentCOS implements UploadDriver {
     }
 
     @Override
-    public UploadRequest option(String identity, Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types, List<String> thumbs, Boolean cropper) {
         String host = this.properties.getBucket() + ".cos." + this.properties.getRegion() + ".myqcloud.com";
         String url = "https://" + host + "/";
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
@@ -64,11 +64,27 @@ public class TencentCOS implements UploadDriver {
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", authorization);
 
-        String imageProcess = "";
+        StringBuilder responseParse = new StringBuilder("var url = result.querySelector('PostResponse > Location').textContent;" +
+                "var name = url.split('/').pop().split('#').shift().split('?').shift();");
 
-        if (!StringUtils.isEmpty(this.properties.getCiHost())) {
-            imageProcess = "var uri = new URL(url); uri.hostname = '" + this.properties.getCiHost() + "'; return uri.href + '" + this.properties.getCiDelimiter() + "' + imageStyle;";
+        List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(thumbs);
+
+        if (thumbSizes.isEmpty()) {
+            responseParse.append("var thumbs = null;");
+        } else {
+            responseParse.append("var thumbs = [];");
+
+            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
+                responseParse.append("var uri = new URL(url);");
+                responseParse.append("uri.hostname = '").append(this.properties.getCiHost()).append("';");
+                responseParse.append("url = uri.href + '").append(this.properties.getCiDelimiter()).append(thumbSize.getThumbName()).append("';");
+                responseParse.append("thumbs.push({ thumb: '")
+                        .append(thumbSize.getThumbName())
+                        .append("', name: name, url: url});");
+            }
         }
+
+        responseParse.append("return { original: { name: name, url: url }, thumbs: thumbs }; ");
 
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
@@ -77,8 +93,7 @@ public class TencentCOS implements UploadDriver {
         request.setHeaders(headers);
         request.setDataType("xml");
         request.setParamName(this.paramName());
-        request.setImageProcess(imageProcess);
-        request.setResponseParse("return result.querySelector('PostResponse > Location').textContent;");
+        request.setResponseParse(responseParse.toString());
 
         return request;
     }

@@ -1,5 +1,7 @@
 package com.huijiewei.agile.spring.upload.util;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class UploadUtils {
@@ -85,5 +90,55 @@ public class UploadUtils {
         }
 
         return StringUtils.stripEnd(absolutePath, File.separator) + File.separator;
+    }
+
+    public static List<ThumbSize> getThumbSizes(List<String> thumbs) {
+        List<ThumbSize> thumbSizes = new ArrayList<>();
+
+        if (thumbs == null) {
+            return thumbSizes;
+        }
+
+        for (String thumb : thumbs) {
+            if (StringUtils.isNotEmpty(thumb)) {
+                String[] thumbSize = thumb.split("x");
+
+                if (thumbSize.length == 2) {
+                    int width = Integer.parseInt(thumbSize[0]);
+                    int height = Integer.parseInt(thumbSize[1]);
+
+                    if (width > 0 && height > 0) {
+                        thumbSizes.add(ThumbSize.of(width, height));
+                    }
+                }
+            }
+        }
+
+        return thumbSizes;
+    }
+
+    public static List<ThumbSize> getThumbSizes(String thumbsPolicy) {
+        if (StringUtils.isEmpty(thumbsPolicy)) {
+            return new ArrayList<>();
+        }
+
+        return UploadUtils.getThumbSizes(Arrays.asList(thumbsPolicy.split(",")));
+    }
+
+    @Getter
+    @Setter
+    public static class ThumbSize {
+        private String thumbName;
+        private Integer width;
+        private Integer height;
+
+        public static ThumbSize of(Integer width, Integer height) {
+            ThumbSize thumbSize = new ThumbSize();
+            thumbSize.width = width;
+            thumbSize.height = height;
+            thumbSize.thumbName = width.toString() + "x" + height.toString();
+
+            return thumbSize;
+        }
     }
 }

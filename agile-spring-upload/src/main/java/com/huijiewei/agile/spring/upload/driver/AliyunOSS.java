@@ -33,7 +33,7 @@ public class AliyunOSS implements UploadDriver {
     }
 
     @Override
-    public UploadRequest option(String identity, Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types, List<String> thumbs, Boolean cropper) {
         String url = "https://" + this.properties.getBucket() + "." + this.properties.getEndpoint();
         String directory = StringUtils.stripEnd(this.properties.getDirectory(), "/") +
                 "/" +
@@ -67,6 +67,27 @@ public class AliyunOSS implements UploadDriver {
         params.put("signature", signature);
         params.put("success_action_status", "201");
 
+        StringBuilder responseParse = new StringBuilder("var url = result.querySelector('PostResponse > Location').textContent;" +
+                "var name = url.split('/').pop().split('#').shift().split('?').shift();");
+
+        List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(thumbs);
+
+        if (thumbSizes.isEmpty()) {
+            responseParse.append("var thumbs = null;");
+        } else {
+            responseParse.append("var thumbs = [];");
+
+            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
+                responseParse.append("thumbs.push({ thumb: '")
+                        .append(thumbSize.getThumbName())
+                        .append("', name: name, url: url + '?x-oss-process=style/")
+                        .append(thumbSize.getThumbName())
+                        .append("'});");
+            }
+        }
+
+        responseParse.append("return { original: { name: name, url: url }, thumbs: thumbs }; ");
+
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
         request.setTimeout(9 * 60);
@@ -74,8 +95,7 @@ public class AliyunOSS implements UploadDriver {
         request.setHeaders(null);
         request.setDataType("xml");
         request.setParamName(this.paramName());
-        request.setImageProcess("return url + '?x-oss-process=style/' + imageStyle");
-        request.setResponseParse("return result.querySelector('PostResponse > Location').textContent;");
+        request.setResponseParse(responseParse.toString());
         request.setSizeLimit(size);
         request.setTypesLimit(types);
 

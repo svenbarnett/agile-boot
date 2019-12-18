@@ -2,8 +2,9 @@ package com.huijiewei.agile.spring.upload.driver;
 
 import com.huijiewei.agile.spring.upload.*;
 import com.huijiewei.agile.spring.upload.util.UploadUtils;
+import lombok.Getter;
+import lombok.Setter;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,13 +39,13 @@ public class LocalFile implements UploadDriver {
         this.properties = properties;
     }
 
-    private String[] parsePolicy(String policy) {
+    private UploadPolicy parsePolicy(String policy) {
         String policyDecrypt = UploadUtils.urlDecode(policy);
         String policyValue = this.decrypt(policyDecrypt, this.properties.getPolicyKey());
 
         String[] policies = policyValue.split(";");
 
-        if (policies.length != 5) {
+        if (policies.length != 6) {
             throw new RuntimeException("策略验证错误");
         }
 
@@ -57,13 +57,20 @@ public class LocalFile implements UploadDriver {
             throw new RuntimeException("参数已过期");
         }
 
-        return policies;
+        UploadPolicy uploadPolicy = new UploadPolicy();
+        uploadPolicy.setIdentity(policies[0]);
+        uploadPolicy.setSize(Integer.parseInt(policies[2]));
+        uploadPolicy.setTypes(Arrays.asList(policies[3].split(",")));
+        uploadPolicy.setThumbs(policies[4]);
+        uploadPolicy.setCropper(Boolean.parseBoolean(policies[5]));
+
+        return uploadPolicy;
     }
 
     public UploadResponse crop(String policy, ImageCropRequest request) {
-        String[] policies = this.parsePolicy(policy);
+        UploadPolicy uploadPolicy = this.parsePolicy(policy);
 
-        if (!Boolean.parseBoolean(policies[4])) {
+        if (!uploadPolicy.getCropper()) {
             throw new RuntimeException("不支持图片切割");
         }
 
@@ -91,61 +98,75 @@ public class LocalFile implements UploadDriver {
 
         String monthName = UploadUtils.buildMonthName();
 
-        String cropperFilePath = absoluteUploadPath + monthName;
+        String absoluteCropperFilePath = absoluteUploadPath + monthName;
 
-        File cropperFilePathFile = new File(cropperFilePath);
+        File cropperFilePathFile = new File(absoluteCropperFilePath);
 
         if (!cropperFilePathFile.exists()) {
             if (!cropperFilePathFile.mkdirs()) {
-                throw new RuntimeException("服务器创建目录错误:" + cropperFilePath);
+                throw new RuntimeException("服务器创建目录错误:" + absoluteCropperFilePath);
             }
         }
 
-        String fileHashName = UploadUtils.random(10);
         String fileExtension = FilenameUtils.getExtension(filePath);
 
-        String fileName = policies[0] + "_" + fileHashName + "." + fileExtension;
+        String fileName = uploadPolicy.getIdentity() + "_" + UploadUtils.random(10) + "." + fileExtension;
 
         BufferedImage cropImage = image.getSubimage(request.getX(), request.getY(), request.getW(), request.getH());
 
-        String cropperFile = cropperFilePath + File.separator + fileName;
+        String cropperFilePath = absoluteCropperFilePath + File.separator + fileName;
 
         try {
-            Thumbnails.of(cropImage)
-                    .size(request.getSize()[0], request.getSize()[1])
-                    .outputQuality(1.0f)
-                    .toFile(cropperFile);
+            ImageIO.write(cropImage, fileExtension, new File(cropperFilePath));
         } catch (IOException ex) {
-            throw new RuntimeException("服务器保存文件错误:" + cropperFile);
+            throw new RuntimeException("服务器保存文件错误:" + cropperFilePath, ex);
         }
 
-        String url = absoluteAccessPathUrl + "/" + monthName + "/" + fileName;
+        String absoluteUrl = absoluteAccessPathUrl + "/" + monthName + "/";
 
         UploadResponse response = new UploadResponse();
-        response.setUrl(url);
+
+        response.setOriginal(new UploadResponse.File(fileName, absoluteUrl + fileName));
+
+        List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(uploadPolicy.getThumbs());
+
+        if (!thumbSizes.isEmpty()) {
+            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
+                String thumbFileName = uploadPolicy.getIdentity() + "_" + UploadUtils.random(10) + "." + fileExtension;
+                String thumbFilePath = absoluteCropperFilePath + File.separator + thumbFileName;
+
+                try {
+                    Thumbnails
+                            .of(cropperFilePath)
+                            .size(thumbSize.getWidth(), thumbSize.getHeight())
+                            .outputQuality(1.0f)
+                            .toFile(thumbFilePath);
+                } catch (IOException ex) {
+                    throw new RuntimeException("生成缩略图错误: " + ex.getMessage(), ex);
+                }
+
+                response.addThumb(thumbSize.getThumbName(), thumbFileName, absoluteUrl + thumbFileName);
+            }
+        }
 
         return response;
     }
 
     public UploadResponse upload(String policy, MultipartFile file) {
-        String[] policies = this.parsePolicy(policy);
+        UploadPolicy uploadPolicy = this.parsePolicy(policy);
 
         if (file.isEmpty()) {
             throw new RuntimeException("没有文件被上传");
         }
 
-        int fileSize = Integer.parseInt(policies[2]);
-
-        if (file.getSize() > fileSize) {
-            throw new RuntimeException("文件大小超出：" + FileUtils.byteCountToDisplaySize(fileSize));
+        if (file.getSize() > uploadPolicy.getSize()) {
+            throw new RuntimeException("文件大小超出：" + FileUtils.byteCountToDisplaySize(uploadPolicy.getSize()));
         }
-
-        List<String> fileTypes = Arrays.asList(policies[3].split(","));
 
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
 
-        if (!fileTypes.contains(fileExtension)) {
-            throw new RuntimeException("文件类型限制：" + String.join(",", fileTypes));
+        if (!uploadPolicy.getTypes().contains(fileExtension)) {
+            throw new RuntimeException("文件类型限制：" + String.join(",", uploadPolicy.getTypes()));
         }
 
         String monthName = UploadUtils.buildMonthName();
@@ -161,76 +182,83 @@ public class LocalFile implements UploadDriver {
             }
         }
 
-        String fileHashName;
+        String fileName = uploadPolicy.getIdentity() + "_" + UploadUtils.random(10) + "." + fileExtension;
 
-        switch (this.properties.getFilenameHash()) {
-            case "md5_file":
-                try {
-                    fileHashName = this.md5(file.getInputStream());
-                } catch (Exception ex) {
-                    throw new RuntimeException("Error while getInputStream: " + ex.getMessage(), ex);
-                }
-                break;
-            case "original":
-                fileHashName = FilenameUtils.getBaseName(file.getOriginalFilename());
-                break;
-            case "random":
-            default:
-                fileHashName = UploadUtils.random(10);
-
-        }
-
-        String fileName = policies[0] + "_" + fileHashName + "." + fileExtension;
-
-        String absoluteFilePath = absoluteUploadPath + File.separator + fileName;
+        String uploadFilePath = absoluteUploadPath + File.separator + fileName;
 
         try {
-            file.transferTo(Path.of(absoluteFilePath));
+            file.transferTo(Path.of(uploadFilePath));
         } catch (Exception ex) {
             throw new RuntimeException("服务器保存文件错误: " + ex.getMessage(), ex);
         }
 
-        String url = UploadUtils.buildAbsoluteAccessPathUrl(this.properties.getAccessPath()) +
-                "/" + monthName + "/" + fileName;
+        String absoluteUrl = UploadUtils.buildAbsoluteAccessPathUrl(this.properties.getAccessPath()) +
+                "/" + monthName + "/";
 
         UploadResponse response = new UploadResponse();
-        response.setUrl(url);
+        response.setOriginal(new UploadResponse.File(fileName, absoluteUrl + fileName));
+
+        List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(uploadPolicy.getThumbs());
+
+        if (!thumbSizes.isEmpty() && !uploadPolicy.getCropper()) {
+            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
+                String thumbFileName = uploadPolicy.getIdentity() + "_" + UploadUtils.random(10) + "." + fileExtension;
+                String thumbFilePath = absoluteUploadPath + File.separator + thumbFileName;
+
+                try {
+                    Thumbnails
+                            .of(uploadFilePath)
+                            .size(thumbSize.getWidth(), thumbSize.getHeight())
+                            .outputQuality(1.0f)
+                            .toFile(thumbFilePath);
+                } catch (IOException ex) {
+                    throw new RuntimeException("生成缩略图错误: " + ex.getMessage(), ex);
+                }
+
+                response.addThumb(thumbSize.getThumbName(), thumbFileName, absoluteUrl + thumbFileName);
+            }
+        }
 
         return response;
     }
 
     @Override
-    public UploadRequest option(String identity, Integer size, List<String> types) {
+    public UploadRequest option(String identity, Integer size, List<String> types, List<String> thumbs, Boolean cropper) {
         long currentTimestamp = System.currentTimeMillis() / 1000L;
 
-        String policy = String.format("%s;%d;%d;%s;%b", identity, currentTimestamp + 10 * 60, size, String.join(",", types), true);
+        String policy = String.format(
+                "%s;%d;%d;%s;%s;%b",
+                identity,
+                currentTimestamp + 10 * 60,
+                size,
+                String.join(",", types),
+                thumbs != null ? String.join(",", thumbs) : "",
+                cropper);
+
         String policyEncrypt = this.encrypt(policy, this.properties.getPolicyKey());
         String policyValue = UploadUtils.urlEncode(policyEncrypt);
 
-        String url = ServletUriComponentsBuilder
+        UploadRequest request = new UploadRequest();
+        request.setUrl(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/" + StringUtils.strip(this.properties.getUploadAction(), "/"))
                 .queryParam("policy", policyValue)
-                .toUriString();
+                .toUriString());
 
-        String cropUrl = StringUtils.isNotEmpty(this.properties.getCorpAction())
-                ? ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/" + StringUtils.strip(this.properties.getCorpAction(), "/"))
-                .queryParam("policy", policyValue)
-                .toUriString()
-                : null;
+        if (cropper && StringUtils.isNotEmpty(this.properties.getCorpAction())) {
+            request.setCropUrl(ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/" + StringUtils.strip(this.properties.getCorpAction(), "/"))
+                    .queryParam("policy", policyValue)
+                    .toUriString());
+        }
 
-        UploadRequest request = new UploadRequest();
-        request.setUrl(url);
         request.setTimeout(9 * 60);
-        request.setCropUrl(cropUrl);
         request.setParams(null);
         request.setHeaders(null);
         request.setDataType("json");
         request.setParamName(this.paramName());
-        request.setImageProcess("");
-        request.setResponseParse("return result.url;");
+        request.setResponseParse("return result;");
         request.setSizeLimit(size);
         request.setTypesLimit(types);
 
@@ -240,14 +268,6 @@ public class LocalFile implements UploadDriver {
     @Override
     public String paramName() {
         return "file";
-    }
-
-    private String md5(InputStream data) {
-        try {
-            return new String(DigestUtils.md5(data));
-        } catch (Exception ex) {
-            throw new RuntimeException("Error while md5: " + ex.getMessage(), ex);
-        }
     }
 
     private String encrypt(String data, String key) {
@@ -274,5 +294,15 @@ public class LocalFile implements UploadDriver {
         } catch (Exception ex) {
             throw new RuntimeException("Error while decrypting: " + ex.getMessage(), ex);
         }
+    }
+
+    @Getter
+    @Setter
+    public static class UploadPolicy {
+        private String identity;
+        private Integer size;
+        private List<String> types;
+        private String thumbs;
+        private Boolean cropper;
     }
 }

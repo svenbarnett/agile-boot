@@ -21,8 +21,6 @@ public class UploadRequest {
 
     private Map<String, String> headers;
 
-    private String imageProcess;
-
     private String responseParse;
 
     private Integer sizeLimit;

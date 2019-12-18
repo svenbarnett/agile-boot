@@ -156,7 +156,7 @@ public class AdminService {
     private Admin update(Admin current, AdminRequest request, boolean isOwner) {
         Admin admin = AdminMapper.INSTANCE.toAdmin(request, current);
 
-        if (!StringUtils.isEmpty(request.getPassword())) {
+        if (StringUtils.isNotEmpty(request.getPassword())) {
             admin.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 

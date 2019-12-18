@@ -49,7 +49,7 @@ public class AdminLogAspect {
             adminLog.setUserAgent(HttpUtils.getUserAgent(request));
             adminLog.setRemoteAddr(HttpUtils.getRemoteAddr(request));
 
-            if (!StringUtils.isEmpty(request.getQueryString())) {
+            if (StringUtils.isNotEmpty(request.getQueryString())) {
                 queryString.append(request.getQueryString());
             }
         }
@@ -78,7 +78,7 @@ public class AdminLogAspect {
                         queryName = pathVariableAnnotation.value();
                     }
 
-                    if (!StringUtils.isEmpty(queryString)) {
+                    if (StringUtils.isNotEmpty(queryString)) {
                         queryString.append("&");
                     }
 

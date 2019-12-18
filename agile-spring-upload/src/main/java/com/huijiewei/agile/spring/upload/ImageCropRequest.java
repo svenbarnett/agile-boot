@@ -9,5 +9,4 @@ public class ImageCropRequest {
     private Integer y;
     private Integer w;
     private Integer h;
-    private Integer[] size;
 }
