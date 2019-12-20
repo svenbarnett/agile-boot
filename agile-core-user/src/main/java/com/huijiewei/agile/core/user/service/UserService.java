@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.user.service;
 
+import cn.hutool.poi.excel.BigExcelWriter;
 import com.github.wenhao.jpa.Sorts;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.PageResponse;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,10 +56,27 @@ public class UserService {
         return response;
     }
 
-    public void exportAll(UserSearchRequest searchRequest) {
+    public void exportAll(UserSearchRequest searchRequest, OutputStream outputStream) {
         Specification<User> userSpecification = searchRequest.getSpecification();
 
         List<UserResponse> users = UserMapper.INSTANCE.toUserResponses(this.userRepository.findAll(userSpecification));
+
+        BigExcelWriter excelWriter = new BigExcelWriter();
+        excelWriter.setOnlyAlias(true);
+
+        excelWriter.addHeaderAlias("id", "Id");
+        excelWriter.addHeaderAlias("phone", "手机号码");
+        excelWriter.addHeaderAlias("email", "电子邮件");
+        excelWriter.addHeaderAlias("name", "名称");
+        excelWriter.addHeaderAlias("createdIp", "注册 IP");
+        excelWriter.addHeaderAlias("createdFrom.description", "注册来源");
+        excelWriter.addHeaderAlias("createdAt", "创建时间");
+
+        excelWriter.write(users, true);
+
+        excelWriter.flush(outputStream, true);
+
+        excelWriter.close();
     }
 
     public UserResponse getById(Integer id) {

@@ -29,6 +29,7 @@ dependencies {
     implementation libs.javaFaker
     implementation libs.flyway
     implementation libs.easyCaptcha
+    implementation libs.hutoolPoi
 
     implementation project(':agile-core')
     implementation project(':agile-core-admin')

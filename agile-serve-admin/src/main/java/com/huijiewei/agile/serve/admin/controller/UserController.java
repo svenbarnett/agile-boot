@@ -16,14 +16,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.net.URLEncoder;
 
 @RestController
 @Tag(name = "user", description = "用户接口")
@@ -60,7 +63,7 @@ public class UserController {
 
     @GetMapping(
             value = "/users/export",
-            produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE}
+            produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.APPLICATION_PROBLEM_JSON_VALUE}
     )
     @Operation(description = "用户导出", operationId = "userExport", parameters = {
             @Parameter(name = "name", description = "名称", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
@@ -72,10 +75,22 @@ public class UserController {
     })
     @ApiResponse(responseCode = "200", description = "用户导出")
     @PreAuthorize("hasPermission('ADMIN', 'user/export')")
-    public ResponseEntity<Resource> actionExport(
-            @Parameter(hidden = true) @RequestParam(required = false) UserSearchRequest userSearchRequest
+    public ResponseEntity<byte[]> actionExport(
+            @Parameter(hidden = true) UserSearchRequest userSearchRequest
     ) {
-        throw new BadRequestException("方法未实现");
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            this.userService.exportAll(userSearchRequest, outputStream);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.ms-excel;charset=utf-8");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + URLEncoder.encode("users.xlsx", "UTF-8") + "\"");
+
+            return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new BadRequestException("导出错误:" + ex.getMessage());
+        }
     }
 
     @GetMapping(
