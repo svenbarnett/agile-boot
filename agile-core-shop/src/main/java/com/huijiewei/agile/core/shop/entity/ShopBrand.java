@@ -16,8 +16,6 @@ import javax.persistence.Entity;
 public class ShopBrand extends BaseEntity {
     private String name;
 
-    private String icon;
-
     private String logo;
 
     private String description;

@@ -13,10 +13,6 @@ public class ShopBrandRequest {
     private String name;
 
     @NotNull
-    @Schema(description = "品牌图标")
-    private String icon;
-
-    @NotNull
     @Schema(description = "品牌 LOGO")
     private String logo;
 
