@@ -4,7 +4,9 @@ import com.huijiewei.agile.core.admin.response.AdminGroupResponse;
 import com.huijiewei.agile.core.admin.security.AdminGroupAcl;
 import com.huijiewei.agile.core.admin.security.AdminGroupAclItem;
 import com.huijiewei.agile.core.admin.service.AdminGroupService;
-import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
+import com.huijiewei.agile.core.shop.response.ShopBrandBaseResponse;
+import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
+import com.huijiewei.agile.core.shop.service.ShopBrandService;
 import com.huijiewei.agile.core.shop.service.ShopCategoryService;
 import com.huijiewei.agile.serve.admin.security.AdminUserDetails;
 import com.huijiewei.agile.spring.upload.UploadDriver;
@@ -26,12 +28,18 @@ import java.util.List;
 public class MiscController {
     private final AdminGroupService adminGroupService;
     private final ShopCategoryService shopCategoryService;
+    private final ShopBrandService shopBrandService;
     private final UploadDriver uploadDriver;
 
     @Autowired
-    public MiscController(AdminGroupService adminGroupService, ShopCategoryService shopCategoryService, UploadDriver uploadDriver) {
+    public MiscController(
+            AdminGroupService adminGroupService,
+            ShopCategoryService shopCategoryService,
+            ShopBrandService shopBrandService,
+            UploadDriver uploadDriver) {
         this.adminGroupService = adminGroupService;
         this.shopCategoryService = shopCategoryService;
+        this.shopBrandService = shopBrandService;
         this.uploadDriver = uploadDriver;
     }
 
@@ -49,8 +57,8 @@ public class MiscController {
             value = "/misc/admin-group-list",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组 MAP", operationId = "miscAdminGroupMap")
-    @ApiResponse(responseCode = "200", description = "管理组 MAP")
+    @Operation(description = "管理组列表", operationId = "miscAdminGroupMap")
+    @ApiResponse(responseCode = "200", description = "管理组列表")
     public List<AdminGroupResponse> actionAdminGroupList() {
         return this.adminGroupService.getList();
     }
@@ -92,7 +100,7 @@ public class MiscController {
     )
     @Operation(description = "商品分类树", operationId = "miscShopCategoryTree")
     @ApiResponse(responseCode = "200", description = "商品分类树")
-    public List<ShopCategoryResponse> actionShopCategoryTree() {
+    public List<ShopCategoryBaseResponse> actionShopCategoryTree() {
         return this.shopCategoryService.getTree();
     }
 
@@ -103,7 +111,17 @@ public class MiscController {
     @Operation(description = "商品分类路径", operationId = "miscShopCategoryRoute")
     @ApiResponse(responseCode = "200", description = "商品分类路径")
     @ApiResponse(responseCode = "404", description = "分类不存在", ref = "NotFoundProblem")
-    public List<ShopCategoryResponse> actionShopCategoryRoute(Integer id) {
+    public List<ShopCategoryBaseResponse> actionShopCategoryRoute(Integer id) {
         return this.shopCategoryService.getRoute(id);
+    }
+
+    @GetMapping(
+            value = "/misc/shop-brand-list",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @Operation(description = "商品品牌列表", operationId = "miscShopBrandList")
+    @ApiResponse(responseCode = "200", description = "商品品牌列表")
+    public List<ShopBrandBaseResponse> actionShopBrandList() {
+        return this.shopBrandService.getList();
     }
 }

@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @DynamicInsert
 @DynamicUpdate
 public class ShopProduct extends BaseEntity {
-    private Integer id;
-
     private String name;
 
     private String cover;
@@ -31,4 +29,8 @@ public class ShopProduct extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "shopCategoryId")
     private ShopCategory shopCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "shopBrandId")
+    private ShopBrand shopBrand;
 }

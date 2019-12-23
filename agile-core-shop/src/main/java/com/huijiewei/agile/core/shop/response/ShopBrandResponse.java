@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ShopCategoryResponse extends ShopCategoryBaseResponse {
+public class ShopBrandResponse extends ShopBrandBaseResponse {
     @Schema(description = "介绍")
     private String description;
 }

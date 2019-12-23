@@ -14,5 +14,5 @@ public interface ShopCategoryRepository extends JpaRepository<ShopCategory, Inte
     @Modifying
     @Transactional
     @Query("DELETE FROM ShopCategory WHERE id IN ?1")
-    public void deleteAllByIds(List<Integer> ids);
+    void deleteAllByIds(List<Integer> ids);
 }

@@ -29,7 +29,6 @@ public class AdminGroupService {
     @Autowired
     public AdminGroupService(AdminRepository adminRepository,
                              AdminGroupRepository adminGroupRepository,
-                             AdminGroupPermissionRepository adminGroupPermissionRepository,
                              AdminGroupPermissionManager adminGroupPermissionManager) {
         this.adminRepository = adminRepository;
         this.adminGroupRepository = adminGroupRepository;

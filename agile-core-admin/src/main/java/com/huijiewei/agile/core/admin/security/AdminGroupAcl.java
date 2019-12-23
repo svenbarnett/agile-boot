@@ -37,6 +37,13 @@ public class AdminGroupAcl {
                         .addChild(new AdminGroupAclItem().name("分类编辑").actionId("shop-category/edit").addCombine("shop-category/view"))
                         .addChild(new AdminGroupAclItem().name("分类删除").actionId("shop-category/delete").addCombine("shop-category/view"))
                 )
+                .addChild(new AdminGroupAclItem().name("商品品牌管理")
+                        .addChild(new AdminGroupAclItem().name("商品品牌").actionId("shop-brand/index"))
+                        .addChild(new AdminGroupAclItem().name("品牌新建").actionId("shop-brand/create"))
+                        .addChild(new AdminGroupAclItem().name("品牌查看").actionId("shop-brand/view"))
+                        .addChild(new AdminGroupAclItem().name("品牌编辑").actionId("shop-brand/edit").addCombine("shop-brand/view"))
+                        .addChild(new AdminGroupAclItem().name("品牌删除").actionId("shop-brand/delete").addCombine("shop-brand/view"))
+                )
         );
 
         all.add(new AdminGroupAclItem().name("系统管理")

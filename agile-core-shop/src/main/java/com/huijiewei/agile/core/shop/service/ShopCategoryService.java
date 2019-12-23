@@ -8,6 +8,7 @@ import com.huijiewei.agile.core.shop.mapper.ShopCategoryMapper;
 import com.huijiewei.agile.core.shop.repository.ShopCategoryRepository;
 import com.huijiewei.agile.core.shop.repository.ShopProductRepository;
 import com.huijiewei.agile.core.shop.request.ShopCategoryRequest;
+import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,15 +35,15 @@ public class ShopCategoryService {
         this.shopProductRepository = shopProductRepository;
     }
 
-    private List<ShopCategoryResponse> getParentsById(Integer id) {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getParents(id));
+    private List<ShopCategoryBaseResponse> getParentsById(Integer id) {
+        return ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getParents(id));
     }
 
-    public List<ShopCategoryResponse> getTree() {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getTree());
+    public List<ShopCategoryBaseResponse> getTree() {
+        return ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getTree());
     }
 
-    public List<ShopCategoryResponse> getRoute(Integer id) {
+    public List<ShopCategoryBaseResponse> getRoute(Integer id) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
         if (shopCategoryOptional.isEmpty()) {
