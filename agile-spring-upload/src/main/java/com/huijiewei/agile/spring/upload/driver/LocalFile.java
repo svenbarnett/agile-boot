@@ -126,7 +126,7 @@ public class LocalFile implements UploadDriver {
 
         UploadResponse response = new UploadResponse();
 
-        response.setOriginal(new UploadResponse.File(fileName, absoluteUrl + fileName));
+        response.setOriginal(absoluteUrl + fileName);
 
         List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(uploadPolicy.getThumbs());
 
@@ -145,7 +145,7 @@ public class LocalFile implements UploadDriver {
                     throw new RuntimeException("生成缩略图错误: " + ex.getMessage(), ex);
                 }
 
-                response.addThumb(thumbSize.getThumbName(), thumbFileName, absoluteUrl + thumbFileName);
+                response.addThumb(thumbSize.getThumbName(), absoluteUrl + thumbFileName);
             }
         }
 
@@ -196,7 +196,7 @@ public class LocalFile implements UploadDriver {
                 "/" + monthName + "/";
 
         UploadResponse response = new UploadResponse();
-        response.setOriginal(new UploadResponse.File(fileName, absoluteUrl + fileName));
+        response.setOriginal(absoluteUrl + fileName);
 
         List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(uploadPolicy.getThumbs());
 
@@ -215,7 +215,7 @@ public class LocalFile implements UploadDriver {
                     throw new RuntimeException("生成缩略图错误: " + ex.getMessage(), ex);
                 }
 
-                response.addThumb(thumbSize.getThumbName(), thumbFileName, absoluteUrl + thumbFileName);
+                response.addThumb(thumbSize.getThumbName(), absoluteUrl + thumbFileName);
             }
         }
 

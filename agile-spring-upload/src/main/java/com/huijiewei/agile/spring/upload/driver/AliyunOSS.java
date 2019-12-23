@@ -67,8 +67,7 @@ public class AliyunOSS implements UploadDriver {
         params.put("signature", signature);
         params.put("success_action_status", "201");
 
-        StringBuilder responseParse = new StringBuilder("var url = result.querySelector('PostResponse > Location').textContent;" +
-                "var name = url.split('/').pop().split('#').shift().split('?').shift();");
+        StringBuilder responseParse = new StringBuilder("var url = result.querySelector('PostResponse > Location').textContent;");
 
         List<UploadUtils.ThumbSize> thumbSizes = UploadUtils.getThumbSizes(thumbs);
 
@@ -80,13 +79,13 @@ public class AliyunOSS implements UploadDriver {
             for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
                 responseParse.append("thumbs.push({ thumb: '")
                         .append(thumbSize.getThumbName())
-                        .append("', name: name, url: url + '?x-oss-process=style/")
+                        .append("', url: url + '?x-oss-process=style/")
                         .append(thumbSize.getThumbName())
                         .append("'});");
             }
         }
 
-        responseParse.append("return { original: { name: name, url: url }, thumbs: thumbs }; ");
+        responseParse.append("return { original: url, thumbs: thumbs }; ");
 
         UploadRequest request = new UploadRequest();
         request.setUrl(url);
