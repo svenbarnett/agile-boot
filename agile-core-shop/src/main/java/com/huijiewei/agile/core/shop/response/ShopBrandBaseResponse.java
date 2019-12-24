@@ -11,6 +11,9 @@ public class ShopBrandBaseResponse {
     @Schema(description = "名称")
     private String name;
 
+    @Schema(description = "别名")
+    private String alias;
+
     @Schema(description = "LOGO")
     private String logo;
 }

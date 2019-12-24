@@ -12,6 +12,10 @@ public class ShopBrandRequest {
     @Schema(description = "品牌名称", required = true)
     private String name;
 
+    @NotBlank
+    @Schema(description = "品牌别名", required = true)
+    private String alias;
+
     @NotNull
     @Schema(description = "品牌 LOGO")
     private String logo;
