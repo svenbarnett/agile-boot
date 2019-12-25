@@ -54,7 +54,7 @@ public class ShopBrandService {
     public ShopBrandResponse create(@Valid ShopBrandRequest request) {
         ShopBrand shopBrand = ShopBrandMapper.INSTANCE.toShopBrand(request);
 
-        this.shopBrandRepository.save(shopBrand);
+        this.shopBrandRepository.saveWithValid(shopBrand);
 
         return ShopBrandMapper.INSTANCE.toShopBrandResponse(shopBrand);
     }
@@ -70,7 +70,7 @@ public class ShopBrandService {
 
         ShopBrand shopBrand = ShopBrandMapper.INSTANCE.toShopBrand(request, current);
 
-        this.shopBrandRepository.save(shopBrand);
+        this.shopBrandRepository.saveWithValid(shopBrand);
 
         return ShopBrandMapper.INSTANCE.toShopBrandResponse(shopBrand);
     }

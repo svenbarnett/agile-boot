@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.shop.entity;
 
+import com.huijiewei.agile.core.constraint.Unique;
 import com.huijiewei.agile.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,10 @@ import javax.persistence.Entity;
 @Data
 @DynamicInsert
 @DynamicUpdate
+@Unique.List({
+        @Unique(fields = {"name"}, message = "品牌已存在"),
+        @Unique(fields = {"alias"}, message = "品牌别名已被占用")
+})
 public class ShopBrand extends BaseEntity {
     private String name;
 
