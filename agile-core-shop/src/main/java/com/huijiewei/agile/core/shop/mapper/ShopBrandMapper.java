@@ -5,52 +5,42 @@ import com.huijiewei.agile.core.shop.request.ShopBrandRequest;
 import com.huijiewei.agile.core.shop.response.ShopBrandBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopBrandResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ShopBrandMapper {
     ShopBrandMapper INSTANCE = Mappers.getMapper(ShopBrandMapper.class);
 
-    @Mapping(target = "id", ignore = true)
     ShopBrand toShopBrand(ShopBrandRequest request);
 
-    @Mapping(target = "id", ignore = true)
     ShopBrand toShopBrand(ShopBrandRequest request, @MappingTarget ShopBrand shopBrand);
 
-    ShopBrandResponse toShopBrandResponse(ShopBrand brand);
+    ShopBrandResponse toShopBrandResponse(ShopBrand shopBrand);
 
-    ShopBrandBaseResponse toShopBrandBaseResponse(ShopBrand brand);
+    ShopBrandBaseResponse toShopBrandBaseResponse(ShopBrand shopBrand);
 
-    default List<ShopBrandResponse> toShopBrandResponses(List<ShopBrand> brands) {
-        if (brands == null) {
-            return null;
-        } else {
-            List<ShopBrandResponse> list = new ArrayList<>(brands.size());
+    default List<ShopBrandResponse> toShopBrandResponses(List<ShopBrand> shopBrands) {
+        List<ShopBrandResponse> list = new ArrayList<>(shopBrands.size());
 
-            for (ShopBrand shopBrand : brands) {
-                list.add(this.toShopBrandResponse(shopBrand));
-            }
-
-            return list;
+        for (ShopBrand shopBrand : shopBrands) {
+            list.add(this.toShopBrandResponse(shopBrand));
         }
+
+        return list;
     }
 
-    default List<ShopBrandBaseResponse> toShopBrandBaseResponses(List<ShopBrand> brands) {
-        if (brands == null) {
-            return null;
-        } else {
-            List<ShopBrandBaseResponse> list = new ArrayList<>(brands.size());
+    default List<ShopBrandBaseResponse> toShopBrandBaseResponses(List<ShopBrand> shopBrands) {
+        List<ShopBrandBaseResponse> list = new ArrayList<>(shopBrands.size());
 
-            for (ShopBrand shopBrand : brands) {
-                list.add(this.toShopBrandBaseResponse(shopBrand));
-            }
-
-            return list;
+        for (ShopBrand shopBrand : shopBrands) {
+            list.add(this.toShopBrandBaseResponse(shopBrand));
         }
+
+        return list;
     }
 }

@@ -3,10 +3,11 @@ package com.huijiewei.agile.core.admin.mapper;
 import com.huijiewei.agile.core.admin.entity.AdminLog;
 import com.huijiewei.agile.core.admin.response.AdminLogResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AdminLogMapper {
     AdminLogMapper INSTANCE = Mappers.getMapper(AdminLogMapper.class);
 

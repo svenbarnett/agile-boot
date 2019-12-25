@@ -6,21 +6,19 @@ import com.huijiewei.agile.core.admin.response.AdminGroupResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AdminGroupMapper {
     AdminGroupMapper INSTANCE = Mappers.getMapper(AdminGroupMapper.class);
 
-    @Mapping(target = "id", ignore = true)
     AdminGroup toAdminGroup(AdminGroupRequest request);
 
-    @Mapping(target = "id", ignore = true)
     AdminGroup toAdminGroup(AdminGroupRequest request, @MappingTarget AdminGroup adminGroup);
 
-    @Mapping(target = "permissions", ignore = true)
     AdminGroupResponse toAdminGroupResponse(AdminGroup adminGroup);
 
     List<AdminGroupResponse> toAdminGroupResponses(List<AdminGroup> adminGroups);

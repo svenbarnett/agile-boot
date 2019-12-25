@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,6 +25,7 @@ public class ShopProduct extends BaseEntity {
 
     private String detail;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne

@@ -19,10 +19,8 @@ public interface AdminMapper {
 
     AdminBaseResponse toAdminBaseResponse(Admin admin);
 
-    @Mapping(target = "adminGroup.permissions", ignore = true)
     AdminMiniResponse toAdminMiniResponse(Admin admin);
 
-    @Mapping(target = "adminGroup.permissions", ignore = true)
     AdminResponse toAdminResponse(Admin admin);
 
     List<AdminResponse> toAdminResponses(List<Admin> admins);

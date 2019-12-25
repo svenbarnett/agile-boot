@@ -36,7 +36,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public PageResponse<UserResponse> getAll(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
+    public SearchPageResponse<UserResponse> getAll(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
         Specification<User> userSpecification = searchRequest.getSpecification();
 
         Page<UserResponse> users = UserMapper.INSTANCE.toPageResponse(
