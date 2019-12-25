@@ -28,6 +28,7 @@ public class V1002__InitTable extends BaseJavaMigration {
                         "  `params` varchar(2048) NOT NULL DEFAULT '',\n" +
                         "  `userAgent` varchar(2048) NOT NULL DEFAULT '',\n" +
                         "  `remoteAddr` varchar(50) NOT NULL DEFAULT '',\n" +
+                        "  `exception` text,\n" +
                         "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                         "  PRIMARY KEY (`id`),\n" +
                         "  KEY `adminId` (`adminId`),\n" +

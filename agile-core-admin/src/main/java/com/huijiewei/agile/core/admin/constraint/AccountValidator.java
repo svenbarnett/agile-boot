@@ -228,6 +228,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
         if (!this.validPassword(request, context)) {
             adminLog.setStatus(AdminLog.STATUS_FAIL);
+            adminLog.setException("密码错误");
             this.adminLogRepository.save(adminLog);
 
             return false;

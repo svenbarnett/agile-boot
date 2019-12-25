@@ -32,6 +32,9 @@ public class AdminLogResponse {
     @Schema(description = "IP 地址")
     private String remoteAddr;
 
+    @Schema(description = "异常信息")
+    private String exception;
+
     @Schema(description = "创建时间")
     private LocalDateTime createdAt;
 

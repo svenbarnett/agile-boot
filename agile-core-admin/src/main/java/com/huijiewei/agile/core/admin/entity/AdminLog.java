@@ -33,6 +33,7 @@ public class AdminLog extends BaseEntity {
     private String params;
     private String userAgent;
     private String remoteAddr;
+    private String exception;
     private LocalDateTime createdAt;
 
     @ManyToOne

@@ -64,7 +64,6 @@ public class AdminLogAspect {
 
         for (int i = 0; i < parameterAnnotations.length; i++) {
             Object[] parameterAnnotation = parameterAnnotations[i];
-            Object arg = args[i];
 
             for (Object object : parameterAnnotation) {
                 Annotation annotation = (Annotation) object;
@@ -106,6 +105,7 @@ public class AdminLogAspect {
             return joinPoint.proceed();
         } catch (Exception ex) {
             adminLog.setStatus(AdminLog.STATUS_FAIL);
+            adminLog.setException(ex.getMessage());
 
             throw ex;
         } finally {
