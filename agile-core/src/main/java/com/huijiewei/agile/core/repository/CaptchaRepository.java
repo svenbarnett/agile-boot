@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface CaptchaRepository extends CrudRepository<Captcha, Integer> {
-    public Optional<Captcha> findByCodeAndUuidAndUserAgentAndRemoteAddr(String code, String uuid, String userAgent, String remoteAddr);
+    Optional<Captcha> findByCodeAndUuidAndUserAgentAndRemoteAddr(String code, String uuid, String userAgent, String remoteAddr);
 }

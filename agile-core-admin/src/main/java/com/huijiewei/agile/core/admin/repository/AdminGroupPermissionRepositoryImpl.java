@@ -1,23 +1,29 @@
 package com.huijiewei.agile.core.admin.repository;
 
 import com.huijiewei.agile.core.admin.entity.AdminGroupPermission;
+import com.huijiewei.agile.core.repository.BatchRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class AdminGroupPermissionBatchRepositoryImpl implements AdminGroupPermissionBatchRepository {
+@Repository
+public class AdminGroupPermissionRepositoryImpl implements BatchRepository<AdminGroupPermission> {
     private final JdbcTemplate jdbcTemplate;
 
-    public AdminGroupPermissionBatchRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    @Autowired
+    public AdminGroupPermissionRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void batchInsert(List<AdminGroupPermission> adminGroupPermissions) {
-        jdbcTemplate.batchUpdate("INSERT INTO " + AdminGroupPermission.tableName(AdminGroupPermission.class) + "(adminGroupId,actionId) values(?,?)",
+        jdbcTemplate.batchUpdate(
+                String.format("INSERT INTO %s(adminGroupId,actionId) values(?,?)", AdminGroupPermission.tableName(AdminGroupPermission.class)),
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement, int i)

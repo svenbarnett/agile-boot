@@ -11,5 +11,5 @@ import javax.validation.Valid;
 public interface ValidSaveRepository<T extends BaseEntity> {
     @Modifying
     @Transactional
-    public void saveWithValid(@Valid T entity);
+    void saveWithValid(@Valid T entity);
 }
