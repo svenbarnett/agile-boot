@@ -3,6 +3,7 @@ package com.huijiewei.agile.serve.admin.controller;
 import com.huijiewei.agile.core.exception.BadRequestException;
 import com.huijiewei.agile.core.response.MessageResponse;
 import com.huijiewei.agile.core.response.PageResponse;
+import com.huijiewei.agile.core.response.SearchPageResponse;
 import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.core.user.entity.User;
 import com.huijiewei.agile.core.user.request.UserRequest;
@@ -53,7 +54,7 @@ public class UserController {
     })
     @ApiResponse(responseCode = "200", description = "用户列表")
     @PreAuthorize("hasPermission('ADMIN', 'user/index')")
-    public PageResponse<UserResponse> actionIndex(
+    public SearchPageResponse<UserResponse> actionIndex(
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
             @Parameter(hidden = true) UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
