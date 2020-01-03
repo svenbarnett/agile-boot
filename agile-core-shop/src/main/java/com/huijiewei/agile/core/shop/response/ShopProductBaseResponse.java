@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.shop.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,9 +15,17 @@ public class ShopProductBaseResponse {
     @Schema(description = "封面")
     private String cover;
 
+    @Schema(description = "商品分类 Id")
+    private Integer shopCategoryId;
+
+    @Schema(description = "商品品牌 Id")
+    private Integer shopBrandId;
+
     @Schema(description = "商品分类")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private ShopCategoryBaseResponse shopCategory;
 
     @Schema(description = "商品品牌")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private ShopBrandBaseResponse shopBrand;
 }
