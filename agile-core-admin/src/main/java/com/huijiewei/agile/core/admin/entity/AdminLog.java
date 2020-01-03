@@ -1,12 +1,15 @@
 package com.huijiewei.agile.core.admin.entity;
 
 import com.huijiewei.agile.core.entity.BaseEntity;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
@@ -36,8 +39,11 @@ public class AdminLog extends BaseEntity {
     private String exception;
     private LocalDateTime createdAt;
 
+    private Integer adminId;
+
     @ManyToOne
-    @JoinColumn(name = "adminId")
+    @JoinColumn(name = "adminId", insertable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private Admin admin;
 
     public static List<Status> statusList() {

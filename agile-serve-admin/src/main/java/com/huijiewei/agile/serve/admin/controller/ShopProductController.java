@@ -1,12 +1,9 @@
 package com.huijiewei.agile.serve.admin.controller;
 
-import com.huijiewei.agile.core.response.PageResponse;
 import com.huijiewei.agile.core.response.SearchPageResponse;
 import com.huijiewei.agile.core.shop.request.ShopProductSearchRequest;
 import com.huijiewei.agile.core.shop.response.ShopProductBaseResponse;
 import com.huijiewei.agile.core.shop.service.ShopProductService;
-import com.huijiewei.agile.core.user.request.UserSearchRequest;
-import com.huijiewei.agile.core.user.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

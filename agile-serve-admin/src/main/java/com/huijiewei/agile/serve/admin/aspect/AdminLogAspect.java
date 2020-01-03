@@ -95,7 +95,7 @@ public class AdminLogAspect {
     @Around(value = "preAuthorize()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         AdminLog adminLog = new AdminLog();
-        adminLog.setAdmin(AdminUserDetails.getCurrentAdminIdentity().getAdmin());
+        adminLog.setAdminId(AdminUserDetails.getCurrentAdminIdentity().getAdmin().getId());
 
         this.setAdminLog(adminLog, joinPoint);
 

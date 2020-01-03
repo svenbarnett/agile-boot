@@ -95,7 +95,7 @@ public class AdminService {
                 identity.getClientId());
 
         AdminLog adminLog = new AdminLog();
-        adminLog.setAdmin(admin);
+        adminLog.setAdminId(admin.getId());
         adminLog.setType(AdminLog.TYPE_LOGIN);
         adminLog.setStatus(AdminLog.STATUS_SUCCESS);
         adminLog.setMethod("POST");
@@ -161,7 +161,7 @@ public class AdminService {
         }
 
         if (isOwner) {
-            admin.setAdminGroup(current.getAdminGroup());
+            admin.setAdminGroupId(current.getAdminGroupId());
         }
 
         this.adminRepository.saveWithValid(admin);

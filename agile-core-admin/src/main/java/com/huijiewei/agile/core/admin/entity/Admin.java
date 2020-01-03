@@ -2,8 +2,10 @@ package com.huijiewei.agile.core.admin.entity;
 
 import com.huijiewei.agile.core.constraint.Unique;
 import com.huijiewei.agile.core.entity.BaseEntity;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -35,7 +37,10 @@ public class Admin extends BaseEntity {
 
     private LocalDateTime updatedAt;
 
+    private Integer adminGroupId;
+
     @ManyToOne
-    @JoinColumn(name = "adminGroupId")
+    @JoinColumn(name = "adminGroupId", insertable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private AdminGroup adminGroup;
 }

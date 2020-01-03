@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 
@@ -37,8 +38,8 @@ public class AdminRequest {
 
     @NotNull
     @Schema(description = "所在管理组", required = true)
-    @Exist(targetEntity = AdminGroup.class, targetProperty = "id", sourceProperty = "id", message = "你选择的管理组不存在")
-    private AdminGroup adminGroup;
+    @Exist(targetEntity = AdminGroup.class, targetProperty = "id", message = "你选择的管理组不存在")
+    private Integer adminGroupId;
 
     public interface Create extends Default {
     }

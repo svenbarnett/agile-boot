@@ -219,7 +219,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
         }
 
         AdminLog adminLog = new AdminLog();
-        adminLog.setAdmin(this.admin);
+        adminLog.setAdminId(this.admin.getId());
         adminLog.setType(AdminLog.TYPE_LOGIN);
         adminLog.setMethod("POST");
         adminLog.setAction("Login");
