@@ -4,9 +4,9 @@ ext.jacksonDatabindVersion = '2.10.1'
 ext.apacheCommonsLangVersion = '3.9'
 ext.apacheCommonsCodecVersion = '1.13'
 ext.apacheCommonsIoVersion = '2.6'
-ext.springWebMvcVersion = '5.2.1.RELEASE'
+ext.springWebMvcVersion = '5.2.2.RELEASE'
 ext.thumbnailatorVersion = '0.4.8'
-ext.springBootDependenciesVersion = '2.2.1.RELEASE'
+ext.springBootDependenciesVersion = '2.2.2.RELEASE'
 
 dependencyManagement {
     imports {
