@@ -105,14 +105,14 @@ public class MiscController {
     }
 
     @GetMapping(
-            value = "/misc/shop-category-route",
+            value = "/misc/shop-category-path",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "商品分类路径", operationId = "miscShopCategoryRoute")
+    @Operation(description = "商品分类路径", operationId = "miscShopCategoryPath")
     @ApiResponse(responseCode = "200", description = "商品分类路径")
     @ApiResponse(responseCode = "404", description = "分类不存在", ref = "NotFoundProblem")
-    public List<ShopCategoryBaseResponse> actionShopCategoryRoute(Integer id) {
-        return this.shopCategoryService.getRoute(id);
+    public List<ShopCategoryBaseResponse> actionShopCategoryPath(Integer id) {
+        return this.shopCategoryService.getPath(id);
     }
 
     @GetMapping(

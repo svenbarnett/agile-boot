@@ -43,7 +43,7 @@ public class ShopCategoryService {
         return ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getTree());
     }
 
-    public List<ShopCategoryBaseResponse> getRoute(Integer id) {
+    public List<ShopCategoryBaseResponse> getPath(Integer id) {
         Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
 
         if (shopCategoryOptional.isEmpty()) {
