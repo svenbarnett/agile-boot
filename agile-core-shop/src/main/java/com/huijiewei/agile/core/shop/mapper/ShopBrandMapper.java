@@ -25,6 +25,10 @@ public interface ShopBrandMapper {
     ShopBrandBaseResponse toShopBrandBaseResponse(ShopBrand shopBrand);
 
     default List<ShopBrandResponse> toShopBrandResponses(List<ShopBrand> shopBrands) {
+        if (shopBrands == null) {
+            return null;
+        }
+
         List<ShopBrandResponse> list = new ArrayList<>(shopBrands.size());
 
         for (ShopBrand shopBrand : shopBrands) {
@@ -35,6 +39,10 @@ public interface ShopBrandMapper {
     }
 
     default List<ShopBrandBaseResponse> toShopBrandBaseResponses(List<ShopBrand> shopBrands) {
+        if (shopBrands == null) {
+            return null;
+        }
+
         List<ShopBrandBaseResponse> list = new ArrayList<>(shopBrands.size());
 
         for (ShopBrand shopBrand : shopBrands) {

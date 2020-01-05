@@ -25,6 +25,10 @@ public interface ShopCategoryMapper {
     ShopCategoryBaseResponse toShopCategoryBaseResponse(ShopCategory category);
 
     default List<ShopCategoryBaseResponse> toShopCategoryBaseResponses(List<ShopCategory> shopCategories) {
+        if (shopCategories == null) {
+            return null;
+        }
+
         List<ShopCategoryBaseResponse> list = new ArrayList<>(shopCategories.size());
 
         for (ShopCategory shopCategory : shopCategories) {
