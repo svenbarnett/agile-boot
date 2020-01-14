@@ -1,14 +1,17 @@
 apply from: 'dep.other.gradle'
+apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
     ext.springBootVersion = "2.2.2.RELEASE"
     ext.dependencyManagementVersion = "1.0.8.RELEASE"
     ext.modernizerVersion = "1.8.0-1"
+    ext.gradleVersionsVersion = "0.27.0"
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
         classpath "gradle.plugin.com.simonharrer:gradle-modernizer-plugin:${modernizerVersion}"
+        classpath "com.github.ben-manes:gradle-versions-plugin:${gradleVersionsVersion}"
     }
 
     repositories {
