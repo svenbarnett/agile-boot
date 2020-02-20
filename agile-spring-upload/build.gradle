@@ -5,7 +5,7 @@ ext.apacheCommonsLangVersion = '3.9'
 ext.apacheCommonsCodecVersion = '1.14'
 ext.apacheCommonsIoVersion = '2.6'
 ext.springWebMvcVersion = '5.2.3.RELEASE'
-ext.thumbnailatorVersion = '0.4.8'
+ext.thumbnailatorVersion = '0.4.9'
 ext.springBootDependenciesVersion = '2.2.4.RELEASE'
 
 dependencyManagement {
