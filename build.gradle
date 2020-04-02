@@ -2,7 +2,7 @@ apply from: 'dep.other.gradle'
 apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
-    ext.springBootVersion = "2.2.5.RELEASE"
+    ext.springBootVersion = "2.2.6.RELEASE"
     ext.dependencyManagementVersion = "1.0.9.RELEASE"
     ext.modernizerVersion = "1.8.0-1"
     ext.gradleVersionsVersion = "0.28.0"

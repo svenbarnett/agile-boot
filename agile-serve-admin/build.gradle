@@ -6,7 +6,7 @@ configurations.all {
     exclude module: 'spring-boot-starter-tomcat'
 }
 
-ext['undertow.version'] = '2.0.28.Final'
+ext['undertow.version'] = '2.0.30.Final'
 
 bootJar {
     exclude "**/application-*.yaml"

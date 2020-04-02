@@ -1,12 +1,12 @@
 apply plugin: 'io.spring.dependency-management'
 
 ext.jacksonDatabindVersion = '2.10.3'
-ext.apacheCommonsLangVersion = '3.9'
+ext.apacheCommonsLangVersion = '3.10'
 ext.apacheCommonsCodecVersion = '1.14'
 ext.apacheCommonsIoVersion = '2.6'
-ext.springWebMvcVersion = '5.2.4.RELEASE'
+ext.springWebMvcVersion = '5.2.5.RELEASE'
 ext.thumbnailatorVersion = '0.4.11'
-ext.springBootDependenciesVersion = '2.2.5.RELEASE'
+ext.springBootDependenciesVersion = '2.2.6.RELEASE'
 
 dependencyManagement {
     imports {
