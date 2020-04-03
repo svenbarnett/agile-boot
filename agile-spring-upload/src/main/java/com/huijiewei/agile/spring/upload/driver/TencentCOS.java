@@ -74,12 +74,13 @@ public class TencentCOS implements UploadDriver {
             responseParse.append("var thumbs = [];");
 
             for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
-                responseParse.append("var uri = new URL(url);");
-                responseParse.append("uri.hostname = '").append(this.properties.getCiHost()).append("';");
-                responseParse.append("url = uri.href + '").append(this.properties.getCiDelimiter()).append(thumbSize.getThumbName()).append("';");
+
                 responseParse.append("thumbs.push({ thumb: '")
                         .append(thumbSize.getThumbName())
-                        .append("', url: url});");
+                        .append("', url: url + '")
+                        .append(this.properties.getStyleDelimiter())
+                        .append(thumbSize.getThumbName())
+                        .append("'});");
             }
         }
 

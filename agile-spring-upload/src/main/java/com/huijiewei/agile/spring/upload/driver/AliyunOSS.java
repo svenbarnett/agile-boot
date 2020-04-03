@@ -77,9 +77,12 @@ public class AliyunOSS implements UploadDriver {
             responseParse.append("var thumbs = [];");
 
             for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
+                String styleDelimiter = StringUtils.isBlank(this.properties.getStyleDelimiter()) ? "?x-oss-process=style/" : this.properties.getStyleDelimiter();
+
                 responseParse.append("thumbs.push({ thumb: '")
                         .append(thumbSize.getThumbName())
-                        .append("', url: url + '?x-oss-process=style/")
+                        .append("', url: url + '")
+                        .append(styleDelimiter)
                         .append(thumbSize.getThumbName())
                         .append("'});");
             }

@@ -18,4 +18,5 @@ public class AliyunOSSProperties {
     private String endpoint;
     private String bucket;
     private String directory = "";
+    private String styleDelimiter = "";
 }

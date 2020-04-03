@@ -31,6 +31,7 @@ agile:
         endpoint: 阿里云 OSS 数据中心访问域名
         bucket: 阿里云 OSS Bucket
         directory: 阿里云文件目录
+        style-delimiter: "" #图片样式分割符号，默认为空
       tencent-cos:
         app-id: 腾讯云 COS appId
         secret-id: 腾讯云 COS secretId
@@ -38,8 +39,7 @@ agile:
         bucket: 腾讯云 COS 存储桶空间名称
         region: 腾讯云 COS 所属区域
         directory: 腾讯云文件目录
-        ci-host: 数据万象图片处理域名
-        ci-delimiter: 图片样式分割符号，默认 / 斜杠
+        style-delimiter: "!" #图片样式分割符号，默认 ! 叹号
       local-file:
         access-path: 上传文件访问路径 # 比如 /files/**
         upload-path: 上传目录 # 使用 file: 开头表示相对系统的绝对路径，否则使用 jar 包所在目录的相对路径
