@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.admin.service;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.devskiller.friendly_id.FriendlyId;
 import com.github.wenhao.jpa.Sorts;
 import com.huijiewei.agile.core.admin.entity.Admin;
@@ -119,7 +120,7 @@ public class AdminService {
 
     public ListResponse<AdminResponse> getAll() {
         ListResponse<AdminResponse> response = new ListResponse<>();
-        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAllWithAdminGroupByOrderByIdAsc()));
+        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll(EntityGraphUtils.fromAttributePaths("adminGroup"))));
 
         return response;
     }

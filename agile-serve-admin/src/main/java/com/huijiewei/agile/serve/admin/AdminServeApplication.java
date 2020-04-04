@@ -7,12 +7,10 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
 @ComponentScan(basePackages = "com.huijiewei.agile")
 @EntityScan(basePackages = "com.huijiewei.agile")
-@EnableJpaRepositories(basePackages = "com.huijiewei.agile")
 @EnableCaching
 public class AdminServeApplication {
     public static void main(String[] args) {

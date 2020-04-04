@@ -23,9 +23,6 @@ public class ShopCategoryBaseResponse {
     @Schema(description = "图片")
     private String image;
 
-    @Schema(description = "介绍")
-    private String description;
-
     @Schema(description = "子分类")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<ShopCategoryBaseResponse> children;

@@ -16,6 +16,7 @@ ext.easyCaptchaVersion = '1.6.2'
 ext.hutoolPoiVersion = '5.2.5'
 ext.apachePoiVersion = '4.1.2'
 ext.xercesImplVersion = '2.12.0'
+ext.jpaEntityGraphVersion = '2.2.3'
 
 ext.libs = [
         lombok            : [
@@ -73,5 +74,8 @@ ext.libs = [
                 "org.apache.poi:poi-ooxml:${apachePoiVersion}",
                 "xerces:xercesImpl:${xercesImplVersion}",
                 "cn.hutool:hutool-poi:${hutoolPoiVersion}"
+        ],
+        jpaEntityGraph    : [
+                "com.cosium.spring.data:spring-data-jpa-entity-graph:${jpaEntityGraphVersion}"
         ]
 ]

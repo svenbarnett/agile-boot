@@ -1,10 +1,13 @@
 package com.huijiewei.agile.core.shop.request;
 
+import com.huijiewei.agile.core.constraint.Exist;
+import com.huijiewei.agile.core.shop.entity.ShopCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class ShopBrandRequest {
@@ -22,4 +25,9 @@ public class ShopBrandRequest {
 
     @Schema(description = "品牌介绍")
     private String description;
+
+
+    @Exist(targetEntity = ShopCategory.class, targetProperty = "id", message = "选择了无效的关联分类")
+    @Schema(description = "关联分类")
+    private List<Integer> shopCategoryIds;
 }

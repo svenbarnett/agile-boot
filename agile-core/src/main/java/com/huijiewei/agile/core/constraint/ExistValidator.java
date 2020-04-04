@@ -8,13 +8,14 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class ExistValidator implements ConstraintValidator<Exist, Object> {
     @Autowired
@@ -33,6 +34,14 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
         this.allowValues = annotation.allowValues();
     }
 
+    private CriteriaBuilder getCriteriaBuilder() {
+        return this.entityManager.getCriteriaBuilder();
+    }
+
+    private CriteriaQuery<Object> getCriteriaQuery() {
+        return this.getCriteriaBuilder().createQuery();
+    }
+
     @SneakyThrows
     @Override
     public boolean isValid(Object object, ConstraintValidatorContext context) {
@@ -41,10 +50,10 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
         assert targetPropertyField != null;
         targetPropertyField.setAccessible(true);
 
-        String value;
+        Object value;
 
         if (StringUtils.isEmpty(this.sourceProperty)) {
-            value = object.toString();
+            value = object;
         } else {
             Class<?> objectClass = object.getClass();
 
@@ -53,22 +62,53 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
             assert sourcePropertyField != null;
             sourcePropertyField.setAccessible(true);
 
-            value = sourcePropertyField.get(object).toString();
+            value = sourcePropertyField.get(object);
         }
 
-        if (this.allowValues.length > 0 && Arrays.asList(this.allowValues).contains(value)) {
+        if (value == null) {
             return true;
         }
 
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object> criteriaQuery;
 
-        CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
+        if (value instanceof Collection) {
+            List<?> list = new ArrayList<>((Collection<?>) value);
 
-        Root<?> root = criteriaQuery.from(this.targetEntity);
+            List<String> search = new ArrayList<>();
 
-        criteriaQuery
-                .select(criteriaBuilder.count(root.get(this.targetProperty)))
-                .where(criteriaBuilder.equal(root.get(this.targetProperty), value));
+            for (Object item : list) {
+                String str = item.toString();
+
+                if (this.allowValues.length == 0 || !Arrays.asList(this.allowValues).contains(str)) {
+                    search.add(str);
+                }
+            }
+
+            CriteriaBuilder criteriaBuilder = this.getCriteriaBuilder();
+            criteriaQuery = this.getCriteriaQuery();
+
+            Root<?> root = criteriaQuery.from(this.targetEntity);
+            Expression<String> expression = root.get(this.targetProperty);
+
+            criteriaQuery
+                    .select(criteriaBuilder.count(root.get(this.targetProperty)))
+                    .where(expression.in(search));
+
+        } else {
+            if (this.allowValues.length > 0 && Arrays.asList(this.allowValues).contains(value.toString())) {
+                return true;
+            }
+
+            CriteriaBuilder criteriaBuilder = this.getCriteriaBuilder();
+            criteriaQuery = this.getCriteriaQuery();
+
+            Root<?> root = criteriaQuery.from(this.targetEntity);
+            Path<?> path = root.get(this.targetProperty);
+
+            criteriaQuery
+                    .select(criteriaBuilder.count(path))
+                    .where(criteriaBuilder.equal(path, value));
+        }
 
         TypedQuery<Object> typedQuery = entityManager.createQuery(criteriaQuery);
 
