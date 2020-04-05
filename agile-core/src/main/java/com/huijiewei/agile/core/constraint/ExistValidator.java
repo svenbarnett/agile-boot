@@ -84,6 +84,10 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
                 }
             }
 
+            if (search.size() == 0) {
+                return true;
+            }
+
             CriteriaBuilder criteriaBuilder = this.getCriteriaBuilder();
             criteriaQuery = this.getCriteriaQuery();
 
@@ -95,7 +99,13 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
                     .where(expression.in(search));
 
         } else {
-            if (this.allowValues.length > 0 && Arrays.asList(this.allowValues).contains(value.toString())) {
+            String search = value.toString();
+
+            if (this.allowValues.length > 0 && Arrays.asList(this.allowValues).contains(search)) {
+                return true;
+            }
+
+            if (StringUtils.isEmpty(search)) {
                 return true;
             }
 
