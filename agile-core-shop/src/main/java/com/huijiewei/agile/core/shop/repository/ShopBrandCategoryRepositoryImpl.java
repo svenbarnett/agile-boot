@@ -21,7 +21,7 @@ public class ShopBrandCategoryRepositoryImpl implements BatchRepository<ShopBran
     }
 
     @Override
-    public void batchInsert(List<ShopBrandCategory> shopBrandCategories) {
+    public void batchInsertImpl(List<ShopBrandCategory> shopBrandCategories) {
         jdbcTemplate.batchUpdate(
                 String.format("INSERT INTO %s(shopBrandId,shopCategoryId) values(?,?)", ShopBrandCategory.tableName(ShopBrandCategory.class)),
                 new BatchPreparedStatementSetter() {

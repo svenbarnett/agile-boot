@@ -29,7 +29,6 @@ spring:
         persistence:
           validation:
             mode: none
-    open-in-view: false
   datasource:
     hikari:
       max-lifetime: 120000

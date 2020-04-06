@@ -21,7 +21,7 @@ public class AdminGroupPermissionRepositoryImpl implements BatchRepository<Admin
     }
 
     @Override
-    public void batchInsert(List<AdminGroupPermission> adminGroupPermissions) {
+    public void batchInsertImpl(List<AdminGroupPermission> adminGroupPermissions) {
         jdbcTemplate.batchUpdate(
                 String.format("INSERT INTO %s(adminGroupId,actionId) values(?,?)", AdminGroupPermission.tableName(AdminGroupPermission.class)),
                 new BatchPreparedStatementSetter() {
