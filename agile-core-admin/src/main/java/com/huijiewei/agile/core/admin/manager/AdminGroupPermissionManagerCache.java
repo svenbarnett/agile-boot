@@ -22,7 +22,6 @@ public class AdminGroupPermissionManagerCache {
 
     @Cacheable(cacheNames = ADMIN_GROUP_PERMISSIONS_CACHE_KEY, key = "#adminGroupId")
     public List<String> getPermissionsByAdminGroupId(Integer adminGroupId) {
-        System.out.println(1);
         return this.adminGroupPermissionRepository
                 .findAllByAdminGroupId(adminGroupId)
                 .stream()
