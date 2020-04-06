@@ -11,21 +11,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class AdminGroupPermissionManager {
     private static final String ADMIN_GROUP_MENUS_CACHE_KEY = "admin-group-menus";
-    private static final String ADMIN_GROUP_PERMISSIONS_CACHE_KEY = "admin-group-permissions";
 
     private final AdminGroupPermissionRepository adminGroupPermissionRepository;
+    private final AdminGroupPermissionManagerCache adminGroupPermissionManagerCache;
 
     @Autowired
-    public AdminGroupPermissionManager(AdminGroupPermissionRepository adminGroupPermissionRepository) {
+    public AdminGroupPermissionManager(AdminGroupPermissionRepository adminGroupPermissionRepository, AdminGroupPermissionManagerCache adminGroupPermissionManagerCache) {
         this.adminGroupPermissionRepository = adminGroupPermissionRepository;
+        this.adminGroupPermissionManagerCache = adminGroupPermissionManagerCache;
     }
 
-    @Cacheable(value = ADMIN_GROUP_MENUS_CACHE_KEY, key = "#adminGroupId")
+    @Cacheable(cacheNames = ADMIN_GROUP_MENUS_CACHE_KEY, key = "#adminGroupId")
     public List<AdminGroupMenuItem> getMenusByAdminGroupId(Integer adminGroupId) {
         List<AdminGroupMenuItem> all = AdminGroupMenu.getAll();
         List<String> adminGroupPermissions = this.getPermissionsByAdminGroupId(adminGroupId);
@@ -43,16 +43,11 @@ public class AdminGroupPermissionManager {
         return adminGroupMenuItems;
     }
 
-    @Cacheable(value = ADMIN_GROUP_PERMISSIONS_CACHE_KEY, key = "#adminGroupId")
     public List<String> getPermissionsByAdminGroupId(Integer adminGroupId) {
-        return this.adminGroupPermissionRepository
-                .findAllByAdminGroupId(adminGroupId)
-                .stream()
-                .map(AdminGroupPermission::getActionId)
-                .collect(Collectors.toList());
+        return this.adminGroupPermissionManagerCache.getPermissionsByAdminGroupId(adminGroupId);
     }
 
-    @CacheEvict(value = {ADMIN_GROUP_MENUS_CACHE_KEY, ADMIN_GROUP_PERMISSIONS_CACHE_KEY}, key = "#adminGroupId")
+    @CacheEvict(cacheNames = {ADMIN_GROUP_MENUS_CACHE_KEY, AdminGroupPermissionManagerCache.ADMIN_GROUP_PERMISSIONS_CACHE_KEY}, key = "#adminGroupId")
     public void updateAdminGroupPermissions(Integer adminGroupId, List<String> permissions, Boolean deletedExistPermissions) {
         if (deletedExistPermissions) {
             this.adminGroupPermissionRepository.deleteAllByAdminGroupId(adminGroupId);

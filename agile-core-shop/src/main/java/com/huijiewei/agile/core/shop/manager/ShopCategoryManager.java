@@ -11,31 +11,31 @@ import java.util.List;
 
 @Component
 public class ShopCategoryManager extends TreeManager<ShopCategory> {
-    private static final String SHOP_CATEGORIES_CACHE_KEY = "shop-categories";
     private static final String SHOP_CATEGORY_TREE_CACHE_KEY = "shop-category-tree";
 
     private final ShopCategoryRepository shopCategoryRepository;
+    private final ShopCategoryManagerCache shopCategoryManagerCache;
 
-    public ShopCategoryManager(ShopCategoryRepository shopCategoryRepository) {
+    public ShopCategoryManager(ShopCategoryRepository shopCategoryRepository, ShopCategoryManagerCache shopCategoryManagerCache) {
         this.shopCategoryRepository = shopCategoryRepository;
+        this.shopCategoryManagerCache = shopCategoryManagerCache;
     }
 
-    @Cacheable(value = SHOP_CATEGORIES_CACHE_KEY)
     public List<ShopCategory> getAll() {
-        return this.shopCategoryRepository.findAll();
+        return this.shopCategoryManagerCache.getAll();
     }
 
-    @Cacheable(value = SHOP_CATEGORY_TREE_CACHE_KEY)
+    @Cacheable(cacheNames = SHOP_CATEGORY_TREE_CACHE_KEY)
     public List<ShopCategory> getTree() {
         return super.getTree();
     }
 
-    @CacheEvict(value = {SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
+    @CacheEvict(cacheNames = {ShopCategoryManagerCache.SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
     public void save(ShopCategory shopCategory) {
         this.shopCategoryRepository.save(shopCategory);
     }
 
-    @CacheEvict(value = {SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
+    @CacheEvict(cacheNames = {ShopCategoryManagerCache.SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)
     public void delete(List<Integer> ids) {
         this.shopCategoryRepository.deleteAllByIds(ids);
     }
