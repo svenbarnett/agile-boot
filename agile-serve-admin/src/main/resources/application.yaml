@@ -25,12 +25,11 @@ spring:
           order_inserts: true
           order_updates: true
           batch_versioned_data: true
-          open-in-view: false
-
       javax:
         persistence:
           validation:
             mode: none
+    open-in-view: false
   datasource:
     hikari:
       max-lifetime: 120000

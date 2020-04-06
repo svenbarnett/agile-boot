@@ -3,7 +3,7 @@ apply plugin: 'io.spring.dependency-management'
 ext.springBootDependenciesVersion = '2.2.6.RELEASE'
 ext.cglibVersion = '3.3.0'
 ext.apachPoiVersion = '4.1.2'
-ext.javassistVersion = '3.26.0-GA'
+ext.javassistVersion = '3.27.0-GA'
 
 dependencyManagement {
     imports {
