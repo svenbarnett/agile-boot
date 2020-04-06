@@ -1,9 +1,7 @@
 apply plugin: 'io.spring.dependency-management'
 
 ext.springBootDependenciesVersion = '2.2.6.RELEASE'
-ext.cglibVersion = '3.3.0'
-ext.apachPoiVersion = '4.1.2'
-ext.javassistVersion = '3.27.0-GA'
+ext.easyPoiBaseVersion = '4.1.3'
 
 dependencyManagement {
     imports {
@@ -13,10 +11,7 @@ dependencyManagement {
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
-    implementation "cglib:cglib:${cglibVersion}"
-    implementation "org.apache.poi:poi:${apachPoiVersion}"
-    implementation "org.apache.poi:poi-ooxml:${apachPoiVersion}"
-    implementation "org.javassist:javassist:${javassistVersion}"
+    implementation "cn.afterturn:easypoi-base::${easyPoiBaseVersion}"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

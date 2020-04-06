@@ -13,7 +13,7 @@ dependencies {
     implementation libs.springdocOpenApi
     implementation libs.friendlyId
     implementation libs.jpaSpec
-    implementation libs.hutoolPoi
+    implementation libs.easyPoiBase
 
     annotationProcessor libs.mapstructProcessor
 

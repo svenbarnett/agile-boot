@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @Tag(name = "user", description = "用户接口")
@@ -86,7 +87,7 @@ public class UserController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.ms-excel;charset=utf-8");
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + URLEncoder.encode("users.xlsx", "UTF-8") + "\"");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + URLEncoder.encode("users.xlsx", StandardCharsets.UTF_8) + "\"");
 
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
         } catch (Exception ex) {

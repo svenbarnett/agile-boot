@@ -29,7 +29,6 @@ dependencies {
     implementation libs.javaFaker
     implementation libs.flyway
     implementation libs.easyCaptcha
-    implementation libs.hutoolPoi
     implementation libs.jpaEntityGraph
 
     implementation project(':agile-core')
