@@ -3,7 +3,6 @@ package com.huijiewei.agile.core.admin.service;
 import com.huijiewei.agile.core.admin.entity.AdminGroup;
 import com.huijiewei.agile.core.admin.manager.AdminGroupPermissionManager;
 import com.huijiewei.agile.core.admin.mapper.AdminGroupMapper;
-import com.huijiewei.agile.core.admin.repository.AdminGroupPermissionRepository;
 import com.huijiewei.agile.core.admin.repository.AdminGroupRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
 import com.huijiewei.agile.core.admin.request.AdminGroupRequest;

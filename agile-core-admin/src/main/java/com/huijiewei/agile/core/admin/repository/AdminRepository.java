@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AdminRepository extends EntityGraphJpaRepository<Admin, Integer>, ValidSaveRepository<Admin> {
+public interface AdminRepository extends EntityGraphJpaRepository<Admin, Integer>, ValidSaveRepository<Admin, Integer> {
     List<Admin> findAll(EntityGraph entityGraph);
 
     Admin findByPhone(String phone);

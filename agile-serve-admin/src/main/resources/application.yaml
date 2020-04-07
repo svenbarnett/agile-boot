@@ -29,6 +29,7 @@ spring:
         persistence:
           validation:
             mode: none
+    open-in-view: true
   datasource:
     hikari:
       max-lifetime: 120000
@@ -51,3 +52,4 @@ agile:
     date-format: yyyy-MM-dd
     time-format: HH:mm
     datetime-format: yyyy-MM-dd HH:mm
+

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -22,7 +23,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
     private String[] fields;
     private String message;
 
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override

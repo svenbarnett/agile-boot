@@ -3,10 +3,10 @@ package com.huijiewei.agile.core.constraint;
 import com.huijiewei.agile.core.entity.BaseEntity;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.validation.ConstraintValidator;
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class ExistValidator implements ConstraintValidator<Exist, Object> {
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     private Class<? extends BaseEntity> targetEntity;

@@ -11,6 +11,6 @@ import org.springframework.lang.Nullable;
 
 import java.util.List;
 
-public interface ShopBrandRepository extends EntityGraphJpaRepository<ShopBrand, Integer>, EntityGraphJpaSpecificationExecutor<ShopBrand>, ValidSaveRepository<ShopBrand> {
+public interface ShopBrandRepository extends EntityGraphJpaRepository<ShopBrand, Integer>, EntityGraphJpaSpecificationExecutor<ShopBrand>, ValidSaveRepository<ShopBrand,Integer> {
     List<ShopBrand> findAll(@Nullable Specification<ShopBrand> spec, @Nullable Sort sort, EntityGraph entityGraph);
 }

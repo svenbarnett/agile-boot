@@ -1,15 +1,19 @@
 package com.huijiewei.agile.core.repository;
 
-import com.huijiewei.agile.core.entity.BaseEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Validated
-public interface ValidSaveRepository<T extends BaseEntity> {
+@NoRepositoryBean
+public interface ValidSaveRepository<T, ID> extends JpaRepository<T, ID> {
     @Modifying
     @Transactional
-    void saveWithValid(@Valid T entity);
+    default void saveWithValid(@Valid T entity) {
+        this.save(entity);
+    }
 }
