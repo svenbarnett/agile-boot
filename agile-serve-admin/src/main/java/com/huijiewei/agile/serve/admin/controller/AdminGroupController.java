@@ -41,7 +41,7 @@ public class AdminGroupController {
     @Operation(description = "管理组详情", operationId = "adminGroupView")
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
-    @PreAuthorize("hasPermission('ADMIN', 'admin-group/view, admin-group/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/view/:id, admin-group/edit/:id')")
     public AdminGroupResponse actionView(@PathVariable("id") Integer id) {
         AdminGroupResponse adminGroupResponse = this.adminGroupService.getById(id);
         adminGroupResponse.setPermissions(this.adminGroupService.getPermissionsById(adminGroupResponse.getId()));
@@ -70,7 +70,7 @@ public class AdminGroupController {
     @Operation(description = "管理组编辑", operationId = "adminGroupEdit")
     @ApiResponse(responseCode = "200", description = "管理组")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'admin-group/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin-group/edit/:id')")
     public AdminGroupResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminGroupRequest request) {
         return this.adminGroupService.edit(id, request);
     }

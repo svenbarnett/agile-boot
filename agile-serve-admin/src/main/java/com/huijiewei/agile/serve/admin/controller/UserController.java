@@ -102,7 +102,7 @@ public class UserController {
     @Operation(description = "用户详情", operationId = "userView")
     @ApiResponse(responseCode = "200", description = "用户")
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'user/view, user/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/view/:id, user/edit/:id')")
     public UserResponse actionView(@PathVariable("id") Integer id) {
         return this.userService.getById(id);
     }
@@ -129,7 +129,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "用户")
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'user/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'user/edit/:id')")
     public UserResponse actionEdit(@PathVariable("id") Integer id, @RequestBody UserRequest request) {
         return this.userService.edit(id, request);
     }

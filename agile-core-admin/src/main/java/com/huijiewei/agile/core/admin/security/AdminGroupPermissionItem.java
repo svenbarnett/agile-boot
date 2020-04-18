@@ -7,31 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class AdminGroupAclItem {
+public class AdminGroupPermissionItem {
     private String name;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String actionId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<AdminGroupAclItem> children;
+    private List<AdminGroupPermissionItem> children;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> combines;
 
-    public AdminGroupAclItem name(String name) {
+    public AdminGroupPermissionItem name(String name) {
         this.setName(name);
 
         return this;
     }
 
-    AdminGroupAclItem actionId(String actionId) {
+    AdminGroupPermissionItem actionId(String actionId) {
         this.setActionId(actionId);
 
         return this;
     }
 
-    AdminGroupAclItem addChild(AdminGroupAclItem adminGroupAclItem) {
+    AdminGroupPermissionItem addChild(AdminGroupPermissionItem adminGroupAclItem) {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
@@ -41,7 +41,7 @@ public class AdminGroupAclItem {
         return this;
     }
 
-    AdminGroupAclItem addCombine(String combine) {
+    AdminGroupPermissionItem addCombine(String combine) {
         if (this.combines == null) {
             this.combines = new ArrayList<>();
         }

@@ -1,8 +1,8 @@
 package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.admin.response.AdminGroupResponse;
-import com.huijiewei.agile.core.admin.security.AdminGroupAcl;
-import com.huijiewei.agile.core.admin.security.AdminGroupAclItem;
+import com.huijiewei.agile.core.admin.security.AdminGroupPermissions;
+import com.huijiewei.agile.core.admin.security.AdminGroupPermissionItem;
 import com.huijiewei.agile.core.admin.service.AdminGroupService;
 import com.huijiewei.agile.core.shop.response.ShopBrandBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
@@ -44,20 +44,20 @@ public class MiscController {
     }
 
     @GetMapping(
-            value = "/misc/admin-group-acl",
+            value = "/misc/admin-group-permissions",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组 ACL 列表", operationId = "miscAdminGroupAcl")
+    @Operation(description = "管理组 ACL 列表", operationId = "miscAdminGroupPermissions")
     @ApiResponse(responseCode = "200", description = "管理组 ACL 列表")
-    public List<AdminGroupAclItem> actionAdminGroupAcl() {
-        return AdminGroupAcl.getAll();
+    public List<AdminGroupPermissionItem> actionAdminGroupAcl() {
+        return AdminGroupPermissions.getAll();
     }
 
     @GetMapping(
-            value = "/misc/admin-group-list",
+            value = "/misc/admin-groups",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "管理组列表", operationId = "miscAdminGroupMap")
+    @Operation(description = "管理组列表", operationId = "miscAdminGroups")
     @ApiResponse(responseCode = "200", description = "管理组列表")
     public List<AdminGroupResponse> actionAdminGroupList() {
         return this.adminGroupService.getList();
@@ -116,7 +116,7 @@ public class MiscController {
     }
 
     @GetMapping(
-            value = "/misc/shop-brand-list",
+            value = "/misc/shop-brands",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(description = "商品品牌列表", operationId = "miscShopBrandList")

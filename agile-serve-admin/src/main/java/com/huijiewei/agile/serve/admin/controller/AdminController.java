@@ -42,7 +42,7 @@ public class AdminController {
     @Operation(description = "管理员详情")
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'admin/view, admin/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/view/:id, admin/edit/:id')")
     public AdminResponse actionView(@PathVariable("id") Integer id) {
         return this.adminService.getById(id);
     }
@@ -69,7 +69,7 @@ public class AdminController {
     @ApiResponse(responseCode = "200", description = "管理员")
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'admin/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'admin/edit/:id')")
     public AdminResponse actionEdit(@PathVariable("id") Integer id, @RequestBody AdminRequest request) {
         return this.adminService.edit(id, request, AdminUserDetails.getCurrentAdminIdentity());
     }

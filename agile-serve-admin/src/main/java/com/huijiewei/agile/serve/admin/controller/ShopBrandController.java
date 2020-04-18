@@ -45,7 +45,7 @@ public class ShopBrandController {
     @Operation(description = "品牌详情", operationId = "shopBrandView")
     @ApiResponse(responseCode = "200", description = "商品品牌")
     @ApiResponse(responseCode = "404", description = "商品品牌不存在", ref = "NotFoundProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-brand/view, shop-brand/edit, shop-brand/delete')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-brand/view/:id, shop-brand/edit/:id')")
     public ShopBrandResponse actionView(@PathVariable("id") Integer id) {
         return this.shopBrandService.getById(id);
     }
@@ -55,10 +55,10 @@ public class ShopBrandController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(description = "分类新建", operationId = "shopBrandCreate")
+    @Operation(description = "品牌新建", operationId = "shopBrandCreate")
     @ApiResponse(responseCode = "201", description = "商品品牌")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-category/create')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-brand/create')")
     public ShopBrandResponse actionCreate(@RequestBody ShopBrandRequest request) {
         return this.shopBrandService.create(request);
     }
@@ -71,7 +71,7 @@ public class ShopBrandController {
     @Operation(description = "品牌编辑", operationId = "shopBrandEdit")
     @ApiResponse(responseCode = "200", description = "品牌")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-brand/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-brand/edit/:id')")
     public ShopBrandResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopBrandRequest request) {
         return this.shopBrandService.edit(id, request);
     }

@@ -76,9 +76,9 @@ public class AliyunOSS implements UploadDriver {
         } else {
             responseParse.append("var thumbs = [];");
 
-            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
-                String styleDelimiter = StringUtils.isBlank(this.properties.getStyleDelimiter()) ? "?x-oss-process=style/" : this.properties.getStyleDelimiter();
+            String styleDelimiter = StringUtils.isBlank(this.properties.getStyleDelimiter()) ? "?x-oss-process=style/" : this.properties.getStyleDelimiter();
 
+            for (UploadUtils.ThumbSize thumbSize : thumbSizes) {
                 responseParse.append("thumbs.push({ thumb: '")
                         .append(thumbSize.getThumbName())
                         .append("', url: url + '")
@@ -98,8 +98,6 @@ public class AliyunOSS implements UploadDriver {
         request.setDataType("xml");
         request.setParamName(this.paramName());
         request.setResponseParse(responseParse.toString());
-        request.setSizeLimit(size);
-        request.setTypesLimit(types);
 
         return request;
     }

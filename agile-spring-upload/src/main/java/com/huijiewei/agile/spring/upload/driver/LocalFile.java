@@ -259,8 +259,6 @@ public class LocalFile implements UploadDriver {
         request.setDataType("json");
         request.setParamName(this.paramName());
         request.setResponseParse("return result;");
-        request.setSizeLimit(size);
-        request.setTypesLimit(types);
 
         return request;
     }

@@ -40,7 +40,7 @@ public class ShopCategoryController {
     @Operation(description = "分类新建", operationId = "shopCategoryCreate")
     @ApiResponse(responseCode = "201", description = "商品分类")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-category/create')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-category/create/:id')")
     public ShopCategoryBaseResponse actionCreate(@RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.create(request);
     }
@@ -53,7 +53,7 @@ public class ShopCategoryController {
     @Operation(description = "分类编辑", operationId = "shopCategoryEdit")
     @ApiResponse(responseCode = "200", description = "分类")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
-    @PreAuthorize("hasPermission('ADMIN', 'shop-category/edit')")
+    @PreAuthorize("hasPermission('ADMIN', 'shop-category/edit/:id')")
     public ShopCategoryBaseResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.edit(id, request);
     }
