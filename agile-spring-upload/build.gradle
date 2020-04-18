@@ -1,6 +1,6 @@
 apply plugin: 'io.spring.dependency-management'
 
-ext.jacksonDatabindVersion = '2.10.3'
+ext.jacksonDatabindVersion = '2.11.0.rc1'
 ext.apacheCommonsLangVersion = '3.10'
 ext.apacheCommonsCodecVersion = '1.14'
 ext.apacheCommonsIoVersion = '2.6'
