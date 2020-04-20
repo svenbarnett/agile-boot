@@ -80,7 +80,7 @@ public class AdminService {
         this.adminAccessTokenRepository.save(adminAccessToken);
 
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminMiniResponse(admin));
+        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
         adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
         adminLoginResponse.setAccessToken(accessToken);
@@ -111,7 +111,7 @@ public class AdminService {
         Admin admin = identity.getAdmin();
 
         AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
-        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminMiniResponse(admin));
+        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
         adminAccountResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
         adminAccountResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
 
@@ -120,7 +120,9 @@ public class AdminService {
 
     public ListResponse<AdminResponse> getAll() {
         ListResponse<AdminResponse> response = new ListResponse<>();
-        response.setItems(AdminMapper.INSTANCE.toAdminResponses(this.adminRepository.findAll(EntityGraphUtils.fromAttributePaths("adminGroup"))));
+        response.setItems(AdminMapper.INSTANCE.toAdminResponses(
+                this.adminRepository.findAll(EntityGraphUtils.fromAttributePaths("adminGroup"))
+        ));
 
         return response;
     }
@@ -204,15 +206,16 @@ public class AdminService {
     public PageResponse<AdminLogResponse> getLog(Boolean withSearchFields, AdminLogSearchRequest searchRequest, Pageable pageable) {
         Specification<AdminLog> adminLogSpecification = searchRequest.getSpecification();
 
-        Page<AdminLogResponse> adminLogs = AdminLogMapper.INSTANCE.toPageResponse(
+        Page<AdminLogResponse> adminLogPage = AdminLogMapper.INSTANCE.toPageResponse(
                 this.adminLogRepository.findAll(
                         adminLogSpecification,
-                        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build())
+                        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build()),
+                        EntityGraphUtils.fromAttributePaths("admin.adminGroup")
                 )
         );
 
         SearchPageResponse<AdminLogResponse> response = new SearchPageResponse<>();
-        response.setPage(adminLogs);
+        response.setPage(adminLogPage);
 
         if (withSearchFields != null && withSearchFields) {
             response.setSearchFields(searchRequest.getSearchFields());

@@ -45,7 +45,13 @@ public class ShopBrandService {
         SearchListResponse<ShopBrandResponse> response = new SearchListResponse<>();
         response.setSearchFields(request.getSearchFields());
 
-        List<ShopBrandResponse> shopBrandResponses = ShopBrandMapper.INSTANCE.toShopBrandResponses(this.shopBrandRepository.findAll(request.getSpecification(), Sort.by(Sort.Direction.ASC, "id"), EntityGraphUtils.fromAttributePaths("shopCategories")));
+        List<ShopBrandResponse> shopBrandResponses = ShopBrandMapper.INSTANCE.toShopBrandResponses(
+                this.shopBrandRepository.findAll(
+                        request.getSpecification(),
+                        Sort.by(Sort.Direction.ASC, "id"),
+                        EntityGraphUtils.fromAttributePaths("shopCategories")
+                )
+        );
 
         for (int i = 0; i < shopBrandResponses.size(); i++) {
             ShopBrandResponse shopBrandResponse = shopBrandResponses.get(i);

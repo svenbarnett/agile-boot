@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface ShopBrandCategoryRepository extends JpaRepository<ShopBrandCategory, Integer>, BatchRepository<ShopBrandCategory> {
+public interface ShopBrandCategoryRepository extends
+        JpaRepository<ShopBrandCategory, Integer>,
+        BatchRepository<ShopBrandCategory> {
     @Modifying
     @Transactional
     @Query("DELETE FROM ShopBrandCategory WHERE shopBrandId = ?1")

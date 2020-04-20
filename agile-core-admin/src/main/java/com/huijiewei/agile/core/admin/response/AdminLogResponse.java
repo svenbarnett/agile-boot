@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.admin.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.huijiewei.agile.core.admin.entity.AdminLog;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -39,5 +40,6 @@ public class AdminLogResponse {
     private LocalDateTime createdAt;
 
     @Schema(description = "所属管理员")
-    private AdminBaseResponse admin;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private AdminResponse admin;
 }

@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface AdminGroupPermissionRepository extends JpaRepository<AdminGroupPermission, Integer>, BatchRepository<AdminGroupPermission> {
+public interface AdminGroupPermissionRepository extends
+        JpaRepository<AdminGroupPermission, Integer>,
+        BatchRepository<AdminGroupPermission> {
     List<AdminGroupPermission> findAllByAdminGroupId(Integer id);
 
     @Modifying

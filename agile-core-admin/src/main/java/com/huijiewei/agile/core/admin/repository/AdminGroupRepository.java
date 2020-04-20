@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdminGroupRepository extends JpaRepository<AdminGroup, Integer>, ValidSaveRepository<AdminGroup, Integer> {
+public interface AdminGroupRepository extends
+        JpaRepository<AdminGroup, Integer>,
+        ValidSaveRepository<AdminGroup, Integer> {
 }
