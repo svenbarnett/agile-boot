@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import java.util.Optional;
 
 public class AdminAuthenticationUserDetailsService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
-    private AdminRepository adminRepository;
-    private AdminAccessTokenRepository adminAccessTokenRepository;
+    private final AdminRepository adminRepository;
+    private final AdminAccessTokenRepository adminAccessTokenRepository;
 
     public AdminAuthenticationUserDetailsService(AdminRepository adminRepository, AdminAccessTokenRepository adminAccessTokenRepository) {
         this.adminRepository = adminRepository;

@@ -8,8 +8,8 @@ import com.huijiewei.agile.core.shop.mapper.ShopCategoryMapper;
 import com.huijiewei.agile.core.shop.mapper.ShopProductMapper;
 import com.huijiewei.agile.core.shop.repository.ShopProductRepository;
 import com.huijiewei.agile.core.shop.request.ShopProductSearchRequest;
-import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
-import com.huijiewei.agile.core.shop.response.ShopProductBaseResponse;
+import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
+import com.huijiewei.agile.core.shop.response.ShopProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,33 +31,33 @@ public class ShopProductService {
         this.shopProductRepository = shopProductRepository;
     }
 
-    public SearchPageResponse<ShopProductBaseResponse> getAll(Boolean withSearchFields, ShopProductSearchRequest searchRequest, Pageable pageable) {
+    public SearchPageResponse<ShopProductResponse> getAll(Boolean withSearchFields, ShopProductSearchRequest searchRequest, Pageable pageable) {
         Specification<ShopProduct> shopProductSpecification = searchRequest.getSpecification();
 
-        Page<ShopProductBaseResponse> shopProducts = ShopProductMapper.INSTANCE.toPageResponse(
+        Page<ShopProductResponse> shopProducts = ShopProductMapper.INSTANCE.toShopProductResponse(
                 this.shopProductRepository.findAll(
                         shopProductSpecification,
                         PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build())
                 )
         );
 
-        SearchPageResponse<ShopProductBaseResponse> response = new SearchPageResponse<>();
+        SearchPageResponse<ShopProductResponse> response = new SearchPageResponse<>();
         response.setPage(shopProducts);
 
         if (withSearchFields != null && withSearchFields) {
             response.setSearchFields(searchRequest.getSearchFields());
         }
 
-        List<ShopProductBaseResponse> shopProductBaseResponses = new ArrayList<>(response.getItems().size());
+        List<ShopProductResponse> shopProductResponses = new ArrayList<>(response.getItems().size());
 
-        for (ShopProductBaseResponse baseResponse : response.getItems()) {
-            ShopCategoryBaseResponse categoryBaseResponse = baseResponse.getShopCategory();
-            categoryBaseResponse.setParents(ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getParents(categoryBaseResponse.getId())));
-            baseResponse.setShopCategory(categoryBaseResponse);
-            shopProductBaseResponses.add(baseResponse);
+        for (ShopProductResponse shopProductResponse : response.getItems()) {
+            ShopCategoryResponse categoryResponse = shopProductResponse.getShopCategory();
+            categoryResponse.setParents(ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getParents(categoryResponse.getId())));
+            shopProductResponse.setShopCategory(categoryResponse);
+            shopProductResponses.add(shopProductResponse);
         }
 
-        response.setItems(shopProductBaseResponses);
+        response.setItems(shopProductResponses);
 
         return response;
     }

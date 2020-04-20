@@ -2,7 +2,7 @@ package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.response.MessageResponse;
 import com.huijiewei.agile.core.shop.request.ShopCategoryRequest;
-import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
+import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import com.huijiewei.agile.core.shop.service.ShopCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,8 +28,8 @@ public class ShopCategoryController {
     @ApiResponse(responseCode = "200", description = "商品分类")
     @ApiResponse(responseCode = "404", description = "商品分类不存在", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/view, shop-category/edit, shop-category/delete')")
-    public ShopCategoryBaseResponse actionView(@PathVariable("id") Integer id, @RequestParam(required = false) Boolean withParents) {
-        return this.shopCategoryService.getById(id, withParents);
+    public ShopCategoryResponse actionView(@PathVariable("id") Integer id, @RequestParam(required = false) Boolean withParents) {
+        return this.shopCategoryService.view(id, withParents);
     }
 
     @PostMapping(
@@ -41,7 +41,7 @@ public class ShopCategoryController {
     @ApiResponse(responseCode = "201", description = "商品分类")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/create/:id')")
-    public ShopCategoryBaseResponse actionCreate(@RequestBody ShopCategoryRequest request) {
+    public ShopCategoryResponse actionCreate(@RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.create(request);
     }
 
@@ -54,7 +54,7 @@ public class ShopCategoryController {
     @ApiResponse(responseCode = "200", description = "分类")
     @ApiResponse(responseCode = "422", description = "输入验证错误", ref = "UnprocessableEntityProblem")
     @PreAuthorize("hasPermission('ADMIN', 'shop-category/edit/:id')")
-    public ShopCategoryBaseResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopCategoryRequest request) {
+    public ShopCategoryResponse actionEdit(@PathVariable("id") Integer id, @RequestBody ShopCategoryRequest request) {
         return this.shopCategoryService.edit(id, request);
     }
 

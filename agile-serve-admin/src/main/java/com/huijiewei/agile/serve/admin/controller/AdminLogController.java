@@ -3,7 +3,7 @@ package com.huijiewei.agile.serve.admin.controller;
 import com.huijiewei.agile.core.admin.request.AdminLogSearchRequest;
 import com.huijiewei.agile.core.admin.response.AdminLogResponse;
 import com.huijiewei.agile.core.admin.service.AdminService;
-import com.huijiewei.agile.core.response.PageResponse;
+import com.huijiewei.agile.core.response.SearchPageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -40,11 +40,11 @@ public class AdminLogController {
     })
     @ApiResponse(responseCode = "200", description = "操作日志")
     @PreAuthorize("hasPermission('ADMIN', 'admin-log/index')")
-    public PageResponse<AdminLogResponse> actionIndex(
+    public SearchPageResponse<AdminLogResponse> actionIndex(
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
-            @Parameter(hidden = true) AdminLogSearchRequest adminLogSearchRequest,
+            @Parameter(hidden = true) AdminLogSearchRequest request,
             @Parameter(hidden = true) Pageable pageable
     ) {
-        return this.adminService.getLog(withSearchFields, adminLogSearchRequest, pageable);
+        return this.adminService.getLog(withSearchFields, request, pageable);
     }
 }

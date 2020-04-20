@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class AdminPermissionEvaluator implements PermissionEvaluator {
-    private AdminGroupService adminGroupService;
+    private final AdminGroupService adminGroupService;
 
     @Autowired
     public AdminPermissionEvaluator(AdminGroupService adminGroupService) {

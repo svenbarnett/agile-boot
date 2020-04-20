@@ -9,7 +9,10 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -27,6 +30,8 @@ public class ShopBrand extends BaseEntity {
     private String alias;
 
     private String logo;
+
+    private String website;
 
     private String description;
 

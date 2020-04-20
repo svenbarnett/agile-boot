@@ -2,10 +2,8 @@ package com.huijiewei.agile.core.shop.mapper;
 
 import com.huijiewei.agile.core.shop.entity.ShopProduct;
 import com.huijiewei.agile.core.shop.request.ShopProductRequest;
-import com.huijiewei.agile.core.shop.response.ShopProductBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopProductResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -21,9 +19,7 @@ public interface ShopProductMapper {
 
     ShopProductResponse toShopProductResponse(ShopProduct shopProduct);
 
-    ShopProductBaseResponse toShopProductBaseResponse(ShopProduct shopProduct);
-
-    default Page<ShopProductBaseResponse> toPageResponse(Page<ShopProduct> page) {
-        return page.map(this::toShopProductBaseResponse);
+    default Page<ShopProductResponse> toShopProductResponse(Page<ShopProduct> page) {
+        return page.map(this::toShopProductResponse);
     }
 }

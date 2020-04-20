@@ -8,7 +8,6 @@ import com.huijiewei.agile.core.shop.mapper.ShopCategoryMapper;
 import com.huijiewei.agile.core.shop.repository.ShopCategoryRepository;
 import com.huijiewei.agile.core.shop.repository.ShopProductRepository;
 import com.huijiewei.agile.core.shop.request.ShopCategoryRequest;
-import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,32 +34,20 @@ public class ShopCategoryService {
         this.shopProductRepository = shopProductRepository;
     }
 
-    private List<ShopCategoryBaseResponse> getParentsById(Integer id) {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getParents(id));
+    private List<ShopCategoryResponse> getParentsById(Integer id) {
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getParents(id));
     }
 
-    public List<ShopCategoryBaseResponse> getTree() {
-        return ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getTree());
+    public List<ShopCategoryResponse> getTree() {
+        return ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getTree());
     }
 
-    public List<ShopCategoryBaseResponse> getPath(Integer id) {
-        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
-
-        if (shopCategoryOptional.isEmpty()) {
-            throw new NotFoundException("分类不存在");
-        }
-
+    public List<ShopCategoryResponse> getPath(Integer id) {
         return this.getParentsById(id);
     }
 
-    public ShopCategoryResponse getById(Integer id, Boolean withParents) {
-        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
-
-        if (shopCategoryOptional.isEmpty()) {
-            throw new NotFoundException("分类不存在");
-        }
-
-        ShopCategory shopCategory = shopCategoryOptional.get();
+    public ShopCategoryResponse view(Integer id, Boolean withParents) {
+        ShopCategory shopCategory = this.getById(id);
 
         ShopCategoryResponse response = ShopCategoryMapper.INSTANCE.toShopCategoryResponse(shopCategory);
 
@@ -69,6 +56,16 @@ public class ShopCategoryService {
         }
 
         return response;
+    }
+
+    private ShopCategory getById(Integer id) {
+        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
+
+        if (shopCategoryOptional.isEmpty()) {
+            throw new NotFoundException("分类不存在");
+        }
+
+        return shopCategoryOptional.get();
     }
 
     public ShopCategoryResponse create(@Valid ShopCategoryRequest request) {
@@ -80,13 +77,7 @@ public class ShopCategoryService {
     }
 
     public ShopCategoryResponse edit(Integer id, @Valid ShopCategoryRequest request) {
-        Optional<ShopCategory> shopCategoryOptional = this.shopCategoryRepository.findById(id);
-
-        if (shopCategoryOptional.isEmpty()) {
-            throw new NotFoundException("商品分类不存在");
-        }
-
-        ShopCategory current = shopCategoryOptional.get();
+        ShopCategory current = this.getById(id);
 
         ShopCategory shopCategory = ShopCategoryMapper.INSTANCE.toShopCategory(request, current);
 
@@ -96,11 +87,9 @@ public class ShopCategoryService {
     }
 
     public void delete(Integer id) {
-        if (!this.shopCategoryRepository.existsById(id)) {
-            throw new NotFoundException("商品分类不存在");
-        }
+        ShopCategory current = this.getById(id);
 
-        List<Integer> shopCategoryIds = this.shopCategoryManager.getChildIds(id, true);
+        List<Integer> shopCategoryIds = this.shopCategoryManager.getChildrenIds(current.getId(), true);
 
         if (shopProductRepository.existsByShopCategoryIdIn(shopCategoryIds)) {
             throw new ConflictException("商品分类内存在商品，无法删除");

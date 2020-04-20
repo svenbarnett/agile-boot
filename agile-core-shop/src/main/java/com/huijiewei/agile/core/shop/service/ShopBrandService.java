@@ -1,9 +1,10 @@
 package com.huijiewei.agile.core.shop.service;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+import com.github.wenhao.jpa.Sorts;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
-import com.huijiewei.agile.core.response.SearchListResponse;
+import com.huijiewei.agile.core.response.SearchPageResponse;
 import com.huijiewei.agile.core.shop.entity.ShopBrand;
 import com.huijiewei.agile.core.shop.entity.ShopBrandCategory;
 import com.huijiewei.agile.core.shop.manager.ShopCategoryManager;
@@ -14,10 +15,11 @@ import com.huijiewei.agile.core.shop.repository.ShopBrandRepository;
 import com.huijiewei.agile.core.shop.repository.ShopProductRepository;
 import com.huijiewei.agile.core.shop.request.ShopBrandRequest;
 import com.huijiewei.agile.core.shop.request.ShopBrandSearchRequest;
-import com.huijiewei.agile.core.shop.response.ShopBrandBaseResponse;
 import com.huijiewei.agile.core.shop.response.ShopBrandResponse;
-import com.huijiewei.agile.core.shop.response.ShopCategoryBaseResponse;
-import org.springframework.data.domain.Sort;
+import com.huijiewei.agile.core.shop.response.ShopCategoryResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -41,40 +43,39 @@ public class ShopBrandService {
         this.shopBrandCategoryRepository = shopBrandCategoryRepository;
     }
 
-    public SearchListResponse<ShopBrandResponse> getAll(ShopBrandSearchRequest request) {
-        SearchListResponse<ShopBrandResponse> response = new SearchListResponse<>();
-        response.setSearchFields(request.getSearchFields());
-
-        List<ShopBrandResponse> shopBrandResponses = ShopBrandMapper.INSTANCE.toShopBrandResponses(
+    public SearchPageResponse<ShopBrandResponse> search(Boolean withSearchFields, ShopBrandSearchRequest request, Pageable pageable) {
+        Page<ShopBrandResponse> shopBrands = ShopBrandMapper.INSTANCE.toShopBrandResponses(
                 this.shopBrandRepository.findAll(
                         request.getSpecification(),
-                        Sort.by(Sort.Direction.ASC, "id"),
+                        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build()),
                         EntityGraphUtils.fromAttributePaths("shopCategories")
                 )
         );
 
-        for (int i = 0; i < shopBrandResponses.size(); i++) {
-            ShopBrandResponse shopBrandResponse = shopBrandResponses.get(i);
-            shopBrandResponses.set(i, this.fillCategories(shopBrandResponse));
-        }
+        SearchPageResponse<ShopBrandResponse> response = new SearchPageResponse<>();
+        response.setPage(shopBrands);
 
-        response.setItems(shopBrandResponses);
+        if (withSearchFields != null && withSearchFields) {
+            response.setSearchFields(request.getSearchFields());
+        }
 
         return response;
     }
 
-    public List<ShopBrandBaseResponse> getList() {
-        return ShopBrandMapper.INSTANCE.toShopBrandBaseResponses(this.shopBrandRepository.findAll());
+    public ShopBrandResponse view(Integer id) {
+        ShopBrand shopBrand = this.getById(id);
+
+        return this.fillCategories(ShopBrandMapper.INSTANCE.toShopBrandResponse(shopBrand));
     }
 
-    public ShopBrandResponse getById(Integer id) {
+    private ShopBrand getById(Integer id) {
         Optional<ShopBrand> shopBrandOptional = this.shopBrandRepository.findById(id);
 
         if (shopBrandOptional.isEmpty()) {
             throw new NotFoundException("商品品牌不存在");
         }
 
-        return ShopBrandMapper.INSTANCE.toShopBrandResponse(shopBrandOptional.get());
+        return shopBrandOptional.get();
     }
 
     public ShopBrandResponse create(@Valid ShopBrandRequest request) {
@@ -101,29 +102,23 @@ public class ShopBrandService {
     }
 
     private ShopBrandResponse fillCategories(ShopBrandResponse shopBrandResponse) {
-        if (shopBrandResponse.getShopCategories() != null) {
-            List<ShopCategoryBaseResponse> shopCategoryBaseResponses = shopBrandResponse.getShopCategories();
+        List<ShopCategoryResponse> shopCategoryResponses = shopBrandResponse.getShopCategories();
 
-            for (int j = 0; j < shopCategoryBaseResponses.size(); j++) {
-                ShopCategoryBaseResponse shopCategoryBaseResponse = shopCategoryBaseResponses.get(j);
-                shopCategoryBaseResponse.setParents(ShopCategoryMapper.INSTANCE.toShopCategoryBaseResponses(this.shopCategoryManager.getParents(shopCategoryBaseResponse.getId())));
-                shopCategoryBaseResponses.set(j, shopCategoryBaseResponse);
+        if (shopCategoryResponses != null) {
+            for (int i = 0; i < shopCategoryResponses.size(); i++) {
+                ShopCategoryResponse shopCategoryResponse = shopCategoryResponses.get(i);
+                shopCategoryResponse.setParents(ShopCategoryMapper.INSTANCE.toShopCategoryResponses(this.shopCategoryManager.getParents(shopCategoryResponse.getParentId())));
+                shopCategoryResponses.set(i, shopCategoryResponse);
             }
 
-            shopBrandResponse.setShopCategories(shopCategoryBaseResponses);
+            shopBrandResponse.setShopCategories(shopCategoryResponses);
         }
 
         return shopBrandResponse;
     }
 
     public ShopBrandResponse edit(Integer id, @Valid ShopBrandRequest request) {
-        Optional<ShopBrand> shopBrandOptional = this.shopBrandRepository.findById(id);
-
-        if (shopBrandOptional.isEmpty()) {
-            throw new NotFoundException("商品品牌不存在");
-        }
-
-        ShopBrand current = shopBrandOptional.get();
+        ShopBrand current = this.getById(id);
 
         ShopBrand shopBrand = ShopBrandMapper.INSTANCE.toShopBrand(request, current);
 
@@ -137,9 +132,7 @@ public class ShopBrandService {
     }
 
     public void delete(Integer id) {
-        if (!this.shopBrandRepository.existsById(id)) {
-            throw new NotFoundException("商品品牌不存在");
-        }
+        ShopBrand shopBrand = this.getById(id);
 
         if (this.shopProductRepository.existsByShopBrandId(id)) {
             throw new ConflictException("商品品牌内存在商品，无法删除");
@@ -147,6 +140,6 @@ public class ShopBrandService {
 
         this.shopBrandCategoryRepository.deleteAllByShopBrandId(id);
 
-        this.shopBrandRepository.deleteById(id);
+        this.shopBrandRepository.delete(shopBrand);
     }
 }

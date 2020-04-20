@@ -203,8 +203,8 @@ public class AdminService {
         this.adminRepository.delete(admin);
     }
 
-    public PageResponse<AdminLogResponse> getLog(Boolean withSearchFields, AdminLogSearchRequest searchRequest, Pageable pageable) {
-        Specification<AdminLog> adminLogSpecification = searchRequest.getSpecification();
+    public SearchPageResponse<AdminLogResponse> getLog(Boolean withSearchFields, AdminLogSearchRequest request, Pageable pageable) {
+        Specification<AdminLog> adminLogSpecification = request.getSpecification();
 
         Page<AdminLogResponse> adminLogPage = AdminLogMapper.INSTANCE.toPageResponse(
                 this.adminLogRepository.findAll(
@@ -218,7 +218,7 @@ public class AdminService {
         response.setPage(adminLogPage);
 
         if (withSearchFields != null && withSearchFields) {
-            response.setSearchFields(searchRequest.getSearchFields());
+            response.setSearchFields(request.getSearchFields());
         }
 
         return response;

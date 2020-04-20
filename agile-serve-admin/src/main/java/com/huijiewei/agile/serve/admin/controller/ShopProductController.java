@@ -2,7 +2,7 @@ package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.response.SearchPageResponse;
 import com.huijiewei.agile.core.shop.request.ShopProductSearchRequest;
-import com.huijiewei.agile.core.shop.response.ShopProductBaseResponse;
+import com.huijiewei.agile.core.shop.response.ShopProductResponse;
 import com.huijiewei.agile.core.shop.service.ShopProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +39,7 @@ public class ShopProductController {
     })
     @ApiResponse(responseCode = "200", description = "用户列表")
     @PreAuthorize("hasPermission('ADMIN', 'shop-product/index')")
-    public SearchPageResponse<ShopProductBaseResponse> actionIndex(
+    public SearchPageResponse<ShopProductResponse> actionIndex(
             @Parameter(description = "是否返回搜索字段信息") @RequestParam(required = false) Boolean withSearchFields,
             @Parameter(hidden = true) ShopProductSearchRequest shopProductSearchRequest,
             @Parameter(hidden = true) Pageable pageable

@@ -22,11 +22,11 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 @EnableWebSecurity
 @Import(SecurityProblemSupport.class)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private SecurityProblemSupport problemSupport;
-    private AdminPermissionEvaluator adminPermissionEvaluator;
+    private final SecurityProblemSupport problemSupport;
+    private final AdminPermissionEvaluator adminPermissionEvaluator;
 
-    private AdminRepository adminRepository;
-    private AdminAccessTokenRepository adminAccessTokenRepository;
+    private final AdminRepository adminRepository;
+    private final AdminAccessTokenRepository adminAccessTokenRepository;
 
     @Autowired
     public WebSecurityConfig(SecurityProblemSupport problemSupport, AdminPermissionEvaluator adminPermissionEvaluator, AdminRepository adminRepository, AdminAccessTokenRepository adminAccessTokenRepository) {

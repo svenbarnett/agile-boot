@@ -49,14 +49,23 @@ public class AdminGroupService {
         return this.adminGroupPermissionManager.getPermissionsByAdminGroupId(id);
     }
 
-    public AdminGroupResponse getById(Integer id) {
+    public AdminGroupResponse view(Integer id) {
+        AdminGroup adminGroup = this.getById(id);
+
+        AdminGroupResponse adminGroupResponse = AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
+        adminGroupResponse.setPermissions(this.getPermissionsById(id));
+
+        return adminGroupResponse;
+    }
+
+    private AdminGroup getById(Integer id) {
         Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
 
         if (adminGroupOptional.isEmpty()) {
             throw new NotFoundException("管理组不存在");
         }
 
-        return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroupOptional.get());
+        return adminGroupOptional.get();
     }
 
     public AdminGroupResponse create(@Valid AdminGroupRequest request) {
@@ -69,13 +78,7 @@ public class AdminGroupService {
     }
 
     public AdminGroupResponse edit(Integer id, @Valid AdminGroupRequest request) {
-        Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
-
-        if (adminGroupOptional.isEmpty()) {
-            throw new NotFoundException("管理组不存在");
-        }
-
-        AdminGroup current = adminGroupOptional.get();
+        AdminGroup current = this.getById(id);
 
         AdminGroup adminGroup = AdminGroupMapper.INSTANCE.toAdminGroup(request, current);
 
@@ -87,17 +90,13 @@ public class AdminGroupService {
     }
 
     public void delete(Integer id) {
-        Optional<AdminGroup> adminGroupOptional = this.adminGroupRepository.findById(id);
-
-        if (adminGroupOptional.isEmpty()) {
-            throw new NotFoundException("管理组不存在");
-        }
+        AdminGroup current = this.getById(id);
 
         if (this.adminRepository.existsByAdminGroupId(id)) {
             throw new ConflictException("管理组内拥有管理员，无法删除");
         }
 
-        this.adminGroupRepository.delete(adminGroupOptional.get());
+        this.adminGroupRepository.delete(current);
         this.adminGroupPermissionManager.updateAdminGroupPermissions(id, null, true);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
-    private AdminPermissionEvaluator adminPermissionEvaluator;
+    private final AdminPermissionEvaluator adminPermissionEvaluator;
 
     @Autowired
     public MethodSecurityConfig(AdminPermissionEvaluator adminPermissionEvaluator) {

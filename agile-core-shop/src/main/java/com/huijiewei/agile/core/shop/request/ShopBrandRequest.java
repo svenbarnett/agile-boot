@@ -23,6 +23,9 @@ public class ShopBrandRequest {
     @Schema(description = "品牌 LOGO")
     private String logo;
 
+    @Schema(description = "品牌网站")
+    private String website;
+
     @Schema(description = "品牌介绍")
     private String description;
 

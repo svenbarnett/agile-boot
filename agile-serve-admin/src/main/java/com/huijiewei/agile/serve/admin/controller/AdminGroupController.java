@@ -43,10 +43,7 @@ public class AdminGroupController {
     @ApiResponse(responseCode = "404", description = "管理组不存在", ref = "Problem")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/view/:id, admin-group/edit/:id')")
     public AdminGroupResponse actionView(@PathVariable("id") Integer id) {
-        AdminGroupResponse adminGroupResponse = this.adminGroupService.getById(id);
-        adminGroupResponse.setPermissions(this.adminGroupService.getPermissionsById(adminGroupResponse.getId()));
-
-        return adminGroupResponse;
+        return this.adminGroupService.view(id);
     }
 
     @PostMapping(
