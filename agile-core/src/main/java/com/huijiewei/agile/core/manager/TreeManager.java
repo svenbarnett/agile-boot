@@ -105,7 +105,7 @@ public abstract class TreeManager<T extends TreeEntity<T>> {
         return new ArrayList<>();
     }
 
-    public List<Integer> getChildIds(Integer id, Boolean withOwner) {
+    public List<Integer> getChildrenIds(Integer id, Boolean withOwner) {
         List<T> children = this.getChildren(id);
 
         List<Integer> childrenIds = TreeManager.getNodeIdsInTree(children);
