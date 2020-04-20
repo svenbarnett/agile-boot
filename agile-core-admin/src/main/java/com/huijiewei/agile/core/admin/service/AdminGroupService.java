@@ -62,7 +62,7 @@ public class AdminGroupService {
     public AdminGroupResponse create(@Valid AdminGroupRequest request) {
         AdminGroup adminGroup = AdminGroupMapper.INSTANCE.toAdminGroup(request);
 
-        this.adminGroupRepository.save(adminGroup);
+        this.adminGroupRepository.saveWithValid(adminGroup);
         this.adminGroupPermissionManager.updateAdminGroupPermissions(adminGroup.getId(), request.getPermissions(), false);
 
         return AdminGroupMapper.INSTANCE.toAdminGroupResponse(adminGroup);
@@ -79,7 +79,7 @@ public class AdminGroupService {
 
         AdminGroup adminGroup = AdminGroupMapper.INSTANCE.toAdminGroup(request, current);
 
-        this.adminGroupRepository.save(adminGroup);
+        this.adminGroupRepository.saveWithValid(adminGroup);
 
         this.adminGroupPermissionManager.updateAdminGroupPermissions(current.getId(), request.getPermissions(), true);
 
