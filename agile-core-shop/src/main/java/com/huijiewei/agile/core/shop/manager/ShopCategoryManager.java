@@ -27,7 +27,7 @@ public class ShopCategoryManager extends TreeManager<ShopCategory> {
 
     @Cacheable(cacheNames = SHOP_CATEGORY_TREE_CACHE_KEY)
     public List<ShopCategory> getTree() {
-        return super.getTree();
+        return this.buildTree(this.shopCategoryRepository.findAll());
     }
 
     @CacheEvict(cacheNames = {ShopCategoryManagerCache.SHOP_CATEGORIES_CACHE_KEY, SHOP_CATEGORY_TREE_CACHE_KEY}, allEntries = true)

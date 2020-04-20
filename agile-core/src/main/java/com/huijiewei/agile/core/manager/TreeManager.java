@@ -50,10 +50,10 @@ public abstract class TreeManager<T extends TreeEntity<T>> {
 
     abstract public List<T> getAll();
 
-    public List<T> getTree() {
-        Map<Integer, T> map = new HashMap<>();
+    abstract public List<T> getTree();
 
-        List<T> items = this.getAll();
+    protected List<T> buildTree(List<T> items) {
+        Map<Integer, T> map = new HashMap<>();
 
         for (T current : items) {
             map.put(current.getId(), current);
