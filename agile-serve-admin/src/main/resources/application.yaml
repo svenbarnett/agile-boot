@@ -1,6 +1,6 @@
 spring:
   application:
-    name: agile-boot-admin-api
+    name: agile-serve-admin
   data:
     jpa:
       repositories:
@@ -45,12 +45,15 @@ spring:
     time-zone: Asia/Shanghai
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 20MB
+      max-file-size: 50MB
+      max-request-size: 80MB
+
+management:
+  endpoints:
+    enabled-by-default: false
 
 agile:
   format:
     date-format: yyyy-MM-dd
     time-format: HH:mm
     datetime-format: yyyy-MM-dd HH:mm
-
