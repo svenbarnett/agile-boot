@@ -11,7 +11,7 @@ dependencyManagement {
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
-    implementation "cn.afterturn:easypoi-base::${easyPoiBaseVersion}"
+    implementation "cn.afterturn:easypoi-base:${easyPoiBaseVersion}"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
