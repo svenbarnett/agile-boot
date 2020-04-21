@@ -42,7 +42,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public SearchPageResponse<UserResponse> getAll(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
+    public SearchPageResponse<UserResponse> search(Boolean withSearchFields, UserSearchRequest searchRequest, Pageable pageable) {
         Specification<User> userSpecification = searchRequest.getSpecification();
 
         Page<UserResponse> users = UserMapper.INSTANCE.toPageResponse(
@@ -62,10 +62,12 @@ public class UserService {
         return response;
     }
 
-    public void exportAll(UserSearchRequest searchRequest, OutputStream outputStream) throws IOException {
+    public void export(UserSearchRequest searchRequest, OutputStream outputStream) throws IOException {
         Specification<User> userSpecification = searchRequest.getSpecification();
 
-        List<UserResponse> users = UserMapper.INSTANCE.toUserResponses(this.userRepository.findAll(userSpecification, Sort.by(Sort.Direction.DESC, "id")));
+        List<UserResponse> users = UserMapper.INSTANCE.toUserResponses(
+                this.userRepository.findAll(userSpecification, Sort.by(Sort.Direction.DESC, "id"))
+        );
 
         List<ExcelExportEntity> entities = new ArrayList<>();
         entities.add(new ExcelExportEntity("Id", "id"));
@@ -87,14 +89,18 @@ public class UserService {
         workbook.close();
     }
 
-    public UserResponse getById(Integer id) {
+    public UserResponse view(Integer id) {
+        return UserMapper.INSTANCE.toUserResponse(this.getById(id));
+    }
+
+    public User getById(Integer id) {
         Optional<User> userOptional = this.userRepository.findById(id);
 
         if (userOptional.isEmpty()) {
             throw new NotFoundException("用户不存在");
         }
 
-        return UserMapper.INSTANCE.toUserResponse(userOptional.get());
+        return userOptional.get();
     }
 
     @Validated(UserRequest.Create.class)
@@ -111,13 +117,7 @@ public class UserService {
 
     @Validated(UserRequest.Edit.class)
     public UserResponse edit(Integer id, @Valid UserRequest request) {
-        Optional<User> userOptional = this.userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("用户不存在");
-        }
-
-        User current = userOptional.get();
+        User current = this.getById(id);
 
         User user = this.update(current, request);
 
@@ -138,12 +138,8 @@ public class UserService {
     }
 
     public void delete(Integer id) {
-        Optional<User> userOptional = this.userRepository.findById(id);
+        User current = this.getById(id);
 
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("用户不存在");
-        }
-
-        this.userRepository.delete(userOptional.get());
+        this.userRepository.delete(current);
     }
 }

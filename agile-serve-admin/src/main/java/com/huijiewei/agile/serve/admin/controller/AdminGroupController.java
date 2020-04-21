@@ -31,7 +31,7 @@ public class AdminGroupController {
     @ApiResponse(responseCode = "200", description = "管理组列表")
     @PreAuthorize("hasPermission('ADMIN', 'admin-group/index')")
     public ListResponse<AdminGroupResponse> actionIndex() {
-        return this.adminGroupService.getAll();
+        return this.adminGroupService.all();
     }
 
     @GetMapping(

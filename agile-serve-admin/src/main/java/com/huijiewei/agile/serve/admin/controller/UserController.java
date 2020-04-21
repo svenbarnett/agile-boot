@@ -2,7 +2,6 @@ package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.exception.BadRequestException;
 import com.huijiewei.agile.core.response.MessageResponse;
-import com.huijiewei.agile.core.response.PageResponse;
 import com.huijiewei.agile.core.response.SearchPageResponse;
 import com.huijiewei.agile.core.until.HttpUtils;
 import com.huijiewei.agile.core.user.entity.User;
@@ -60,7 +59,7 @@ public class UserController {
             @Parameter(hidden = true) UserSearchRequest userSearchRequest,
             @Parameter(hidden = true) Pageable pageable
     ) {
-        return this.userService.getAll(withSearchFields, userSearchRequest, pageable);
+        return this.userService.search(withSearchFields, userSearchRequest, pageable);
     }
 
     @GetMapping(
@@ -83,7 +82,7 @@ public class UserController {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            this.userService.exportAll(userSearchRequest, outputStream);
+            this.userService.export(userSearchRequest, outputStream);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.ms-excel;charset=utf-8");
@@ -104,7 +103,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'user/view/:id, user/edit/:id')")
     public UserResponse actionView(@PathVariable("id") Integer id) {
-        return this.userService.getById(id);
+        return this.userService.view(id);
     }
 
     @PostMapping(

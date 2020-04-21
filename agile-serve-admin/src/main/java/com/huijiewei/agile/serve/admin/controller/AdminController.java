@@ -32,7 +32,7 @@ public class AdminController {
     @ApiResponse(responseCode = "200", description = "管理员列表")
     @PreAuthorize("hasPermission('ADMIN', 'admin/index')")
     public ListResponse<AdminResponse> actionIndex() {
-        return this.adminService.getAll();
+        return this.adminService.all();
     }
 
     @GetMapping(
@@ -44,7 +44,7 @@ public class AdminController {
     @ApiResponse(responseCode = "404", ref = "NotFoundProblem")
     @PreAuthorize("hasPermission('ADMIN', 'admin/view/:id, admin/edit/:id')")
     public AdminResponse actionView(@PathVariable("id") Integer id) {
-        return this.adminService.getById(id);
+        return this.adminService.view(id);
     }
 
     @PostMapping(

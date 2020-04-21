@@ -44,7 +44,7 @@ public class MiscController {
     )
     @Operation(description = "管理组 ACL 列表", operationId = "miscAdminGroupPermissions")
     @ApiResponse(responseCode = "200", description = "管理组 ACL 列表")
-    public List<AdminGroupPermissionItem> actionAdminGroupAcl() {
+    public List<AdminGroupPermissionItem> actionAdminGroupPermissions() {
         return AdminGroupPermissions.getAll();
     }
 
@@ -54,8 +54,8 @@ public class MiscController {
     )
     @Operation(description = "管理组列表", operationId = "miscAdminGroups")
     @ApiResponse(responseCode = "200", description = "管理组列表")
-    public List<AdminGroupResponse> actionAdminGroupList() {
-        return this.adminGroupService.getList();
+    public List<AdminGroupResponse> actionAdminGroups() {
+        return this.adminGroupService.list();
     }
 
     @GetMapping(

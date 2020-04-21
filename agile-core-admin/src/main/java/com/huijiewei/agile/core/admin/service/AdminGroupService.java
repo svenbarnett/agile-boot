@@ -34,14 +34,14 @@ public class AdminGroupService {
         this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
 
-    public ListResponse<AdminGroupResponse> getAll() {
+    public ListResponse<AdminGroupResponse> all() {
         ListResponse<AdminGroupResponse> response = new ListResponse<>();
         response.setItems(AdminGroupMapper.INSTANCE.toAdminGroupResponses(this.adminGroupRepository.findAll()));
 
         return response;
     }
 
-    public List<AdminGroupResponse> getList() {
+    public List<AdminGroupResponse> list() {
         return AdminGroupMapper.INSTANCE.toAdminGroupResponses(this.adminGroupRepository.findAll());
     }
 

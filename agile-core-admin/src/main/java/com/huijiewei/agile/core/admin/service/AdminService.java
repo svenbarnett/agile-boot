@@ -23,7 +23,6 @@ import com.huijiewei.agile.core.admin.security.AdminIdentity;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.ListResponse;
-import com.huijiewei.agile.core.response.PageResponse;
 import com.huijiewei.agile.core.response.SearchPageResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +117,7 @@ public class AdminService {
         return adminAccountResponse;
     }
 
-    public ListResponse<AdminResponse> getAll() {
+    public ListResponse<AdminResponse> all() {
         ListResponse<AdminResponse> response = new ListResponse<>();
         response.setItems(AdminMapper.INSTANCE.toAdminResponses(
                 this.adminRepository.findAll(EntityGraphUtils.fromAttributePaths("adminGroup"))
@@ -127,14 +126,18 @@ public class AdminService {
         return response;
     }
 
-    public AdminResponse getById(Integer id) {
+    public AdminResponse view(Integer id) {
+        return AdminMapper.INSTANCE.toAdminResponse(this.getById(id));
+    }
+
+    public Admin getById(Integer id) {
         Optional<Admin> adminOptional = this.adminRepository.findById(id);
 
         if (adminOptional.isEmpty()) {
             throw new NotFoundException("管理员不存在");
         }
 
-        return AdminMapper.INSTANCE.toAdminResponse(adminOptional.get());
+        return adminOptional.get();
     }
 
     @Validated(AdminRequest.Create.class)
@@ -174,13 +177,7 @@ public class AdminService {
 
     @Validated(AdminRequest.Edit.class)
     public AdminResponse edit(Integer id, @Valid AdminRequest request, AdminIdentity identity) {
-        Optional<Admin> adminOptional = this.adminRepository.findById(id);
-
-        if (adminOptional.isEmpty()) {
-            throw new NotFoundException("管理员不存在");
-        }
-
-        Admin current = adminOptional.get();
+        Admin current = this.getById(id);
 
         Admin admin = this.update(current, request, identity.getAdmin().getId().equals(current.getId()));
 
@@ -188,39 +185,12 @@ public class AdminService {
     }
 
     public void delete(Integer id, AdminIdentity identity) {
-        Optional<Admin> adminOptional = this.adminRepository.findById(id);
-
-        if (adminOptional.isEmpty()) {
-            throw new NotFoundException("管理员不存在");
-        }
-
-        Admin admin = adminOptional.get();
+        Admin admin = this.getById(id);
 
         if (admin.getId().equals(identity.getAdmin().getId())) {
             throw new ConflictException("管理员不能删除自己");
         }
 
         this.adminRepository.delete(admin);
-    }
-
-    public SearchPageResponse<AdminLogResponse> getLog(Boolean withSearchFields, AdminLogSearchRequest request, Pageable pageable) {
-        Specification<AdminLog> adminLogSpecification = request.getSpecification();
-
-        Page<AdminLogResponse> adminLogPage = AdminLogMapper.INSTANCE.toPageResponse(
-                this.adminLogRepository.findAll(
-                        adminLogSpecification,
-                        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sorts.builder().desc("id").build()),
-                        EntityGraphUtils.fromAttributePaths("admin.adminGroup")
-                )
-        );
-
-        SearchPageResponse<AdminLogResponse> response = new SearchPageResponse<>();
-        response.setPage(adminLogPage);
-
-        if (withSearchFields != null && withSearchFields) {
-            response.setSearchFields(request.getSearchFields());
-        }
-
-        return response;
     }
 }

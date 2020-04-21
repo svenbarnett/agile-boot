@@ -2,6 +2,7 @@ package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.admin.request.AdminLogSearchRequest;
 import com.huijiewei.agile.core.admin.response.AdminLogResponse;
+import com.huijiewei.agile.core.admin.service.AdminLogService;
 import com.huijiewei.agile.core.admin.service.AdminService;
 import com.huijiewei.agile.core.response.SearchPageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "admin-log", description = "日志")
 public class AdminLogController {
-    private final AdminService adminService;
+    private final AdminLogService adminLogService;
 
     @Autowired
-    public AdminLogController(AdminService adminService) {
-        this.adminService = adminService;
+    public AdminLogController(AdminLogService adminLogService) {
+        this.adminLogService = adminLogService;
     }
 
     @GetMapping(
@@ -45,6 +46,6 @@ public class AdminLogController {
             @Parameter(hidden = true) AdminLogSearchRequest request,
             @Parameter(hidden = true) Pageable pageable
     ) {
-        return this.adminService.getLog(withSearchFields, request, pageable);
+        return this.adminLogService.search(withSearchFields, request, pageable);
     }
 }
