@@ -13,8 +13,6 @@ spring:
         one-indexed-parameters: true
   jpa:
     hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: none
       use-new-id-generator-mappings: false
     properties:
@@ -47,10 +45,6 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 80MB
-
-management:
-  endpoints:
-    enabled-by-default: false
 
 agile:
   format:
