@@ -3,7 +3,9 @@ apply from: '../dep.spring.boot.gradle'
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
+    implementation libs.springSecurity
     implementation libs.apacheCommonsLang
+    implementation libs.apacheCommonsCodec
     implementation libs.hibernateValidator
     implementation libs.validationApi
     implementation libs.springdocOpenApi

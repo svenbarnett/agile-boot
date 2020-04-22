@@ -2,35 +2,26 @@ package com.huijiewei.agile.core.admin.service;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.devskiller.friendly_id.FriendlyId;
-import com.github.wenhao.jpa.Sorts;
 import com.huijiewei.agile.core.admin.entity.Admin;
 import com.huijiewei.agile.core.admin.entity.AdminAccessToken;
 import com.huijiewei.agile.core.admin.entity.AdminLog;
 import com.huijiewei.agile.core.admin.manager.AdminGroupPermissionManager;
-import com.huijiewei.agile.core.admin.mapper.AdminLogMapper;
 import com.huijiewei.agile.core.admin.mapper.AdminMapper;
 import com.huijiewei.agile.core.admin.repository.AdminAccessTokenRepository;
 import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
-import com.huijiewei.agile.core.admin.request.AdminLogSearchRequest;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.admin.request.AdminRequest;
 import com.huijiewei.agile.core.admin.response.AdminAccountResponse;
-import com.huijiewei.agile.core.admin.response.AdminLogResponse;
 import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.security.AdminIdentity;
 import com.huijiewei.agile.core.exception.ConflictException;
 import com.huijiewei.agile.core.exception.NotFoundException;
 import com.huijiewei.agile.core.response.ListResponse;
-import com.huijiewei.agile.core.response.SearchPageResponse;
+import com.huijiewei.agile.core.until.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -40,8 +31,6 @@ import java.util.Optional;
 @Service
 @Validated
 public class AdminService {
-    private final static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     private final AdminRepository adminRepository;
     private final AdminLogRepository adminLogRepository;
     private final AdminAccessTokenRepository adminAccessTokenRepository;
@@ -59,7 +48,7 @@ public class AdminService {
     }
 
     public AdminLoginResponse login(@Valid AdminLoginRequest request) {
-        Admin admin = request.getAdmin();
+        Admin admin = (Admin) request.getIdentity();
         String accessToken = FriendlyId.createFriendlyId();
 
         Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository
@@ -143,7 +132,7 @@ public class AdminService {
     @Validated(AdminRequest.Create.class)
     public AdminResponse create(@Valid AdminRequest request) {
         Admin admin = AdminMapper.INSTANCE.toAdmin(request);
-        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setPassword(SecurityUtils.passwordEncode(request.getPassword()));
 
         this.adminRepository.saveWithValid(admin);
 
@@ -163,7 +152,7 @@ public class AdminService {
         Admin admin = AdminMapper.INSTANCE.toAdmin(request, current);
 
         if (StringUtils.isNotEmpty(request.getPassword())) {
-            admin.setPassword(passwordEncoder.encode(request.getPassword()));
+            admin.setPassword(SecurityUtils.passwordEncode(request.getPassword()));
         }
 
         if (isOwner) {

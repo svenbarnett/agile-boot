@@ -94,22 +94,29 @@ public class AdminLogAspect {
 
     @Around(value = "preAuthorize()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        AdminLog adminLog = new AdminLog();
-        adminLog.setAdminId(AdminUserDetails.getCurrentAdminIdentity().getAdmin().getId());
+        AdminLog adminLog = AdminUserDetails.getCurrentAdminIdentity().getAdmin().createLog();
 
-        this.setAdminLog(adminLog, joinPoint);
+        if (adminLog != null) {
+            this.setAdminLog(adminLog, joinPoint);
+        }
 
         try {
-            adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+            if (adminLog != null) {
+                adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+            }
 
             return joinPoint.proceed();
         } catch (Exception ex) {
-            adminLog.setStatus(AdminLog.STATUS_FAIL);
-            adminLog.setException(ex.getMessage());
+            if (adminLog != null) {
+                adminLog.setStatus(AdminLog.STATUS_FAIL);
+                adminLog.setException(ex.getMessage());
+            }
 
             throw ex;
         } finally {
-            this.adminLogRepository.save(adminLog);
+            if (adminLog != null) {
+                this.adminLogRepository.save(adminLog);
+            }
         }
     }
 }

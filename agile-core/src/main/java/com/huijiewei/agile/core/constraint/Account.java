@@ -1,4 +1,6 @@
-package com.huijiewei.agile.core.admin.constraint;
+package com.huijiewei.agile.core.constraint;
+
+import com.huijiewei.agile.core.service.IdentityService;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,6 +14,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = AccountValidator.class)
 public @interface Account {
     public String message() default "";
+
+    Class<? extends IdentityService> service();
 
     public String accountTypeMessage() default "Invalid account type, account should be the phone or email";
 
