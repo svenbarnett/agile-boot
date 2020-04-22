@@ -83,16 +83,19 @@ public class AdminService {
                 admin.getId(),
                 identity.getClientId());
 
-        AdminLog adminLog = new AdminLog();
-        adminLog.setAdminId(admin.getId());
-        adminLog.setType(AdminLog.TYPE_LOGIN);
-        adminLog.setStatus(AdminLog.STATUS_SUCCESS);
-        adminLog.setMethod("POST");
-        adminLog.setAction("Logout");
-        adminLog.setUserAgent(userAgent);
-        adminLog.setRemoteAddr(remoteAddr);
+        AdminLog adminLog = admin.createLog();
 
-        this.adminLogRepository.save(adminLog);
+        if (adminLog != null) {
+            adminLog.setAdminId(admin.getId());
+            adminLog.setType(AdminLog.TYPE_LOGIN);
+            adminLog.setStatus(AdminLog.STATUS_SUCCESS);
+            adminLog.setMethod("POST");
+            adminLog.setAction("Logout");
+            adminLog.setUserAgent(userAgent);
+            adminLog.setRemoteAddr(remoteAddr);
+
+            this.adminLogRepository.save(adminLog);
+        }
     }
 
     public AdminAccountResponse account(AdminIdentity identity) {
