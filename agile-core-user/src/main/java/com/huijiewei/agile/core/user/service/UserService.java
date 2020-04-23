@@ -71,18 +71,18 @@ public class UserService {
 
         List<ExcelExportEntity> entities = new ArrayList<>();
         entities.add(new ExcelExportEntity("Id", "id"));
-        entities.add(new ExcelExportEntity("手机号码", "phone"));
-        entities.add(new ExcelExportEntity("电子邮件", "email"));
+        entities.add(new ExcelExportEntity("手机号码", "phone", 30));
+        entities.add(new ExcelExportEntity("电子邮件", "email", 50));
         entities.add(new ExcelExportEntity("名称", "name"));
-        entities.add(new ExcelExportEntity("注册 IP", "createdIp"));
+        entities.add(new ExcelExportEntity("注册 IP", "createdIp", 15));
         entities.add(new ExcelExportEntity("注册来源", "createdFrom.description"));
-        entities.add(new ExcelExportEntity("创建时间", "createdAt"));
+        entities.add(new ExcelExportEntity("创建时间", "createdAt", 30));
 
         ExportParams exportParams = new ExportParams();
+        exportParams.setSheetName("用户列表");
         exportParams.setType(ExcelType.XSSF);
 
         Workbook workbook = ExcelExportUtil.exportExcel(exportParams, entities, users);
-        workbook.setSheetName(0, "用户列表");
 
         workbook.write(outputStream);
 

@@ -18,14 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -76,19 +74,17 @@ public class UserController {
     })
     @ApiResponse(responseCode = "200", description = "用户导出")
     @PreAuthorize("hasPermission('ADMIN', 'user/export')")
-    public ResponseEntity<byte[]> actionExport(
-            @Parameter(hidden = true) UserSearchRequest userSearchRequest
+    public void actionExport(
+            @Parameter(hidden = true) UserSearchRequest userSearchRequest,
+            HttpServletResponse response
     ) {
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            response.setHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.ms-excel;charset=utf-8");
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + URLEncoder.encode("用户列表.xlsx", StandardCharsets.UTF_8) + "\"");
 
-            this.userService.export(userSearchRequest, outputStream);
+            this.userService.export(userSearchRequest, response.getOutputStream());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.ms-excel;charset=utf-8");
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + URLEncoder.encode("users.xlsx", StandardCharsets.UTF_8) + "\"");
-
-            return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+            response.getOutputStream().flush();
         } catch (Exception ex) {
             throw new BadRequestException("导出错误:" + ex.getMessage());
         }
