@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AdminIdentityService extends IdentityService {
+public class AdminIdentityService implements IdentityService {
 
     private final AdminRepository adminRepository;
     private final AdminLogRepository adminLogRepository;
