@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @MappedSuperclass
-public class IdentityLog<L extends IdentityLog<L>> extends BaseEntity {
+public class IdentityLog extends BaseEntity {
     public static final String TYPE_LOGIN = "LOGIN";
     public static final String TYPE_VISIT = "VISIT";
     public static final String TYPE_OPERATE = "OPERATE";

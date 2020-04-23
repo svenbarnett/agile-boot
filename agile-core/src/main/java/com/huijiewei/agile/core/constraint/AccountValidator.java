@@ -19,7 +19,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
-public class AccountValidator implements ConstraintValidator<Account, Object> {
+public class AccountValidator implements ConstraintValidator<Account, IdentityRequest> {
     private String accountTypeMessage;
     private String accountNotExistMessage;
     private String passwordIncorrectMessage;
@@ -38,7 +38,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
 
     private IdentityService service;
 
-    private Identity<?> identity;
+    private Identity identity;
 
     @Override
     public void initialize(final Account constraintAnnotation) {
@@ -215,9 +215,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        IdentityRequest request = (IdentityRequest) value;
-
+    public boolean isValid(IdentityRequest request, ConstraintValidatorContext context) {
         String account = request.getAccount();
         String password = request.getPassword();
 
@@ -233,7 +231,7 @@ public class AccountValidator implements ConstraintValidator<Account, Object> {
             return false;
         }
 
-        IdentityLog<?> log = this.identity.createLog();
+        IdentityLog log = this.identity.createLog();
 
         if (log != null) {
             log.setType(IdentityLog.TYPE_LOGIN);

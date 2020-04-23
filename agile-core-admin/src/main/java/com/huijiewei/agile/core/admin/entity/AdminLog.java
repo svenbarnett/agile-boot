@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class AdminLog extends IdentityLog<AdminLog> {
+public class AdminLog extends IdentityLog {
     private Integer adminId;
 
     @ManyToOne

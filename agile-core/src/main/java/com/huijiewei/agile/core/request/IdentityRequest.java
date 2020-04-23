@@ -31,5 +31,5 @@ public class IdentityRequest {
     private String remoteAddr;
 
     @Schema(hidden = true)
-    private Identity<?> identity = null;
+    private Identity identity = null;
 }

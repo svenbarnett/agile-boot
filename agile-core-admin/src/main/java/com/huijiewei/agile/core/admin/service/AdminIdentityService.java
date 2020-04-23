@@ -40,7 +40,7 @@ public class AdminIdentityService extends IdentityService {
     }
 
     @Override
-    public void saveIdentityLog(IdentityLog<?> identityLog) {
+    public void saveIdentityLog(IdentityLog identityLog) {
         this.adminLogRepository.save((AdminLog) identityLog);
     }
 

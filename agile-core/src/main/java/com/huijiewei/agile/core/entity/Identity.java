@@ -8,12 +8,12 @@ import javax.persistence.MappedSuperclass;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @MappedSuperclass
-public abstract class Identity<T extends Identity<T>> extends BaseEntity {
+public abstract class Identity extends BaseEntity {
     private String phone;
 
     private String email;
 
     private String password;
 
-    public abstract IdentityLog<?> createLog();
+    public abstract IdentityLog createLog();
 }

@@ -1,5 +1,7 @@
 package com.huijiewei.agile.core.constraint;
 
+import com.huijiewei.agile.core.entity.Identity;
+import com.huijiewei.agile.core.entity.IdentityLog;
 import com.huijiewei.agile.core.service.IdentityService;
 
 import javax.validation.Constraint;

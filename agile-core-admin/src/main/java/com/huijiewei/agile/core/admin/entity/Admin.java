@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
         @Unique(fields = {"phone"}, message = "手机号码已被使用"),
         @Unique(fields = {"email"}, message = "电子邮箱已被使用")
 })
-public class Admin extends Identity<Admin> {
+public class Admin extends Identity {
     private String name;
 
     private String avatar;
