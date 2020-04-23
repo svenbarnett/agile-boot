@@ -16,6 +16,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.stream.Collectors;
+
 @Configuration
 public class OpenApiConfig {
 
@@ -54,7 +56,8 @@ public class OpenApiConfig {
         Schema<String> schema = new Schema<>();
         schema.setType("string");
         schema.setUniqueItems(true);
-        schema.setEnum(User.createFormValues());
+
+        schema.setEnum(User.createdFromList().stream().map(User.CreatedFrom::getValue).collect(Collectors.toList()));
 
         return new ArraySchema().items(schema);
     }

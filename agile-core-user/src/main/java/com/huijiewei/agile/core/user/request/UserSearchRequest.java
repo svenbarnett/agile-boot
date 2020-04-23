@@ -31,7 +31,7 @@ public class UserSearchRequest extends BaseSearchRequest {
                         .field("createdFrom")
                         .label("注册来源")
                         .multiple(true)
-                        .options(User.createFromList())
+                        .options(User.createdFromList())
                 )
                 .addSearchField(new DateTimeRangeSearchField()
                         .field("createdRange")

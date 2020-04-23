@@ -1,5 +1,6 @@
 package com.huijiewei.agile.core.entity;
 
+import com.huijiewei.agile.core.consts.ValueDescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -39,15 +40,11 @@ public class IdentityLog<L extends IdentityLog<L>> extends BaseEntity {
     }
 
     public static Status getStatus(Integer status) {
-        List<Status> statuses = IdentityLog.statusList();
-
-        for (Status everyStatus : statuses) {
-            if (everyStatus.value.equals(status)) {
-                return everyStatus;
-            }
-        }
-
-        return new Status(status, status.toString());
+        return IdentityLog.statusList()
+                .stream()
+                .filter(item -> item.getValue().equals(status))
+                .findFirst()
+                .orElse(new Status(status, status.toString()));
     }
 
     public static List<Type> typeList() {
@@ -61,36 +58,22 @@ public class IdentityLog<L extends IdentityLog<L>> extends BaseEntity {
     }
 
     public static Type getType(String type) {
-        List<Type> types = IdentityLog.typeList();
-
-        for (Type everyType : types) {
-            if (everyType.value.equals(type)) {
-                return everyType;
-            }
-        }
-
-        return new Type(type, type);
+        return IdentityLog.typeList()
+                .stream()
+                .filter(item -> item.getValue().equals(type))
+                .findFirst()
+                .orElse(new Type(type, type));
     }
 
-    @Data
-    public static class Type {
-        private String value;
-        private String description;
-
-        public Type(String value, String label) {
-            this.value = value;
-            this.description = label;
+    public static class Status extends ValueDescription<Integer> {
+        public Status(Integer value, String description) {
+            super(value, description);
         }
     }
 
-    @Data
-    public static class Status {
-        private Integer value;
-        private String description;
-
-        public Status(Integer status, String label) {
-            this.value = status;
-            this.description = label;
+    public static class Type extends ValueDescription<String> {
+        public Type(String value, String description) {
+            super(value, description);
         }
     }
 }

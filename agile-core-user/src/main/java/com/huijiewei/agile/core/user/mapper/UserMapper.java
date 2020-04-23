@@ -31,6 +31,6 @@ public interface UserMapper {
     }
 
     default User.CreatedFrom toCreatedFrom(String createdFrom) {
-        return User.getCreateFrom(createdFrom);
+        return User.getCreatedFrom(createdFrom);
     }
 }

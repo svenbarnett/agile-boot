@@ -1,6 +1,7 @@
 package com.huijiewei.agile.core.user.entity;
 
 import com.huijiewei.agile.core.constraint.Unique;
+import com.huijiewei.agile.core.consts.ValueDescription;
 import com.huijiewei.agile.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,7 +48,7 @@ public class User extends BaseEntity {
 
     private LocalDateTime updatedAt;
 
-    public static List<CreatedFrom> createFromList() {
+    public static List<CreatedFrom> createdFromList() {
         List<CreatedFrom> createdFroms = new ArrayList<>();
 
         createdFroms.add(new CreatedFrom(CREATED_FROM_WEB, "网站"));
@@ -58,37 +59,17 @@ public class User extends BaseEntity {
         return createdFroms;
     }
 
-    public static CreatedFrom getCreateFrom(String createdFrom) {
-        List<CreatedFrom> createdFroms = User.createFromList();
-
-        for (CreatedFrom everyCreateFrom : createdFroms) {
-            if (everyCreateFrom.value.equals(createdFrom)) {
-                return everyCreateFrom;
-            }
-        }
-
-        return new CreatedFrom(createdFrom, createdFrom);
+    public static CreatedFrom getCreatedFrom(String createdFrom) {
+        return User.createdFromList()
+                .stream()
+                .filter(item -> item.getValue().equals(createdFrom))
+                .findFirst()
+                .orElse(new CreatedFrom(createdFrom, createdFrom));
     }
 
-    public static List<String> createFormValues() {
-        List<CreatedFrom> createdFroms = User.createFromList();
-        List<String> createFormValues = new ArrayList<>();
-
-        for (CreatedFrom everyCreateFrom : createdFroms) {
-            createFormValues.add(everyCreateFrom.value);
-        }
-
-        return createFormValues;
-    }
-
-    @Data
-    public static class CreatedFrom {
-        private String value;
-        private String description;
-
-        public CreatedFrom(String value, String label) {
-            this.value = value;
-            this.description = label;
+    public static class CreatedFrom extends ValueDescription<String> {
+        public CreatedFrom(String value, String description) {
+            super(value, description);
         }
     }
 }
