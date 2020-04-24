@@ -12,8 +12,7 @@ import com.huijiewei.agile.core.admin.repository.AdminLogRepository;
 import com.huijiewei.agile.core.admin.repository.AdminRepository;
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.admin.request.AdminRequest;
-import com.huijiewei.agile.core.admin.response.AdminAccountResponse;
-import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.core.admin.response.AdminIdentityResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.security.AdminIdentity;
 import com.huijiewei.agile.core.exception.ConflictException;
@@ -47,14 +46,13 @@ public class AdminService {
         this.adminGroupPermissionManager = adminGroupPermissionManager;
     }
 
-    public AdminLoginResponse login(@Valid AdminLoginRequest request) {
+    public AdminIdentityResponse login(@Valid AdminLoginRequest request) {
         Admin admin = (Admin) request.getIdentity();
         String accessToken = FriendlyId.createFriendlyId();
 
-        Optional<AdminAccessToken> adminAccessTokenOptional = this.adminAccessTokenRepository
-                .findByClientIdAndAdminId(request.getClientId(), admin.getId());
-
-        AdminAccessToken adminAccessToken = adminAccessTokenOptional.orElseGet(AdminAccessToken::new);
+        AdminAccessToken adminAccessToken = this.adminAccessTokenRepository
+                .findByClientIdAndAdminId(request.getClientId(), admin.getId())
+                .orElseGet(AdminAccessToken::new);
 
         if (!adminAccessToken.hasId()) {
             adminAccessToken.setAdminId(admin.getId());
@@ -67,13 +65,13 @@ public class AdminService {
 
         this.adminAccessTokenRepository.save(adminAccessToken);
 
-        AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-        adminLoginResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
-        adminLoginResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
-        adminLoginResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
-        adminLoginResponse.setAccessToken(accessToken);
+        AdminIdentityResponse adminIdentityResponse = new AdminIdentityResponse();
+        adminIdentityResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminIdentityResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
+        adminIdentityResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
+        adminIdentityResponse.setAccessToken(accessToken);
 
-        return adminLoginResponse;
+        return adminIdentityResponse;
     }
 
     public void logout(AdminIdentity identity, String userAgent, String remoteAddr) {
@@ -98,15 +96,15 @@ public class AdminService {
         }
     }
 
-    public AdminAccountResponse account(AdminIdentity identity) {
+    public AdminIdentityResponse account(AdminIdentity identity) {
         Admin admin = identity.getAdmin();
 
-        AdminAccountResponse adminAccountResponse = new AdminAccountResponse();
-        adminAccountResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
-        adminAccountResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
-        adminAccountResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
+        AdminIdentityResponse adminIdentityResponse = new AdminIdentityResponse();
+        adminIdentityResponse.setCurrentUser(AdminMapper.INSTANCE.toAdminResponse(admin));
+        adminIdentityResponse.setGroupPermissions(this.adminGroupPermissionManager.getPermissionsByAdminGroupId(admin.getAdminGroup().getId()));
+        adminIdentityResponse.setGroupMenus(this.adminGroupPermissionManager.getMenusByAdminGroupId(admin.getAdminGroup().getId()));
 
-        return adminAccountResponse;
+        return adminIdentityResponse;
     }
 
     public ListResponse<AdminResponse> all() {

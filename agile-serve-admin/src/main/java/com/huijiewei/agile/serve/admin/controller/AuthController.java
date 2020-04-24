@@ -2,8 +2,7 @@ package com.huijiewei.agile.serve.admin.controller;
 
 import com.huijiewei.agile.core.admin.request.AdminLoginRequest;
 import com.huijiewei.agile.core.admin.request.AdminRequest;
-import com.huijiewei.agile.core.admin.response.AdminAccountResponse;
-import com.huijiewei.agile.core.admin.response.AdminLoginResponse;
+import com.huijiewei.agile.core.admin.response.AdminIdentityResponse;
 import com.huijiewei.agile.core.admin.response.AdminResponse;
 import com.huijiewei.agile.core.admin.service.AdminService;
 import com.huijiewei.agile.core.response.MessageResponse;
@@ -36,7 +35,7 @@ public class AuthController {
     @Operation(description = "管理员登录", operationId = "authLogin")
     @ApiResponse(responseCode = "200", description = "登录成功")
     @ApiResponse(responseCode = "422", ref = "UnprocessableEntityProblem")
-    public AdminLoginResponse actionLogin(
+    public AdminIdentityResponse actionLogin(
             @RequestBody AdminLoginRequest request,
             HttpServletRequest servletRequest) {
 
@@ -53,7 +52,7 @@ public class AuthController {
             value = "/auth/account",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public AdminAccountResponse actionAccount() {
+    public AdminIdentityResponse actionAccount() {
         return this.adminService.account(AdminUserDetails.getCurrentAdminIdentity());
     }
 

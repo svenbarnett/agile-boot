@@ -152,15 +152,11 @@ public class AccountValidator implements ConstraintValidator<Account, IdentityRe
 
         AccountTypeEnums accountType = null;
 
-        EmailValidator emailValidator = new EmailValidator();
-
-        if (emailValidator.isValid(account, context)) {
+        if (new EmailValidator().isValid(account, context)) {
             accountType = AccountTypeEnums.EMAIL;
         }
 
-        PhoneValidator phoneValidator = new PhoneValidator();
-
-        if (phoneValidator.isValid(account, context)) {
+        if (new PhoneValidator().isValid(account, context)) {
             accountType = AccountTypeEnums.PHONE;
         }
 
