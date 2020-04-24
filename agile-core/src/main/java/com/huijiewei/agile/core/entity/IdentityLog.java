@@ -42,7 +42,7 @@ public class IdentityLog extends BaseEntity {
     public static Status getStatus(Integer status) {
         return IdentityLog.statusList()
                 .stream()
-                .filter(item -> item.getValue().equals(status))
+                .filter(each -> each.getValue().equals(status))
                 .findFirst()
                 .orElse(new Status(status, status.toString()));
     }
@@ -60,7 +60,7 @@ public class IdentityLog extends BaseEntity {
     public static Type getType(String type) {
         return IdentityLog.typeList()
                 .stream()
-                .filter(item -> item.getValue().equals(type))
+                .filter(each -> each.getValue().equals(type))
                 .findFirst()
                 .orElse(new Type(type, type));
     }

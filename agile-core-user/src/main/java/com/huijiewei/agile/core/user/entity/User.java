@@ -62,7 +62,7 @@ public class User extends BaseEntity {
     public static CreatedFrom getCreatedFrom(String createdFrom) {
         return User.createdFromList()
                 .stream()
-                .filter(item -> item.getValue().equals(createdFrom))
+                .filter(each -> each.getValue().equals(createdFrom))
                 .findFirst()
                 .orElse(new CreatedFrom(createdFrom, createdFrom));
     }
